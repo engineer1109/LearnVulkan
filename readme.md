@@ -7,7 +7,7 @@
 # C/C++ Compiler
    GCC 7+   using -std=c++17
 # Compile & BUILD
-'
+```
     cmake ..
     make
-'
+```
