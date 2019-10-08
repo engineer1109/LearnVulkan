@@ -4,7 +4,7 @@ project(learnVulkan)
 
 if(UNIX)
     set(CMAKE_EXE_LINKER_FLAGS "-fno-pie -no-pie")
-    add_definitions("-Ofast -std=c++17")
+    add_definitions("-Ofast -std=c++17 -fPIC")
     add_definitions(-DVK_USE_PLATFORM_XCB_KHR)
 elseif(WIN32)
     add_definitions(-DNOMINMAX)
@@ -23,5 +23,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/base)
 include_directories(${PROJECT_SOURCE_DIR}/include/external)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
+
+include(${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake)
 
 add_subdirectory(src)
