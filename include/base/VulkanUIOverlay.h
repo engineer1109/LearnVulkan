@@ -22,7 +22,7 @@
 #include "VulkanBuffer.hpp"
 #include "VulkanDevice.hpp"
 
-#include "../external/imgui/imgui.h"
+#include "imgui.h"
 
 #if defined(__ANDROID__)
 #include "VulkanAndroid.h"
