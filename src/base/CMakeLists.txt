@@ -3,8 +3,9 @@ SET(LIB_NAME vulkanbase)
 
 FILE(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*)
 FILE(GLOB HEAD_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
+FILE(GLOB_RECURSE IMGUI ${CMAKE_SOURCE_DIR}/third_party/imgui/*)
 
-add_library(${LIB_NAME} SHARED ${SRC_FILES})
+add_library(${LIB_NAME} SHARED ${SRC_FILES} ${IMGUI})
 target_link_libraries(${LIB_NAME} ${Vulkan_LIBRARIES})
 
 
