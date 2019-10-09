@@ -18,8 +18,14 @@
 # C/C++ Compiler
    GCC 7+   using -std=c++17
 # Compile & BUILD
+   If you don't have GLM, GLI, IMGUI, you need "git submodule update --init" first.
+```
+   git submodule update --init
+```
+   Compile
 ```
     cmake ..
     make
     make install
 ```
+   
