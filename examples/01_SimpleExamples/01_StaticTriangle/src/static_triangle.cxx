@@ -3,7 +3,14 @@
 StaticTriangle::StaticTriangle(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->zoom=-2.f;
 }
-StaticTriangle::~StaticTriangle(){}
+StaticTriangle::~StaticTriangle(){
+    vkDestroyPipeline(device, m_pipeline, nullptr);
+    vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
+    vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
+    m_vertexBuffer.destroy();
+    m_indexBuffer.destroy();
+    m_uniformBufferVS.destroy();
+}
 
 void StaticTriangle::prepare(){
     VulkanBasicEngine::prepare();

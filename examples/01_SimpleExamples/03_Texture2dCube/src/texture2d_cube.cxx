@@ -1,9 +1,9 @@
-#include "static_cube.h"
+#include "texture2d_cube.h"
 #define VERTEX_BUFFER_BIND_ID 0
-StaticCube::StaticCube(bool debugLayer):VulkanBasicEngine(debugLayer){
+Texture2dCube::Texture2dCube(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->zoom=-4.f;
 }
-StaticCube::~StaticCube(){
+Texture2dCube::~Texture2dCube(){
     vkDestroyPipeline(device, m_pipeline, nullptr);
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
@@ -12,7 +12,7 @@ StaticCube::~StaticCube(){
     m_uniformBufferVS.destroy();
 }
 
-void StaticCube::prepare(){
+void Texture2dCube::prepare(){
     VulkanBasicEngine::prepare();
     generateVertex();
     setupVertexDescriptions();
@@ -25,7 +25,7 @@ void StaticCube::prepare(){
     this->prepared=true;
 }
 
-void StaticCube::render()
+void Texture2dCube::render()
 {
     if (!prepared)
         return;
@@ -40,7 +40,7 @@ void StaticCube::render()
     }
 }
 
-void StaticCube::draw()
+void Texture2dCube::draw()
 {
     VulkanBasicEngine::prepareFrame();
     // Command buffer to be sumitted to the queue
@@ -50,7 +50,7 @@ void StaticCube::draw()
     VulkanBasicEngine::submitFrame();
 }
 
-void StaticCube::generateVertex(){
+void Texture2dCube::generateVertex(){
     // Setup vertices for a single uv-mapped quad made from two triangles
     std::vector<Vertex> vertices =
     {
@@ -123,7 +123,7 @@ void StaticCube::generateVertex(){
         indices.data()));
 }
 
-void StaticCube::setupVertexDescriptions()
+void Texture2dCube::setupVertexDescriptions()
 {
     // Binding description
     m_vertices.inputBinding.resize(1);
@@ -170,7 +170,7 @@ void StaticCube::setupVertexDescriptions()
     m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.inputAttributes.data();
 }
 
-void StaticCube::prepareUniformBuffers()
+void Texture2dCube::prepareUniformBuffers()
 {
     // Vertex shader uniform buffer block
     VK_CHECK_RESULT(vulkanDevice->createBuffer(
@@ -183,7 +183,7 @@ void StaticCube::prepareUniformBuffers()
     updateUniformBuffers(true);
 }
 
-void StaticCube::updateUniformBuffers(bool viewchanged)
+void Texture2dCube::updateUniformBuffers(bool viewchanged)
 {
     if (viewchanged)
     {
@@ -197,7 +197,7 @@ void StaticCube::updateUniformBuffers(bool viewchanged)
     memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
 }
 
-void StaticCube::setupDescriptorSetLayout()
+void Texture2dCube::setupDescriptorSetLayout()
 {
     std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings =
     {
@@ -223,7 +223,7 @@ void StaticCube::setupDescriptorSetLayout()
     VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout));
 }
 
-void StaticCube::preparePipelines()
+void Texture2dCube::preparePipelines()
 {
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState =
         vks::initializers::pipelineInputAssemblyStateCreateInfo(
@@ -299,7 +299,7 @@ void StaticCube::preparePipelines()
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
 }
 
-void StaticCube::setupDescriptorPool()
+void Texture2dCube::setupDescriptorPool()
 {
     // Example uses one ubo and one image sampler
     std::vector<VkDescriptorPoolSize> poolSizes =
@@ -316,7 +316,7 @@ void StaticCube::setupDescriptorPool()
     VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &descriptorPool));
 }
 
-void StaticCube::setupDescriptorSet()
+void Texture2dCube::setupDescriptorSet()
 {
     VkDescriptorSetAllocateInfo allocInfo =
         vks::initializers::descriptorSetAllocateInfo(
@@ -339,7 +339,7 @@ void StaticCube::setupDescriptorSet()
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
 }
 
-void StaticCube::buildCommandBuffers()
+void Texture2dCube::buildCommandBuffers()
 {
     VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
 
