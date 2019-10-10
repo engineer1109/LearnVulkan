@@ -8,4 +8,4 @@ FILE(GLOB_RECURSE IMGUI ${CMAKE_SOURCE_DIR}/third_party/imgui/*)
 add_library(${LIB_NAME} SHARED ${SRC_FILES} ${IMGUI})
 target_link_libraries(${LIB_NAME} ${Vulkan_LIBRARIES})
 
-
+INSTALL(TARGETS ${LIB_NAME} DESTINATION "${PROJECT_SOURCE_DIR}/bin")

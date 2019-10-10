@@ -11,3 +11,5 @@ target_link_libraries(${LIB_NAME} vulkanbase ${Vulkan_LIBRARIES})
 if(UNIX)
     target_link_libraries(${LIB_NAME} xcb)
 endif()
+
+INSTALL(TARGETS ${LIB_NAME} DESTINATION "${PROJECT_SOURCE_DIR}/lib")
