@@ -12,7 +12,7 @@ This project is mainly faced to GUI engineering applications and advanced backen
 ## 
 This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  <br>
 Use sharelib (libvulkanbase.so, libvulkan_basicengine.so) instead of static lib.  <br>
-For example:  
+For examples of cross-platform api:  
 ```
 int main(int argc,char** argv){
     bool debug=false;
@@ -21,6 +21,7 @@ int main(int argc,char** argv){
     statictrianglePtr->initWindow();
     statictrianglePtr->prepare();
     statictrianglePtr->renderLoop();
+    delete statictrianglePtr;
     return 1;
 }
 ```
