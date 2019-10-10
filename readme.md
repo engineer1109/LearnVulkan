@@ -1,7 +1,7 @@
 
 # LearnVulkan
-This project is mainly faced to GUI engineering applications and advanced backend computing, such as X11, Qt, ffmpeg, OpenCV, CUDA and so on. Combining Vulkan with practical applications, not a pure demo.  <br>
-Planned Application Areas:  <br>
+This project is mainly faced to GUI engineering applications and advanced backend computing, such as X11, Qt, ffmpeg, OpenCV, CUDA and so on. Combining Vulkan with engineering applications, not a pure demo.  <br>
+## Planned Application Areas: 
    1. Imaging Proceessing of Vulkan  
    2. Medical Imaging of Vulkan  
    3. Vulkan on Qt (GAMES)  
@@ -9,6 +9,7 @@ Planned Application Areas:  <br>
    5. Vulkan with CUDA  
    6. Vulkan server rendering with ffmpeg  
     <br>
+## 
 This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  <br>
 Use sharelib (libvulkanbase.so, libvulkan_basicengine.so) instead of static lib.  <br>
 For example:  
