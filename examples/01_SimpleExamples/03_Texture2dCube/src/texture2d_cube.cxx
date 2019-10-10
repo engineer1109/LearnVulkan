@@ -16,6 +16,7 @@ Texture2dCube::~Texture2dCube(){
 void Texture2dCube::prepare(){
     VulkanBasicEngine::prepare();
     generateVertex();
+    loadTexture2D();
     setupVertexDescriptions();
     prepareUniformBuffers();
     setupDescriptorSetLayout();
@@ -78,7 +79,7 @@ void Texture2dCube::generateVertex(){
        { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
        { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
        { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
 
        { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
        { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
@@ -132,6 +133,10 @@ void Texture2dCube::generateVertex(){
         &m_indexBuffer,
         indices.size() * sizeof(uint32_t),
         indices.data()));
+}
+
+void Texture2dCube::loadTexture2D(){
+    m_texture.loadFromFile("../data/textures/metalplate01_rgba.ktx",VK_FORMAT_R8G8B8A8_UNORM,vulkanDevice,queue);
 }
 
 void Texture2dCube::setupVertexDescriptions()
@@ -217,6 +222,11 @@ void Texture2dCube::setupDescriptorSetLayout()
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             VK_SHADER_STAGE_VERTEX_BIT,
             0),
+        // Binding 1 : Fragment shader image sampler
+        vks::initializers::descriptorSetLayoutBinding(
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+            VK_SHADER_STAGE_FRAGMENT_BIT,
+            1)
     };
 
     VkDescriptorSetLayoutCreateInfo descriptorLayout =
@@ -305,8 +315,8 @@ void Texture2dCube::preparePipelines()
     pipelineCreateInfo.pStages = shaderStages.data();
 
     //pipelineCreateInfo.subpass=1;
-    shaderStages[0] = loadShader("../data/shaders/01_StaticTriangle/statictriangle.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("../data/shaders/01_StaticTriangle/statictriangle.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader("../data/shaders/03_Texture2dCube/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader("../data/shaders/03_Texture2dCube/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
 }
 
@@ -345,6 +355,13 @@ void Texture2dCube::setupDescriptorSet()
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             0,
             &m_uniformBufferVS.descriptor),
+        // Binding 1 : Fragment shader texture sampler
+        //	Fragment shader: layout (binding = 1) uniform sampler2D samplerColor;
+        vks::initializers::writeDescriptorSet(
+            m_descriptorSet,
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// The descriptor set will use a combined image sampler (sampler and image could be split)
+            1,												// Shader binding point 1
+            &m_texture.descriptor)
     };
 
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
@@ -401,7 +418,6 @@ void Texture2dCube::buildCommandBuffers()
 void Texture2dCube::startAutoRotation(){
     if(m_autoRotation){
         m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
-        memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
     }
 }
 

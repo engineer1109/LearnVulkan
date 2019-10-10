@@ -360,7 +360,6 @@ void StaticTriangle::buildCommandBuffers()
 void StaticTriangle::startAutoRotation(){
     if(m_autoRotation){
         m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
-        memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
     }
 }
 

@@ -1,6 +1,7 @@
 #ifndef STATIC_TRIANGLE_H
 #define STATIC_TRIANGLE
 #include "vulkan_basicengine.h"
+#include "VulkanTexture.hpp"
 class Texture2dCube:public VulkanBasicEngine{
 public:
     Texture2dCube(bool debugLayer);
@@ -13,6 +14,7 @@ public:
     virtual void OnUpdateUIOverlay(vks::UIOverlay *overlay);
 private:
     void generateVertex();
+    void loadTexture2D();
     void setupVertexDescriptions();
     void prepareUniformBuffers();
     void updateUniformBuffers(bool viewchanged=false);
@@ -41,6 +43,7 @@ private:
     vks::Buffer m_vertexBuffer;
     vks::Buffer m_indexBuffer;
     vks::Buffer m_uniformBufferVS;
+    vks::Texture2D m_texture;
     VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
     VkDescriptorSet m_descriptorSet=VK_NULL_HANDLE;
     VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
