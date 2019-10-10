@@ -2,6 +2,7 @@
 #define VERTEX_BUFFER_BIND_ID 0
 Texture2dCube::Texture2dCube(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->zoom=-4.f;
+    this->settings.overlay=true;
 }
 Texture2dCube::~Texture2dCube(){
     vkDestroyPipeline(device, m_pipeline, nullptr);
@@ -37,6 +38,7 @@ void Texture2dCube::render()
     }
     if (!paused || camera.updated){
         updateUniformBuffers(camera.updated);
+        startAutoRotation();
     }
 }
 
@@ -48,6 +50,15 @@ void Texture2dCube::draw()
     submitInfo.pCommandBuffers = &drawCmdBuffers[currentBuffer];
     VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE));
     VulkanBasicEngine::submitFrame();
+}
+
+void Texture2dCube::OnUpdateUIOverlay(vks::UIOverlay *overlay)
+{
+    if (overlay->header("Settings")) {
+        if (overlay->button("Auto Rotation")) {
+            m_autoRotation=!m_autoRotation;
+        }
+     }
 }
 
 void Texture2dCube::generateVertex(){
@@ -387,5 +398,10 @@ void Texture2dCube::buildCommandBuffers()
     vkQueueWaitIdle(queue);
 }
 
-
+void Texture2dCube::startAutoRotation(){
+    if(m_autoRotation){
+        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
+        memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
+    }
+}
 

@@ -9,6 +9,8 @@ public:
     virtual void prepare();
     virtual void render();
     virtual void draw();
+
+    virtual void OnUpdateUIOverlay(vks::UIOverlay *overlay);
 private:
     void generateVertex();
     void setupVertexDescriptions();
@@ -19,6 +21,7 @@ private:
     void setupDescriptorPool();
     void setupDescriptorSet();
     void buildCommandBuffers();
+    void startAutoRotation();
 public:
     struct Vertex {
         float pos[3];
@@ -43,7 +46,7 @@ private:
     VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
     VkPipeline m_pipeline=VK_NULL_HANDLE;
     uint32_t m_indexCount=0;
-
+    bool m_autoRotation=false;
 };
 
 #endif

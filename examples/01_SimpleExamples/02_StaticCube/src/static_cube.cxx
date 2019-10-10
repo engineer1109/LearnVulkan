@@ -2,6 +2,7 @@
 #define VERTEX_BUFFER_BIND_ID 0
 StaticCube::StaticCube(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->zoom=-4.f;
+    this->settings.overlay=true;
 }
 StaticCube::~StaticCube(){
     vkDestroyPipeline(device, m_pipeline, nullptr);
@@ -37,6 +38,7 @@ void StaticCube::render()
     }
     if (!paused || camera.updated){
         updateUniformBuffers(camera.updated);
+        startAutoRotation();
     }
 }
 
@@ -48,6 +50,15 @@ void StaticCube::draw()
     submitInfo.pCommandBuffers = &drawCmdBuffers[currentBuffer];
     VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE));
     VulkanBasicEngine::submitFrame();
+}
+
+void StaticCube::OnUpdateUIOverlay(vks::UIOverlay *overlay)
+{
+    if (overlay->header("Settings")) {
+        if (overlay->button("Auto Rotation")) {
+            m_autoRotation=!m_autoRotation;
+        }
+     }
 }
 
 void StaticCube::generateVertex(){
@@ -387,5 +398,11 @@ void StaticCube::buildCommandBuffers()
     vkQueueWaitIdle(queue);
 }
 
+void StaticCube::startAutoRotation(){
+    if(m_autoRotation){
+        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
+        memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
+    }
+}
 
 
