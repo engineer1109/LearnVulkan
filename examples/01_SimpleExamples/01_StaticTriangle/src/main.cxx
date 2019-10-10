@@ -6,5 +6,6 @@ int main(int argc,char** argv){
     statictrianglePtr->initWindow();
     statictrianglePtr->prepare();
     statictrianglePtr->renderLoop();
+    delete statictrianglePtr;
     return 1;
 }

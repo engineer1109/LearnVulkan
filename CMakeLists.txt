@@ -18,9 +18,12 @@ include(${PROJECT_SOURCE_DIR}/cmake/FindOpenMP.cmake)
 #    message(GIT_SUBMODULE)
 #endif()
 
+SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin/)
+SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin/)
+
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/base)
-include_directories(${PROJECT_SOURCE_DIR}/include/external)
+include_directories(${PROJECT_SOURCE_DIR}/include/basicengine)
 include_directories(${PROJECT_SOURCE_DIR}/third_party/gli)
 include_directories(${PROJECT_SOURCE_DIR}/third_party/glm)
 include_directories(${PROJECT_SOURCE_DIR}/third_party/imgui)
@@ -29,3 +32,4 @@ link_directories(${PROJECT_SOURCE_DIR}/lib)
 include(${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake)
 
 add_subdirectory(src)
+add_subdirectory(examples)
