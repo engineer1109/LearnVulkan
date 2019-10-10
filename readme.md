@@ -1,16 +1,17 @@
 
 # LearnVulkan
-   This project is mainly oriented to GUI engineering applications and advanced backend computing, such as X11, Qt, ffmpeg, OpenCV, CUDA and so on. Combining Vulkan with practical applications, not a pure demo.  </Br>
-   Planned Application Areas:  
+>This project is mainly faced to GUI engineering applications and advanced backend computing, such as X11, Qt, ffmpeg, OpenCV, CUDA and so on. Combining Vulkan with practical applications, not a pure demo.  <br>
+>Planned Application Areas:  <br>
    1. Imaging Proceessing of Vulkan  
    2. Medical Imaging of Vulkan  
    3. Vulkan on Qt (GAMES)  
    4. Vulkan on XWindow (GAMES)  
    5. Vulkan with CUDA  
    6. Vulkan server rendering with ffmpeg  
-   This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  
-   Use sharelib (libvulkanbase.so, libvulkan_basicengine.so) instead of static lib.  
-   For example:  
+    <br>
+>This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  <br>
+>Use sharelib (libvulkanbase.so, libvulkan_basicengine.so) instead of static lib.  <br>
+>For example:  
 ```
 int main(int argc,char** argv){
     bool debug=false;
@@ -22,7 +23,7 @@ int main(int argc,char** argv){
     return 1;
 }
 ```
-   Finally, welcome to clone or fork my project, remember to star if you consider my project is quite good.  
+>Finally, welcome to clone or fork my project, remember to star if you consider my project is quite good.  
 
 # Requirements
 ## Supported System:
@@ -41,7 +42,7 @@ int main(int argc,char** argv){
    GCC 7+   using -std=c++17
    MSVC 2017
 # Compile & BUILD
-   If you don't have GLM, GLI, IMGUI, you need "git submodule update --init" first.
+>If you don't have GLM, GLI, IMGUI, you need "git submodule update --init" first.
 ```
    git submodule update --init
 ```
@@ -51,7 +52,7 @@ int main(int argc,char** argv){
     make
     make install
 ```
-The programs will be installed in the ./bin .
+>The programs will be installed in the ./bin .
 # PLANS
 1. Simple Examples (doing)
 2. Advanced Examples
