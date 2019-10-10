@@ -1,1 +1,2 @@
 add_subdirectory(01_StaticTriangle)
+add_subdirectory(02_StaticCube)

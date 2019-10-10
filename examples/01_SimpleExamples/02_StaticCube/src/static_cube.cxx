@@ -1,11 +1,11 @@
-#include "static_triangle.h"
+#include "static_cube.h"
 #define VERTEX_BUFFER_BIND_ID 0
-StaticTriangle::StaticTriangle(bool debugLayer):VulkanBasicEngine(debugLayer){
-    this->zoom=-2.f;
+StaticCube::StaticCube(bool debugLayer):VulkanBasicEngine(debugLayer){
+    this->zoom=-4.f;
 }
-StaticTriangle::~StaticTriangle(){}
+StaticCube::~StaticCube(){}
 
-void StaticTriangle::prepare(){
+void StaticCube::prepare(){
     VulkanBasicEngine::prepare();
     generateVertex();
     setupVertexDescriptions();
@@ -18,7 +18,7 @@ void StaticTriangle::prepare(){
     this->prepared=true;
 }
 
-void StaticTriangle::render()
+void StaticCube::render()
 {
     if (!prepared)
         return;
@@ -33,7 +33,7 @@ void StaticTriangle::render()
     }
 }
 
-void StaticTriangle::draw()
+void StaticCube::draw()
 {
     VulkanBasicEngine::prepareFrame();
     // Command buffer to be sumitted to the queue
@@ -43,17 +43,59 @@ void StaticTriangle::draw()
     VulkanBasicEngine::submitFrame();
 }
 
-void StaticTriangle::generateVertex(){
+void StaticCube::generateVertex(){
     // Setup vertices for a single uv-mapped quad made from two triangles
     std::vector<Vertex> vertices =
     {
-        { {  0.0f,  -1.0f, 0.0f }, { 1.0f, 1.0f },{ 0.0f, 0.0f, 1.0f } },
-        { {  1.0f,  1.0f, 0.0f }, { 0.0f, 1.0f },{ 0.0f, 0.0f, 1.0f } },
-        { {  -1.0f, 1.0f, 0.0f }, { 1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } },
+
+       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+
+       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+
+       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+
+       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+
+       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+
+       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
     };
 
     // Setup indices
-    std::vector<uint32_t> indices = { 0,1,2 };
+    std::vector<uint32_t> indices(vertices.size());
+    for(int i=0;i<indices.size();i++){
+        indices[i]=i;
+    }
     m_indexCount = static_cast<uint32_t>(indices.size());
 
     // Create buffers
@@ -74,7 +116,7 @@ void StaticTriangle::generateVertex(){
         indices.data()));
 }
 
-void StaticTriangle::setupVertexDescriptions()
+void StaticCube::setupVertexDescriptions()
 {
     // Binding description
     m_vertices.inputBinding.resize(1);
@@ -121,7 +163,7 @@ void StaticTriangle::setupVertexDescriptions()
     m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.inputAttributes.data();
 }
 
-void StaticTriangle::prepareUniformBuffers()
+void StaticCube::prepareUniformBuffers()
 {
     // Vertex shader uniform buffer block
     VK_CHECK_RESULT(vulkanDevice->createBuffer(
@@ -134,7 +176,7 @@ void StaticTriangle::prepareUniformBuffers()
     updateUniformBuffers(true);
 }
 
-void StaticTriangle::updateUniformBuffers(bool viewchanged)
+void StaticCube::updateUniformBuffers(bool viewchanged)
 {
     if (viewchanged)
     {
@@ -148,7 +190,7 @@ void StaticTriangle::updateUniformBuffers(bool viewchanged)
     memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
 }
 
-void StaticTriangle::setupDescriptorSetLayout()
+void StaticCube::setupDescriptorSetLayout()
 {
     std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings =
     {
@@ -174,7 +216,7 @@ void StaticTriangle::setupDescriptorSetLayout()
     VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout));
 }
 
-void StaticTriangle::preparePipelines()
+void StaticCube::preparePipelines()
 {
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState =
         vks::initializers::pipelineInputAssemblyStateCreateInfo(
@@ -250,7 +292,7 @@ void StaticTriangle::preparePipelines()
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
 }
 
-void StaticTriangle::setupDescriptorPool()
+void StaticCube::setupDescriptorPool()
 {
     // Example uses one ubo and one image sampler
     std::vector<VkDescriptorPoolSize> poolSizes =
@@ -267,7 +309,7 @@ void StaticTriangle::setupDescriptorPool()
     VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &descriptorPool));
 }
 
-void StaticTriangle::setupDescriptorSet()
+void StaticCube::setupDescriptorSet()
 {
     VkDescriptorSetAllocateInfo allocInfo =
         vks::initializers::descriptorSetAllocateInfo(
@@ -290,7 +332,7 @@ void StaticTriangle::setupDescriptorSet()
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
 }
 
-void StaticTriangle::buildCommandBuffers()
+void StaticCube::buildCommandBuffers()
 {
     VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
 
