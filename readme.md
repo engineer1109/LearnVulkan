@@ -1,11 +1,11 @@
 
-# Learn Vulkan
-   Many people know LearnOpenGL https://github.com/JoeyDeVries/LearnOpenGL helps us to learn Computer Graphics a lot. Now the author of LearnOpenGL JoeyDeVries is too busy to complete learnVulkan. So I create this project for communication technology of Vulkan.
+# LearnVulkan
+   This project is based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git).
 
 # Requirements
 ## Supported System:
-   **Now:** Linux
-   **Planned supported:** Mac Android IOS Windows(Mingw)
+   **Now:** Linux(Mainly)  Windows(Partly)
+   **Planned supported:** Mac Android IOS
 ## Libraries
    **Vulkan:** 1.1.121+
    **Glm:** 0.9.9+
