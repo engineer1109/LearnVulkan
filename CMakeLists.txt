@@ -27,6 +27,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include/basicengine)
 include_directories(${PROJECT_SOURCE_DIR}/third_party/gli)
 include_directories(${PROJECT_SOURCE_DIR}/third_party/glm)
 include_directories(${PROJECT_SOURCE_DIR}/third_party/imgui)
+include_directories(${PROJECT_SOURCE_DIR}/third_party/stb_image/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 include(${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake)
