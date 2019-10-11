@@ -9,7 +9,7 @@ This project is mainly faced to GUI engineering applications and advanced backen
    5. Vulkan with CUDA  
    6. Vulkan server rendering with ffmpeg  
     <br>
-## 
+## What is more than SaschaWillems's Project
 This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  <br>
 Use sharelib (libvulkanbase.so, libvulkan_basicengine.so) instead of static lib.  <br>
 For examples of cross-platform api:  
@@ -25,6 +25,8 @@ int main(int argc,char** argv){
     return 1;
 }
 ```
+The libvulkan_basicengine.so also integrates 'stb_image' from LearnOpenGL, supporting jpg and png image loading, and you don't need to generate ktx images for Vulkan Texture now. See 'vulkan_basicengine_texture.h'.
+
 Finally, welcome to clone or fork my project, remember to star if you consider my project is quite good.  
 
 # Requirements
