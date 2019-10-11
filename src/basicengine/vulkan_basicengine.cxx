@@ -162,10 +162,6 @@ void VulkanBasicEngine::initWindow()
 #endif
 
 std::string VulkanBasicEngine::getShaderPath(){
-#ifdef WIN32
-    return "../../data/";
-#else
     return "../data/";
-#endif
 }
 
