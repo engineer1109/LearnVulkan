@@ -57,7 +57,15 @@ If you don't have GLM, GLI, IMGUI, you need "git submodule update --init" first.
     make
     make install
 ```
-The programs will be installed in the ./bin .
+The programs will be installed in the {PROJECT_DIR}/bin .
+## For Windows
+   Compile
+```
+    cmake -G "Visual Studio 14 2015 Win64" -T host=x64 ..
+    cmake --build . --config Release
+    cmake --build . --config Release --target INSTALL
+```
+The programs will be installed in the {PROJECT_DIR}/Release .
 # PLANS
 1. Simple Examples (doing)
 2. Advanced Examples
