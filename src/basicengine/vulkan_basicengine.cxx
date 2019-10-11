@@ -6,6 +6,18 @@ VulkanBasicEngine::VulkanBasicEngine(bool enableValidation):VulkanExampleBase(en
 VulkanBasicEngine::~VulkanBasicEngine(){
 
 }
+
+std::string VulkanBasicEngine::getWindowTitle()
+{
+	std::string device(deviceProperties.deviceName);
+	std::string windowTitle;
+	windowTitle = title + " - " + device;
+	if (!settings.overlay) {
+		windowTitle += " - " + std::to_string(frameCounter) + " fps";
+	}
+	return windowTitle;
+}
+
 #ifdef __unix__
 void VulkanBasicEngine::initWindow(){
     this->setupWindow();
@@ -13,6 +25,7 @@ void VulkanBasicEngine::initWindow(){
 #endif
 
 #ifdef WIN32
+
 VulkanBasicEngine *g_vulkanExample;                                                                        \
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)                        \
 {                                                                                                    \
@@ -23,7 +36,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)    
     return (DefWindowProc(hWnd, uMsg, wParam, lParam));                                                \
 }
 
-HWND VulkanBasicEngine::initWindow()
+void VulkanBasicEngine::initWindow()
 {
     WNDPROC wndproc=WndProc;
     HINSTANCE hinstance = ::GetModuleHandle(NULL);
@@ -75,7 +88,8 @@ HWND VulkanBasicEngine::initWindow()
                 }
                 else
                 {
-                    return nullptr;
+                    window=nullptr;
+                    return;
                 }
             }
         }
@@ -92,7 +106,7 @@ HWND VulkanBasicEngine::initWindow()
     }
     else
     {
-        if(enableWindow){
+        if(m_enableWindow){
             dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
             dwStyle = WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
         }
@@ -136,14 +150,22 @@ HWND VulkanBasicEngine::initWindow()
     {
         printf("Could not create window!\n");
         fflush(stdout);
-        return nullptr;
+        window=nullptr;
+        return;
         exit(1);
     }
 
     ShowWindow(window, SW_SHOW);
     SetForegroundWindow(window);
     SetFocus(window);
-
-    return window;
 }
 #endif
+
+std::string VulkanBasicEngine::getShaderPath(){
+#ifdef WIN32
+    return "../../data/";
+#else
+    return "../data/";
+#endif
+}
+

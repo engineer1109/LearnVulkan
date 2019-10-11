@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 SET(LIB_NAME vulkan_basicengine)
 
 add_definitions(-DSTBI_NO_DDS)
+add_definitions(-DVK_BASICENGINE_EXPORT_API)
+add_definitions(-DSTB_IMAGE_EXPORT_API)
 
 FILE(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*)
 FILE(GLOB HEAD_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*
