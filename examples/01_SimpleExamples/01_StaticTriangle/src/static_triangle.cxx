@@ -264,8 +264,8 @@ void StaticTriangle::preparePipelines()
     pipelineCreateInfo.pStages = shaderStages.data();
 
     //pipelineCreateInfo.subpass=1;
-    shaderStages[0] = loadShader("../data/shaders/01_StaticTriangle/statictriangle.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("../data/shaders/01_StaticTriangle/statictriangle.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(getShaderPath()+"shaders/01_StaticTriangle/statictriangle.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(getShaderPath()+"shaders/01_StaticTriangle/statictriangle.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
 }
 

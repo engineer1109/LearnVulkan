@@ -1,10 +1,10 @@
-#include "static_cube.h"
+#include "multi_imagesampler.h"
 #define VERTEX_BUFFER_BIND_ID 0
-StaticCube::StaticCube(bool debugLayer):VulkanBasicEngine(debugLayer){
+MultiImageSampler::MultiImageSampler(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->zoom=-4.f;
     this->settings.overlay=true;
 }
-StaticCube::~StaticCube(){
+MultiImageSampler::~MultiImageSampler(){
     vkDestroyPipeline(device, m_pipeline, nullptr);
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
@@ -13,9 +13,10 @@ StaticCube::~StaticCube(){
     m_uniformBufferVS.destroy();
 }
 
-void StaticCube::prepare(){
+void MultiImageSampler::prepare(){
     VulkanBasicEngine::prepare();
     generateVertex();
+    loadTexture2D();
     setupVertexDescriptions();
     prepareUniformBuffers();
     setupDescriptorSetLayout();
@@ -26,7 +27,7 @@ void StaticCube::prepare(){
     this->prepared=true;
 }
 
-void StaticCube::render()
+void MultiImageSampler::render()
 {
     if (!prepared)
         return;
@@ -42,7 +43,7 @@ void StaticCube::render()
     }
 }
 
-void StaticCube::draw()
+void MultiImageSampler::draw()
 {
     VulkanBasicEngine::prepareFrame();
     // Command buffer to be sumitted to the queue
@@ -52,7 +53,7 @@ void StaticCube::draw()
     VulkanBasicEngine::submitFrame();
 }
 
-void StaticCube::OnUpdateUIOverlay(vks::UIOverlay *overlay)
+void MultiImageSampler::OnUpdateUIOverlay(vks::UIOverlay *overlay)
 {
     if (overlay->header("Settings")) {
         if (overlay->button("Auto Rotation")) {
@@ -61,51 +62,51 @@ void StaticCube::OnUpdateUIOverlay(vks::UIOverlay *overlay)
      }
 }
 
-void StaticCube::generateVertex(){
+void MultiImageSampler::generateVertex(){
     // Setup vertices for a single uv-mapped quad made from two triangles
     std::vector<Vertex> vertices =
     {
 
        { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
        { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
        { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
        { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
 
-       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+
+       { {  1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
        { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
        { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+
+       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
 
        { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
        { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
 
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
        { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
        { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-
-       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
        { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
     };
 
@@ -134,7 +135,11 @@ void StaticCube::generateVertex(){
         indices.data()));
 }
 
-void StaticCube::setupVertexDescriptions()
+void MultiImageSampler::loadTexture2D(){
+    m_texture.loadFromFile("../data/textures/awesomeface.png",VK_FORMAT_R8G8B8A8_UNORM,vulkanDevice,queue);
+}
+
+void MultiImageSampler::setupVertexDescriptions()
 {
     // Binding description
     m_vertices.inputBinding.resize(1);
@@ -181,7 +186,7 @@ void StaticCube::setupVertexDescriptions()
     m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.inputAttributes.data();
 }
 
-void StaticCube::prepareUniformBuffers()
+void MultiImageSampler::prepareUniformBuffers()
 {
     // Vertex shader uniform buffer block
     VK_CHECK_RESULT(vulkanDevice->createBuffer(
@@ -194,7 +199,7 @@ void StaticCube::prepareUniformBuffers()
     updateUniformBuffers(true);
 }
 
-void StaticCube::updateUniformBuffers(bool viewchanged)
+void MultiImageSampler::updateUniformBuffers(bool viewchanged)
 {
     if (viewchanged)
     {
@@ -208,7 +213,7 @@ void StaticCube::updateUniformBuffers(bool viewchanged)
     memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
 }
 
-void StaticCube::setupDescriptorSetLayout()
+void MultiImageSampler::setupDescriptorSetLayout()
 {
     std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings =
     {
@@ -217,6 +222,11 @@ void StaticCube::setupDescriptorSetLayout()
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             VK_SHADER_STAGE_VERTEX_BIT,
             0),
+        // Binding 1 : Fragment shader image sampler
+        vks::initializers::descriptorSetLayoutBinding(
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+            VK_SHADER_STAGE_FRAGMENT_BIT,
+            1)
     };
 
     VkDescriptorSetLayoutCreateInfo descriptorLayout =
@@ -234,7 +244,7 @@ void StaticCube::setupDescriptorSetLayout()
     VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout));
 }
 
-void StaticCube::preparePipelines()
+void MultiImageSampler::preparePipelines()
 {
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState =
         vks::initializers::pipelineInputAssemblyStateCreateInfo(
@@ -305,12 +315,12 @@ void StaticCube::preparePipelines()
     pipelineCreateInfo.pStages = shaderStages.data();
 
     //pipelineCreateInfo.subpass=1;
-    shaderStages[0] = loadShader(getShaderPath()+"shaders/01_StaticTriangle/statictriangle.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(getShaderPath()+"shaders/01_StaticTriangle/statictriangle.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(getShaderPath()+"shaders/03_Texture2dCube/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(getShaderPath()+"shaders/03_Texture2dCube/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
 }
 
-void StaticCube::setupDescriptorPool()
+void MultiImageSampler::setupDescriptorPool()
 {
     // Example uses one ubo and one image sampler
     std::vector<VkDescriptorPoolSize> poolSizes =
@@ -327,7 +337,7 @@ void StaticCube::setupDescriptorPool()
     VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &descriptorPool));
 }
 
-void StaticCube::setupDescriptorSet()
+void MultiImageSampler::setupDescriptorSet()
 {
     VkDescriptorSetAllocateInfo allocInfo =
         vks::initializers::descriptorSetAllocateInfo(
@@ -345,12 +355,19 @@ void StaticCube::setupDescriptorSet()
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             0,
             &m_uniformBufferVS.descriptor),
+        // Binding 1 : Fragment shader texture sampler
+        //	Fragment shader: layout (binding = 1) uniform sampler2D samplerColor;
+        vks::initializers::writeDescriptorSet(
+            m_descriptorSet,
+            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// The descriptor set will use a combined image sampler (sampler and image could be split)
+            1,												// Shader binding point 1
+            &m_texture.descriptor)
     };
 
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
 }
 
-void StaticCube::buildCommandBuffers()
+void MultiImageSampler::buildCommandBuffers()
 {
     VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
 
@@ -398,10 +415,9 @@ void StaticCube::buildCommandBuffers()
     vkQueueWaitIdle(queue);
 }
 
-void StaticCube::startAutoRotation(){
+void MultiImageSampler::startAutoRotation(){
     if(m_autoRotation){
         m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 }
-
 

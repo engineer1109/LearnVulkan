@@ -1,3 +1,4 @@
 add_subdirectory(01_StaticTriangle)
 add_subdirectory(02_StaticCube)
 add_subdirectory(03_Texture2dCube)
+add_subdirectory(04_MultiImageSampler)

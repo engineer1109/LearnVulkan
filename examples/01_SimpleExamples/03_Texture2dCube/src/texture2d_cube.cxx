@@ -315,8 +315,8 @@ void Texture2dCube::preparePipelines()
     pipelineCreateInfo.pStages = shaderStages.data();
 
     //pipelineCreateInfo.subpass=1;
-    shaderStages[0] = loadShader("../data/shaders/03_Texture2dCube/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("../data/shaders/03_Texture2dCube/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(getShaderPath()+"shaders/03_Texture2dCube/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(getShaderPath()+"shaders/03_Texture2dCube/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
 }
 
