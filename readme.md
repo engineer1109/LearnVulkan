@@ -25,7 +25,8 @@ int main(int argc,char** argv){
     return 1;
 }
 ```
-The libvulkan_basicengine.so also integrates 'stb_image' from LearnOpenGL, supporting jpg and png image loading, and you don't need to generate ktx images for Vulkan Texture now. See 'vulkan_basicengine_texture.h'.
+![image](https://github.com/engineer1109/LearnVulkan/blob/master/data/gif/output.gif)
+The libvulkan_basicengine.so also integrates 'stb_image' from [https://github.com/JoeyDeVries/LearnOpenGL](https://github.com/SaschaWillems/Vulkan.git), supporting jpg and png image loading, and you don't need to generate ktx images for Vulkan Texture now. See 'vulkan_basicengine_texture.h'.
 
 Finally, welcome to clone or fork my project, remember to star if you consider my project is quite good.  
 
