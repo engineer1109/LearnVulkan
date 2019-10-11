@@ -47,6 +47,7 @@ Finally, welcome to clone or fork my project, remember to star if you consider m
    GCC 7+   using -std=c++17
    MSVC 2017
 # Compile & BUILD
+## For Linux/UNIX
 If you don't have GLM, GLI, IMGUI, you need "git submodule update --init" first.
 ```
    git submodule update --init
