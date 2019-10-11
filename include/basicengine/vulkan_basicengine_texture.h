@@ -1,7 +1,7 @@
 #ifndef VULKAN_BASICENGINE_TEXTURE_H
 #define VULKAN_BASICENGINE_TEXTURE_H
 #include "VulkanTexture.hpp"
-#include "stb_image.h"
+#include "stb_image_aug.h"
 namespace vks {
 
 struct Texture2DStbImage: public Texture2D{

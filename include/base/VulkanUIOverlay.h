@@ -22,6 +22,8 @@
 #include "VulkanBuffer.hpp"
 #include "VulkanDevice.hpp"
 
+#include "vulkanexamplebase_def.h"
+
 #include "imgui.h"
 
 #if defined(__ANDROID__)
@@ -30,7 +32,7 @@
 
 namespace vks 
 {
-	class UIOverlay 
+	class VK_BASE_EXPORT UIOverlay 
 	{
 	public:
 		vks::VulkanDevice *device;

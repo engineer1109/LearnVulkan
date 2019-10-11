@@ -10,6 +10,7 @@
 
 #include "vulkan/vulkan.h"
 #include "VulkanInitializers.hpp"
+#include "vulkanexamplebase_def.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -70,20 +71,20 @@ namespace vks
 	namespace tools
 	{
 		/** @brief Disable message boxes on fatal errors */
-		extern bool errorModeSilent;
+		VK_BASE_EXPORT extern bool errorModeSilent;
 
 		/** @brief Returns an error code as a string */
-		std::string errorString(VkResult errorCode);
+		VK_BASE_EXPORT std::string errorString(VkResult errorCode);
 
 		/** @brief Returns the device type as a string */
-		std::string physicalDeviceTypeString(VkPhysicalDeviceType type);
+		VK_BASE_EXPORT std::string physicalDeviceTypeString(VkPhysicalDeviceType type);
 
 		// Selected a suitable supported depth format starting with 32 bit down to 16 bit
 		// Returns false if none of the depth formats in the list is supported by the device
-		VkBool32 getSupportedDepthFormat(VkPhysicalDevice physicalDevice, VkFormat *depthFormat);
+		VK_BASE_EXPORT VkBool32 getSupportedDepthFormat(VkPhysicalDevice physicalDevice, VkFormat *depthFormat);
 
 		// Put an image memory barrier for setting an image layout on the sub resource into the given command buffer
-		void setImageLayout(
+		VK_BASE_EXPORT void setImageLayout(
 			VkCommandBuffer cmdbuffer,
 			VkImage image,
 			VkImageLayout oldImageLayout,
@@ -92,7 +93,7 @@ namespace vks
 			VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
 			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 		// Uses a fixed sub resource layout with first mip level and layer
-		void setImageLayout(
+		VK_BASE_EXPORT void setImageLayout(
 			VkCommandBuffer cmdbuffer,
 			VkImage image,
 			VkImageAspectFlags aspectMask,
@@ -102,7 +103,7 @@ namespace vks
 			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
 		/** @brief Inser an image memory barrier into the command buffer */
-		void insertImageMemoryBarrier(
+		VK_BASE_EXPORT void insertImageMemoryBarrier(
 			VkCommandBuffer cmdbuffer,
 			VkImage image,
 			VkAccessFlags srcAccessMask,
@@ -114,17 +115,17 @@ namespace vks
 			VkImageSubresourceRange subresourceRange);
 
 		// Display error message and exit on fatal error
-		void exitFatal(std::string message, int32_t exitCode);
-		void exitFatal(std::string message, VkResult resultCode);
+		VK_BASE_EXPORT void exitFatal(std::string message, int32_t exitCode);
+		VK_BASE_EXPORT void exitFatal(std::string message, VkResult resultCode);
 
 		// Load a SPIR-V shader (binary) 
 #if defined(__ANDROID__)
-		VkShaderModule loadShader(AAssetManager* assetManager, const char *fileName, VkDevice device);
+		VK_BASE_EXPORT VkShaderModule loadShader(AAssetManager* assetManager, const char *fileName, VkDevice device);
 #else
-		VkShaderModule loadShader(const char *fileName, VkDevice device);
+		VK_BASE_EXPORT VkShaderModule loadShader(const char *fileName, VkDevice device);
 #endif
 
 		/** @brief Checks if a file exists */
-		bool fileExists(const std::string &filename);
+		VK_BASE_EXPORT bool fileExists(const std::string &filename);
 	}
 }

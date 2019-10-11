@@ -9,7 +9,7 @@
 #pragma once
 
 #ifdef _WIN32
-#pragma comment(linker, "/subsystem:windows")
+#pragma comment(linker, "/subsystem:console")
 #include <windows.h>
 #include <fcntl.h>
 #include <io.h>
@@ -54,7 +54,9 @@
 #include "camera.hpp"
 #include "benchmark.hpp"
 
-class VulkanExampleBase
+#include "vulkanexamplebase_def.h"
+
+class VK_BASE_EXPORT VulkanExampleBase
 {
 private:	
 	// Get window title with example name, device, et.
