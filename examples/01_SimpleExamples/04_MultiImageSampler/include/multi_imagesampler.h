@@ -1,5 +1,8 @@
 #ifndef STATIC_TRIANGLE_H
 #define STATIC_TRIANGLE
+#ifdef WIN32
+    #define gli glm
+#endif
 #include "vulkan_basicengine.h"
 #include "vulkan_basicengine_texture.h"
 class MultiImageSampler:public VulkanBasicEngine{
