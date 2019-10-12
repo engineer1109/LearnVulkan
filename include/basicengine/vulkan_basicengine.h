@@ -11,6 +11,7 @@ public:
     
     std::string getWindowTitle();
     virtual void initWindow();
+    virtual void setWindow(uint32_t window);
 
     void* getWindowPtr(){return m_window;}
     void setWindowFrameVisible(bool value){m_enableWindow=value;}
