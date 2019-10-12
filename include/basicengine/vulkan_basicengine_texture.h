@@ -1,5 +1,8 @@
 #ifndef VULKAN_BASICENGINE_TEXTURE_H
 #define VULKAN_BASICENGINE_TEXTURE_H
+#ifdef WIN32
+    #define gli glm
+#endif
 #include "VulkanTexture.hpp"
 #include "stb_image_aug.h"
 namespace vks {
