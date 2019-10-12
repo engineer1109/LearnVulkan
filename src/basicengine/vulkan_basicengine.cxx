@@ -22,6 +22,11 @@ std::string VulkanBasicEngine::getWindowTitle()
 void VulkanBasicEngine::initWindow(){
     this->setupWindow();
 }
+
+void VulkanBasicEngine::setWindow(uint32_t window){
+    this->window=window;
+    xcb_map_window(connection,window);
+}
 #endif
 
 #ifdef WIN32
