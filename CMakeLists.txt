@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 MESSAGE(STATUS "operation system is ${CMAKE_SYSTEM}")
-project(learnVulkan)
+project(LearnVulkan)
 
 include(${PROJECT_SOURCE_DIR}/cmake/Config.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/GCC.cmake)
