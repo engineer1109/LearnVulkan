@@ -1,1 +1,2 @@
 add_subdirectory(01_SimpleExamples)
+add_subdirectory(03_QVulkan)
