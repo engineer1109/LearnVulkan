@@ -284,7 +284,7 @@ void VulkanExampleBase::renderLoop()
 #if defined(_WIN32)
 	MSG msg;
 	bool quitMessageReceived = false;
-	while (!quitMessageReceived) {
+    while (!quitMessageReceived) {
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
