@@ -24,6 +24,9 @@ public:
     std::string getShaderPath();
 
     void quitRender();
+    void qtPreRender();
+    void qtRender();
+    void afterRender();
 protected:
 
 private:

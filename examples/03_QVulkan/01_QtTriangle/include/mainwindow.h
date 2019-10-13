@@ -27,6 +27,7 @@ private:
 private slots:
     void on_pushButton_pressed();
     void disableRotate();
+    void pressButton();
 
 private:
     Ui::MainWindow *ui;

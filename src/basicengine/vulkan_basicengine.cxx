@@ -463,3 +463,59 @@ void VulkanBasicEngine::quitRender(){
     this->m_quit=true;
 }
 
+void VulkanBasicEngine::qtPreRender(){
+    destWidth = width;
+    destHeight = height;
+    lastTimestamp = std::chrono::high_resolution_clock::now();
+}
+
+void VulkanBasicEngine::qtRender(){
+    //while (!quit and !m_quit)
+    //{
+        auto tStart = std::chrono::high_resolution_clock::now();
+        if (viewUpdated)
+        {
+            viewUpdated = false;
+            viewChanged();
+        }
+        //xcb_generic_event_t *event;
+        //while ((event = xcb_poll_for_event(connection)))
+        //{
+        //    handleEvent(event);
+        //    free(event);
+        //}
+        render();
+        frameCounter++;
+        auto tEnd = std::chrono::high_resolution_clock::now();
+        auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+        frameTimer = tDiff / 1000.0f;
+        camera.update(frameTimer);
+        if (camera.moving())
+        {
+            viewUpdated = true;
+        }
+        // Convert to clamped timer value
+        if (!paused)
+        {
+            timer += timerSpeed * frameTimer;
+            if (timer > 1.0)
+            {
+                timer -= 1.0f;
+            }
+        }
+        float fpsTimer = std::chrono::duration<double, std::milli>(tEnd - lastTimestamp).count();
+        if (fpsTimer > 1000.0f)
+        {
+            lastFPS = (float)frameCounter * (1000.0f / fpsTimer);
+            frameCounter = 0;
+            lastTimestamp = tEnd;
+        }
+        updateOverlay();
+    //}
+}
+
+void VulkanBasicEngine::afterRender(){
+    if (device != VK_NULL_HANDLE) {
+        vkDeviceWaitIdle(device);
+    }
+}
