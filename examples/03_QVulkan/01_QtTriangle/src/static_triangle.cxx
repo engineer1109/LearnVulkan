@@ -363,3 +363,11 @@ void StaticTriangle::startAutoRotation(){
     }
 }
 
+void StaticTriangle::renderAsyncThread(){
+    m_thread=new std::thread(&StaticTriangle::renderLoop,this);
+}
+
+void StaticTriangle::renderJoin(){
+    m_thread->join();
+}
+

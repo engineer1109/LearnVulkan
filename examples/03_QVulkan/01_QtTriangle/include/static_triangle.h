@@ -5,12 +5,16 @@ class StaticTriangle:public VulkanBasicEngine{
 public:
     StaticTriangle(bool debugLayer);
     ~StaticTriangle();
-
+public:
     virtual void prepare();
     virtual void render();
     virtual void draw();
 
     virtual void OnUpdateUIOverlay(vks::UIOverlay *overlay);
+
+    void enableAutoRotation(bool value=true){m_autoRotation=value;}
+    void renderAsyncThread();
+    void renderJoin();
 private:
     void generateVertex();
     void setupVertexDescriptions();
@@ -47,7 +51,7 @@ private:
     VkPipeline m_pipeline=VK_NULL_HANDLE;
     uint32_t m_indexCount=0;
     bool m_autoRotation=false;
-
+    std::thread* m_thread;
 };
 
 #endif

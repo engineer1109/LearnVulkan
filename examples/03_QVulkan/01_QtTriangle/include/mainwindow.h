@@ -16,16 +16,23 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+protected:
+    void showEvent(QShowEvent *event);
+    void closeEvent(QCloseEvent *event);
 
 private:
-    void render();
+    void vkRender();
+    void eventLoop();
 
 private slots:
-    void on_button_render_pressed();
+    void on_pushButton_pressed();
+    void disableRotate();
 
 private:
     Ui::MainWindow *ui;
     StaticTriangle* m_pStatictriangle;
     std::thread* m_thread;
+    bool m_quitRender=false;
+    bool m_rotate=false;
 };
 #endif
