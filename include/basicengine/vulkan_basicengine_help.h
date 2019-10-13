@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <ciso646>
 #if defined(__GNUC__) && __GNUC__ > 7
     #include <filesystem>
 #else
