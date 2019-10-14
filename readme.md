@@ -59,6 +59,10 @@ If you don't have GLM, GLI, IMGUI, you need "git submodule update --init" first.
     make install
 ```
 The programs will be installed in the {PROJECT_DIR}/bin .
+### For Qt
+```
+    cmake .. -DBUILD_QtExamples=ON
+```
 ## For Windows
    Compile
 ```
