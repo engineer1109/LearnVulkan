@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <thread>
 #include <QMainWindow>
 
 namespace Ui {
@@ -22,17 +21,13 @@ protected:
 
 private:
     void vkRender();
-    void eventLoop();
 
 private slots:
-    void on_pushButton_pressed();
-    void disableRotate();
-    void pressButton();
+    void setAutoRotate();
 
 private:
-    Ui::MainWindow *ui;
-    StaticTriangle* m_pStatictriangle;
-    std::thread* m_thread;
+    Ui::MainWindow *ui=nullptr;
+    StaticTriangle* m_pStatictriangle=nullptr;
     bool m_quitRender=false;
     bool m_rotate=false;
 };

@@ -7,6 +7,6 @@ FILE(GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.ui)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_executable(${LEARN_VULKAN_PROJECT} ${SRC_FILES} ${HEAD_FILES} ${UI_FILES})
 
-TARGET_LINK_LIBRARIES(${LEARN_VULKAN_PROJECT} Qt5::Widgets Qt5::Core Qt5::X11Extras vulkan_basicengine vulkanbase)
+TARGET_LINK_LIBRARIES(${LEARN_VULKAN_PROJECT} Qt5::Widgets Qt5::Core vulkan_basicengine vulkanbase)
 
 set_property(TARGET ${LEARN_VULKAN_PROJECT} PROPERTY CXX_STANDARD 17)

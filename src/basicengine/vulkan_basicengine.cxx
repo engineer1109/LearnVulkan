@@ -23,13 +23,18 @@ void VulkanBasicEngine::initWindow(){
     this->setupWindow();
 }
 
-void VulkanBasicEngine::setWindow(uint32_t window,xcb_connection_t* connection){
+void VulkanBasicEngine::setWindow(uint32_t window){
     this->window=window;
     xcb_map_window(connection,window);
 }
 #endif
 
 #ifdef WIN32
+
+void VulkanBasicEngine::setWindow(uint32_t window){
+    this->window=(HWND)window;
+    this->windowInstance = ::GetModuleHandle(NULL);
+}
 
 VulkanBasicEngine *g_vulkanExample;                                                                        \
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)                        \
@@ -463,13 +468,13 @@ void VulkanBasicEngine::quitRender(){
     this->m_quit=true;
 }
 
-void VulkanBasicEngine::qtPreRender(){
+void VulkanBasicEngine::preRender(){
     destWidth = width;
     destHeight = height;
     lastTimestamp = std::chrono::high_resolution_clock::now();
 }
 
-void VulkanBasicEngine::qtRender(){
+void VulkanBasicEngine::singleRender(){
     //while (!quit and !m_quit)
     //{
         auto tStart = std::chrono::high_resolution_clock::now();

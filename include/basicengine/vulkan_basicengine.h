@@ -11,11 +11,7 @@ public:
     
     std::string getWindowTitle();
     virtual void initWindow();
-#ifdef __unix__
-    virtual void setWindow(uint32_t window,xcb_connection_t* connection);
-#elif WIN32
     virtual void setWindow(uint32_t window);
-#endif
     virtual void renderLoop();
 
     void* getWindowPtr(){return m_window;}
@@ -24,8 +20,8 @@ public:
     std::string getShaderPath();
 
     void quitRender();
-    void qtPreRender();
-    void qtRender();
+    void preRender();
+    void singleRender();
     void afterRender();
 protected:
 
