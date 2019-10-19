@@ -1,4 +1,5 @@
 #include "vkCube.h"
+#define VERTEX_BUFFER_BIND_ID 0
 VkCube::VkCube(){
 
 }
@@ -92,4 +93,51 @@ void VkCube::generateVertex(){
         &m_indexBuffer,
         indices.size() * sizeof(uint32_t),
         indices.data()));
+}
+
+void VkCube::setupVertexDescriptions()
+{
+    // Binding description
+    m_vertices.inputBinding.resize(1);
+    m_vertices.inputBinding[0] =
+    vks::initializers::vertexInputBindingDescription(
+        VERTEX_BUFFER_BIND_ID,
+        sizeof(Vertex),
+        VK_VERTEX_INPUT_RATE_VERTEX);
+//    vertices.inputBinding[1] =
+//    vks::initializers::vertexInputBindingDescription(
+//        VERTEX_BUFFER_BIND_ID,
+//        sizeof(Vertex),
+//        VK_VERTEX_INPUT_RATE_VERTEX);
+
+    // Attribute descriptions
+    // Describes memory layout and shader positions
+    m_vertices.inputAttributes.resize(3);
+    // Location 0 : Position
+    m_vertices.inputAttributes[0] =
+    vks::initializers::vertexInputAttributeDescription(
+        VERTEX_BUFFER_BIND_ID,
+        0,
+        VK_FORMAT_R32G32B32_SFLOAT,
+        offsetof(Vertex, pos));
+    // Location 1 : Texture coordinates
+    m_vertices.inputAttributes[1] =
+    vks::initializers::vertexInputAttributeDescription(
+        VERTEX_BUFFER_BIND_ID,
+        1,
+        VK_FORMAT_R32G32_SFLOAT,
+        offsetof(Vertex, uv));
+    // Location 1 : Vertex normal
+    m_vertices.inputAttributes[2] =
+    vks::initializers::vertexInputAttributeDescription(
+        VERTEX_BUFFER_BIND_ID,
+        2,
+        VK_FORMAT_R32G32B32_SFLOAT,
+        offsetof(Vertex, normal));
+
+    m_vertices.inputState = vks::initializers::pipelineVertexInputStateCreateInfo();
+    m_vertices.inputState.vertexBindingDescriptionCount = static_cast<uint32_t>(m_vertices.inputBinding.size());
+    m_vertices.inputState.pVertexBindingDescriptions = m_vertices.inputBinding.data();
+    m_vertices.inputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(m_vertices.inputAttributes.size());
+    m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.inputAttributes.data();
 }

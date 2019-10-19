@@ -39,6 +39,7 @@ public:
     void create();
 private:
     void generateVertex();
+    void setupVertexDescriptions();
 private:
     vks::VulkanDevice* m_vulkanDevice=nullptr;
     VkDevice m_device=VK_NULL_HANDLE;
