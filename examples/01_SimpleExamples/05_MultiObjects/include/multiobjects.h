@@ -5,6 +5,8 @@
 #endif
 #include "vulkan_basicengine.h"
 #include "vulkan_basicengine_texture.h"
+class VkCube;
+
 class MultiImageSampler:public VulkanBasicEngine{
 public:
     MultiImageSampler(bool debugLayer);
@@ -16,6 +18,7 @@ public:
 
     virtual void OnUpdateUIOverlay(vks::UIOverlay *overlay);
 private:
+    void createObjects();
     void generateVertex();
     void loadTexture2D();
     void setupVertexDescriptions();
@@ -54,6 +57,7 @@ private:
     VkPipeline m_pipeline=VK_NULL_HANDLE;
     uint32_t m_indexCount=0;
     bool m_autoRotation=false;
+    std::vector<VkCube*> m_vkCubeList;
 };
 
 #endif

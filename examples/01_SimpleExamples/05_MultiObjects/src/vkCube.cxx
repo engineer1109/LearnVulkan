@@ -4,9 +4,13 @@ VkCube::VkCube(){
 
 }
 VkCube::~VkCube(){
-
+    m_textureA.destroy();
+    m_textureB.destroy();
+    m_vertexBuffer.destroy();
+    m_indexBuffer.destroy();
+    m_uniformBufferVS.destroy();
 }
-void VkCube::setDeviceInfo(VkObjectInfo info){
+void VkCube::setObjectInfo(ObjectInfo info){
     this->m_vulkanDevice=info.vulkanDevice;
     this->m_device=this->m_vulkanDevice->logicalDevice;
     this->m_physicalDevice=this->m_vulkanDevice->physicalDevice;
@@ -19,8 +23,15 @@ void VkCube::setDeviceInfo(VkObjectInfo info){
     this->m_queue=info.queue;
 }
 
+void VkCube::setCamera(ObjectCamera camera){
+    m_camera=camera;
+}
+
 void VkCube::create(){
     generateVertex();
+    setupVertexDescriptions();
+    loadTexture2D();
+    prepareUniformBuffers();
 }
 
 void VkCube::generateVertex(){
@@ -146,4 +157,31 @@ void VkCube::setupVertexDescriptions()
 void VkCube::loadTexture2D(){
     m_textureA.loadFromFile("../data/textures/awesomeface.png",VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
     m_textureB.loadFromFile("../data/textures/container.png",VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
+}
+
+void VkCube::prepareUniformBuffers()
+{
+    // Vertex shader uniform buffer block
+    VK_CHECK_RESULT(m_vulkanDevice->createBuffer(
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        &m_uniformBufferVS,
+        sizeof(m_uboVS),
+        &m_uboVS));
+    VK_CHECK_RESULT(m_uniformBufferVS.map());
+    updateUniformBuffers(true);
+}
+
+void VkCube::updateUniformBuffers(bool viewchanged)
+{
+    if (viewchanged)
+    {
+        m_uboVS.projection = glm::perspective(glm::radians(60.0f), float(*m_screenWitdh) / float(*m_screenHeight), 0.001f, 256.0f);
+        glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, *m_camera.zoom));
+        m_uboVS.model = viewMatrix * glm::translate(glm::mat4(1.0f), *m_camera.cameraPos);
+        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_camera.rotation->x), glm::vec3(1.0f, 0.0f, 0.0f));
+        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_camera.rotation->y), glm::vec3(0.0f, 1.0f, 0.0f));
+        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_camera.rotation->z), glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+    memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
 }

@@ -1,4 +1,5 @@
 #include "multiobjects.h"
+#include "vkCube.h"
 #define VERTEX_BUFFER_BIND_ID 0
 MultiImageSampler::MultiImageSampler(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->zoom=-4.f;
@@ -27,6 +28,30 @@ void MultiImageSampler::prepare(){
     setupDescriptorSet();
     buildCommandBuffers();
     this->prepared=true;
+}
+
+void MultiImageSampler::createObjects(){
+    VkCube::ObjectInfo objectinfo;
+    objectinfo.vulkanDevice=vulkanDevice;
+    objectinfo.instance=instance;
+    objectinfo.cmdPool=cmdPool;
+    objectinfo.pipelineLayout=m_pipelineLayout;
+    objectinfo.pipelineCache=pipelineCache;
+    objectinfo.renderPass=renderPass;
+    objectinfo.queue=queue;
+    objectinfo.screenWitdh=&width;
+    objectinfo.screenHeight=&height;
+
+    VkCube::ObjectCamera camera;
+    camera.zoom=&zoom;
+    camera.rotation=&rotation;
+    camera.cameraPos=&cameraPos;
+    m_vkCubeList.resize(1);
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        m_vkCubeList[i]=new VkCube();
+        m_vkCubeList[i]->setObjectInfo(objectinfo);
+        m_vkCubeList[i]->setCamera(camera);
+    }
 }
 
 void MultiImageSampler::render()
