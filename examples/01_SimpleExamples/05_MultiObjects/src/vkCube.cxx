@@ -16,6 +16,7 @@ void VkCube::setDeviceInfo(VkObjectInfo info){
     this->m_pipelineCache=info.pipelineCache;
     this->m_pipelineLayout=info.pipelineLayout;
     this->m_renderPass=info.renderPass;
+    this->m_queue=info.queue;
 }
 
 void VkCube::create(){
@@ -140,4 +141,9 @@ void VkCube::setupVertexDescriptions()
     m_vertices.inputState.pVertexBindingDescriptions = m_vertices.inputBinding.data();
     m_vertices.inputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(m_vertices.inputAttributes.size());
     m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.inputAttributes.data();
+}
+
+void VkCube::loadTexture2D(){
+    m_textureA.loadFromFile("../data/textures/awesomeface.png",VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
+    m_textureB.loadFromFile("../data/textures/container.png",VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
 }

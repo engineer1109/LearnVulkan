@@ -5,6 +5,7 @@ Texture2dCube::Texture2dCube(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->settings.overlay=true;
 }
 Texture2dCube::~Texture2dCube(){
+    m_texture.destroy();
     vkDestroyPipeline(device, m_pipeline, nullptr);
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
@@ -326,6 +327,7 @@ void Texture2dCube::setupDescriptorPool()
     std::vector<VkDescriptorPoolSize> poolSizes =
     {
         vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1),
+        vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1),
     };
 
     VkDescriptorPoolCreateInfo descriptorPoolInfo =

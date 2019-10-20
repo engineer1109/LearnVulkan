@@ -5,6 +5,7 @@
 #include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
 #include "VulkanDevice.hpp"
+#include <vulkan_basicengine_texture.h>
 class VkCube{
 public:
     VkCube();
@@ -17,6 +18,7 @@ public:
         VkPipelineLayout pipelineLayout=VK_NULL_HANDLE;
         VkPipelineCache pipelineCache=VK_NULL_HANDLE;
         VkRenderPass renderPass=VK_NULL_HANDLE;
+        VkQueue queue=VK_NULL_HANDLE;
         int* screenWitdh=nullptr;
         int* screenHeight=nullptr;
     };
@@ -40,6 +42,7 @@ public:
 private:
     void generateVertex();
     void setupVertexDescriptions();
+    void loadTexture2D();
 private:
     vks::VulkanDevice* m_vulkanDevice=nullptr;
     VkDevice m_device=VK_NULL_HANDLE;
@@ -49,11 +52,14 @@ private:
     VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
     VkPipelineCache m_pipelineCache=VK_NULL_HANDLE;
     VkRenderPass m_renderPass=VK_NULL_HANDLE;
+    VkQueue m_queue=VK_NULL_HANDLE;
     int* screenWitdh=nullptr;
     int* screenHeight=nullptr;
     vks::Buffer m_vertexBuffer;
     vks::Buffer m_indexBuffer;
     vks::Buffer m_uniformBufferVS;
+    vks::Texture2DStbImage m_textureA;
+    vks::Texture2DStbImage m_textureB;
     uint32_t m_indexCount=0;
 };
 #endif

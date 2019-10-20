@@ -5,6 +5,8 @@ MultiImageSampler::MultiImageSampler(bool debugLayer):VulkanBasicEngine(debugLay
     this->settings.overlay=true;
 }
 MultiImageSampler::~MultiImageSampler(){
+    m_textureA.destroy();
+    m_textureB.destroy();
     vkDestroyPipeline(device, m_pipeline, nullptr);
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
@@ -328,10 +330,10 @@ void MultiImageSampler::preparePipelines()
 
 void MultiImageSampler::setupDescriptorPool()
 {
-    // Example uses one ubo and one image sampler
     std::vector<VkDescriptorPoolSize> poolSizes =
     {
         vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1),
+        vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 2),
     };
 
     VkDescriptorPoolCreateInfo descriptorPoolInfo =
