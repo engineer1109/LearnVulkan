@@ -6,22 +6,19 @@ MultiImageSampler::MultiImageSampler(bool debugLayer):VulkanBasicEngine(debugLay
     this->settings.overlay=true;
 }
 MultiImageSampler::~MultiImageSampler(){
-    m_textureA.destroy();
-    m_textureB.destroy();
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        delete m_vkCubeList[i];
+        m_vkCubeList[i]=nullptr;
+    }
     vkDestroyPipeline(device, m_pipeline, nullptr);
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
-    m_vertexBuffer.destroy();
-    m_indexBuffer.destroy();
-    m_uniformBufferVS.destroy();
 }
 
 void MultiImageSampler::prepare(){
     VulkanBasicEngine::prepare();
-    generateVertex();
-    loadTexture2D();
+    createObjects();
     setupVertexDescriptions();
-    prepareUniformBuffers();
     setupDescriptorSetLayout();
     preparePipelines();
     setupDescriptorPool();
@@ -51,6 +48,7 @@ void MultiImageSampler::createObjects(){
         m_vkCubeList[i]=new VkCube();
         m_vkCubeList[i]->setObjectInfo(objectinfo);
         m_vkCubeList[i]->setCamera(camera);
+        m_vkCubeList[i]->create();
     }
 }
 
@@ -65,7 +63,8 @@ void MultiImageSampler::render()
         vkDeviceWaitIdle(device);
     }
     if (!paused || camera.updated){
-        updateUniformBuffers(camera.updated);
+        //updateUniformBuffers(camera.updated);
+        m_vkCubeList[0]->update();
         startAutoRotation();
     }
 }
@@ -350,7 +349,7 @@ void MultiImageSampler::preparePipelines()
     //pipelineCreateInfo.subpass=1;
     shaderStages[0] = loadShader(getShaderPath()+"shaders/04_MultiImageSampler/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader(getShaderPath()+"shaders/04_MultiImageSampler/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
-    VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
+    VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_vkCubeList[0]->m_pipeline));
 }
 
 void MultiImageSampler::setupDescriptorPool()
@@ -387,21 +386,21 @@ void MultiImageSampler::setupDescriptorSet()
             m_descriptorSet,
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             0,
-            &m_uniformBufferVS.descriptor),
+            &m_vkCubeList[0]->m_uniformBufferVS.descriptor),
         // Binding 1 : Fragment shader texture sampler
         //	Fragment shader: layout (binding = 1) uniform sampler2D samplerColor;
         vks::initializers::writeDescriptorSet(
             m_descriptorSet,
             VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// The descriptor set will use a combined image sampler (sampler and image could be split)
             1,												// Shader binding point 1
-            &m_textureA.descriptor),
+            &m_vkCubeList[0]->m_textureA.descriptor),
         // Binding 2 : Fragment shader texture sampler
         //	Fragment shader: layout (binding = 2) uniform sampler2D samplerColor;
         vks::initializers::writeDescriptorSet(
             m_descriptorSet,
             VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
             2,
-            &m_textureB.descriptor)
+            &m_vkCubeList[0]->m_textureB.descriptor)
     };
 
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
@@ -442,10 +441,7 @@ void MultiImageSampler::buildCommandBuffers()
         vkCmdSetViewport(drawCmdBuffers[i], 0, 8, &viewports);
         vkCmdSetScissor(drawCmdBuffers[i], 0, 8, &scissorRects);
 
-        vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
-        vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1,&m_vertexBuffer.buffer, offsets);
-        vkCmdBindIndexBuffer(drawCmdBuffers[i], m_indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
-        vkCmdDrawIndexed(drawCmdBuffers[i], m_indexCount, 1, 0, 0, 0);
+        m_vkCubeList[0]->build(drawCmdBuffers[i]);
 
         drawUI(drawCmdBuffers[i]);
 

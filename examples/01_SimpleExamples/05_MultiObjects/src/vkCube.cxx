@@ -21,6 +21,8 @@ void VkCube::setObjectInfo(ObjectInfo info){
     this->m_pipelineLayout=info.pipelineLayout;
     this->m_renderPass=info.renderPass;
     this->m_queue=info.queue;
+    this->m_screenWidth=info.screenWitdh;
+    this->m_screenHeight=info.screenHeight;
 }
 
 void VkCube::setCamera(ObjectCamera camera){
@@ -32,6 +34,18 @@ void VkCube::create(){
     setupVertexDescriptions();
     loadTexture2D();
     prepareUniformBuffers();
+}
+
+void VkCube::build(VkCommandBuffer cmd){
+    VkDeviceSize offsets[1] = { 0 };
+    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
+    vkCmdBindVertexBuffers(cmd, VERTEX_BUFFER_BIND_ID, 1,&m_vertexBuffer.buffer, offsets);
+    vkCmdBindIndexBuffer(cmd, m_indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+    vkCmdDrawIndexed(cmd, m_indexCount, 1, 0, 0, 0);
+}
+
+void VkCube::update(){
+    updateUniformBuffers(true);
 }
 
 void VkCube::generateVertex(){
@@ -171,12 +185,11 @@ void VkCube::prepareUniformBuffers()
     VK_CHECK_RESULT(m_uniformBufferVS.map());
     updateUniformBuffers(true);
 }
-
 void VkCube::updateUniformBuffers(bool viewchanged)
 {
     if (viewchanged)
     {
-        m_uboVS.projection = glm::perspective(glm::radians(60.0f), float(*m_screenWitdh) / float(*m_screenHeight), 0.001f, 256.0f);
+        m_uboVS.projection = glm::perspective(glm::radians(60.0f), float(*m_screenWidth) / float(*m_screenHeight), 0.001f, 256.0f);
         glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, *m_camera.zoom));
         m_uboVS.model = viewMatrix * glm::translate(glm::mat4(1.0f), *m_camera.cameraPos);
         m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_camera.rotation->x), glm::vec3(1.0f, 0.0f, 0.0f));

@@ -41,10 +41,17 @@ public:
         std::vector<VkVertexInputBindingDescription> inputBinding;
         std::vector<VkVertexInputAttributeDescription> inputAttributes;
     } m_vertices;
+
+    VkPipeline m_pipeline;
+    vks::Buffer m_uniformBufferVS;
+    vks::Texture2DStbImage m_textureA;
+    vks::Texture2DStbImage m_textureB;
 public:
     void setObjectInfo(ObjectInfo info);
     void setCamera(ObjectCamera camera);
     void create();
+    void build(VkCommandBuffer cmd);
+    void update();
 private:
     void generateVertex();
     void setupVertexDescriptions();
@@ -61,13 +68,14 @@ private:
     VkPipelineCache m_pipelineCache=VK_NULL_HANDLE;
     VkRenderPass m_renderPass=VK_NULL_HANDLE;
     VkQueue m_queue=VK_NULL_HANDLE;
-    int* m_screenWitdh=nullptr;
-    int* m_screenHeight=nullptr;
+    uint32_t* m_screenWidth=nullptr;
+    uint32_t* m_screenHeight=nullptr;
     vks::Buffer m_vertexBuffer;
     vks::Buffer m_indexBuffer;
-    vks::Buffer m_uniformBufferVS;
-    vks::Texture2DStbImage m_textureA;
-    vks::Texture2DStbImage m_textureB;
     uint32_t m_indexCount=0;
+    float m_size=1.f;
+    float m_x=0.f;
+    float m_y=0.f;
+    float m_z=0.f;
 };
 #endif
