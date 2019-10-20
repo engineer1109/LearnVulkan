@@ -49,6 +49,8 @@ public:
 public:
     void setObjectInfo(ObjectInfo info);
     void setCamera(ObjectCamera camera);
+    void setLocation(float x,float y,float z);
+    void setSize(float size);
     void create();
     void build(VkCommandBuffer cmd);
     void update();

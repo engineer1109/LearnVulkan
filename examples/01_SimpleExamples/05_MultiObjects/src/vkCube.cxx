@@ -6,6 +6,7 @@ VkCube::VkCube(){
 VkCube::~VkCube(){
     m_textureA.destroy();
     m_textureB.destroy();
+    vkDestroyPipeline(m_device, m_pipeline, nullptr);
     m_vertexBuffer.destroy();
     m_indexBuffer.destroy();
     m_uniformBufferVS.destroy();
@@ -27,6 +28,15 @@ void VkCube::setObjectInfo(ObjectInfo info){
 
 void VkCube::setCamera(ObjectCamera camera){
     m_camera=camera;
+}
+
+void VkCube::setLocation(float x,float y,float z){
+    m_x=x;
+    m_y=y;
+    m_z=z;
+}
+void VkCube::setSize(float size){
+    m_size=size;
 }
 
 void VkCube::create(){
@@ -53,47 +63,47 @@ void VkCube::generateVertex(){
     std::vector<Vertex> vertices =
     {
 
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
 
-       { {  1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
 
-       { {  1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
 
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
 
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
 
-       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
     };
 
     // Setup indices

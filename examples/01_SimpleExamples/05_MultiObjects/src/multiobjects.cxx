@@ -10,7 +10,6 @@ MultiImageSampler::~MultiImageSampler(){
         delete m_vkCubeList[i];
         m_vkCubeList[i]=nullptr;
     }
-    vkDestroyPipeline(device, m_pipeline, nullptr);
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
 }
@@ -43,9 +42,11 @@ void MultiImageSampler::createObjects(){
     camera.zoom=&zoom;
     camera.rotation=&rotation;
     camera.cameraPos=&cameraPos;
-    m_vkCubeList.resize(1);
+    m_vkCubeList.resize(5);
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         m_vkCubeList[i]=new VkCube();
+        //m_vkCubeList[i]->setSize(i+1.f);
+        m_vkCubeList[i]->setLocation(-4.f+i*2,-4.f+i*2,0);
         m_vkCubeList[i]->setObjectInfo(objectinfo);
         m_vkCubeList[i]->setCamera(camera);
         m_vkCubeList[i]->create();
@@ -63,8 +64,9 @@ void MultiImageSampler::render()
         vkDeviceWaitIdle(device);
     }
     if (!paused || camera.updated){
-        //updateUniformBuffers(camera.updated);
-        m_vkCubeList[0]->update();
+        for (size_t i=0;i<m_vkCubeList.size();i++) {
+            m_vkCubeList[i]->update();
+        }
         startAutoRotation();
     }
 }
@@ -86,84 +88,6 @@ void MultiImageSampler::OnUpdateUIOverlay(vks::UIOverlay *overlay)
             m_autoRotation=!m_autoRotation;
         }
      }
-}
-
-void MultiImageSampler::generateVertex(){
-    // Setup vertices for a single uv-mapped quad made from two triangles
-    std::vector<Vertex> vertices =
-    {
-
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-
-       { {  1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-
-       { {  1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f,  1.0f,  1.0f },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f,  1.0f,  1.0f },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f,  1.0f, -1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f,  1.0f, -1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-
-       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f, -1.0f,  1.0f },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f, -1.0f,  1.0f },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f, -1.0f, -1.0f },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f, -1.0f, -1.0f },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-    };
-
-    // Setup indices
-    std::vector<uint32_t> indices(vertices.size());
-    for(int i=0;i<indices.size();i++){
-        indices[i]=i;
-    }
-    m_indexCount = static_cast<uint32_t>(indices.size());
-
-    // Create buffers
-    // For the sake of simplicity we won't stage the vertex data to the gpu memory
-    // Vertex buffer
-    VK_CHECK_RESULT(vulkanDevice->createBuffer(
-    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        &m_vertexBuffer,
-        vertices.size() * sizeof(Vertex),
-        vertices.data()));
-    // Index buffer
-    VK_CHECK_RESULT(vulkanDevice->createBuffer(
-        VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        &m_indexBuffer,
-        indices.size() * sizeof(uint32_t),
-        indices.data()));
-}
-
-void MultiImageSampler::loadTexture2D(){
-    m_textureA.loadFromFile("../data/textures/awesomeface.png",VK_FORMAT_R8G8B8A8_UNORM,vulkanDevice,queue);
-    m_textureB.loadFromFile("../data/textures/container.png",VK_FORMAT_R8G8B8A8_UNORM,vulkanDevice,queue);
 }
 
 void MultiImageSampler::setupVertexDescriptions()
@@ -213,53 +137,24 @@ void MultiImageSampler::setupVertexDescriptions()
     m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.inputAttributes.data();
 }
 
-void MultiImageSampler::prepareUniformBuffers()
-{
-    // Vertex shader uniform buffer block
-    VK_CHECK_RESULT(vulkanDevice->createBuffer(
-        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        &m_uniformBufferVS,
-        sizeof(m_uboVS),
-        &m_uboVS));
-    VK_CHECK_RESULT(m_uniformBufferVS.map());
-    updateUniformBuffers(true);
-}
-
-void MultiImageSampler::updateUniformBuffers(bool viewchanged)
-{
-    if (viewchanged)
-    {
-        m_uboVS.projection = glm::perspective(glm::radians(60.0f), (float)width / (float)height, 0.001f, 256.0f);
-        glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, zoom));
-        m_uboVS.model = viewMatrix * glm::translate(glm::mat4(1.0f), cameraPos);
-        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    }
-    memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
-}
-
 void MultiImageSampler::setupDescriptorSetLayout()
 {
-    std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings =
-    {
-        // Binding 0 : Vertex shader uniform buffer
-        vks::initializers::descriptorSetLayoutBinding(
-            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            VK_SHADER_STAGE_VERTEX_BIT,
-            0),
-        // Binding 1 : Fragment shader image sampler
-        vks::initializers::descriptorSetLayoutBinding(
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            VK_SHADER_STAGE_FRAGMENT_BIT,
-            1),
-        // Binding 2 : Fragment shader image sampler
-        vks::initializers::descriptorSetLayoutBinding(
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            VK_SHADER_STAGE_FRAGMENT_BIT,
-            2)
-    };
+    uint32_t index=0;
+    std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings;
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        setLayoutBindings.push_back(vks::initializers::descriptorSetLayoutBinding(
+                                        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                        VK_SHADER_STAGE_VERTEX_BIT,
+                                        index++));
+        setLayoutBindings.push_back(vks::initializers::descriptorSetLayoutBinding(
+                                        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                        VK_SHADER_STAGE_FRAGMENT_BIT,
+                                        index++));
+        setLayoutBindings.push_back(vks::initializers::descriptorSetLayoutBinding(
+                                        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                        VK_SHADER_STAGE_FRAGMENT_BIT,
+                                        index++));
+    }
 
     VkDescriptorSetLayoutCreateInfo descriptorLayout =
         vks::initializers::descriptorSetLayoutCreateInfo(
@@ -349,16 +244,18 @@ void MultiImageSampler::preparePipelines()
     //pipelineCreateInfo.subpass=1;
     shaderStages[0] = loadShader(getShaderPath()+"shaders/04_MultiImageSampler/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader(getShaderPath()+"shaders/04_MultiImageSampler/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
-    VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_vkCubeList[0]->m_pipeline));
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_vkCubeList[i]->m_pipeline));
+    }
 }
 
 void MultiImageSampler::setupDescriptorPool()
 {
-    std::vector<VkDescriptorPoolSize> poolSizes =
-    {
-        vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1),
-        vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 2),
-    };
+    std::vector<VkDescriptorPoolSize> poolSizes;
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        poolSizes.push_back(vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1));
+        poolSizes.push_back(vks::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 2));
+    }
 
     VkDescriptorPoolCreateInfo descriptorPoolInfo =
         vks::initializers::descriptorPoolCreateInfo(
@@ -379,30 +276,25 @@ void MultiImageSampler::setupDescriptorSet()
 
     VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_descriptorSet));
 
-    std::vector<VkWriteDescriptorSet> writeDescriptorSets =
-    {
-        // Binding 0 : Vertex shader uniform buffer
-        vks::initializers::writeDescriptorSet(
-            m_descriptorSet,
-            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            0,
-            &m_vkCubeList[0]->m_uniformBufferVS.descriptor),
-        // Binding 1 : Fragment shader texture sampler
-        //	Fragment shader: layout (binding = 1) uniform sampler2D samplerColor;
-        vks::initializers::writeDescriptorSet(
-            m_descriptorSet,
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// The descriptor set will use a combined image sampler (sampler and image could be split)
-            1,												// Shader binding point 1
-            &m_vkCubeList[0]->m_textureA.descriptor),
-        // Binding 2 : Fragment shader texture sampler
-        //	Fragment shader: layout (binding = 2) uniform sampler2D samplerColor;
-        vks::initializers::writeDescriptorSet(
-            m_descriptorSet,
-            VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            2,
-            &m_vkCubeList[0]->m_textureB.descriptor)
-    };
-
+    uint32_t index=0;
+    std::vector<VkWriteDescriptorSet> writeDescriptorSets;
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        writeDescriptorSets.push_back(vks::initializers::writeDescriptorSet(
+                                          m_descriptorSet,
+                                          VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                          index++,
+                                          &m_vkCubeList[i]->m_uniformBufferVS.descriptor));
+        writeDescriptorSets.push_back(vks::initializers::writeDescriptorSet(
+                                          m_descriptorSet,
+                                          VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// The descriptor set will use a combined image sampler (sampler and image could be split)
+                                          index++,												// Shader binding point 1
+                                          &m_vkCubeList[i]->m_textureA.descriptor));
+        writeDescriptorSets.push_back(vks::initializers::writeDescriptorSet(
+                                          m_descriptorSet,
+                                          VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// The descriptor set will use a combined image sampler (sampler and image could be split)
+                                          index++,												// Shader binding point 1
+                                          &m_vkCubeList[i]->m_textureB.descriptor));
+    }
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
 }
 
@@ -441,7 +333,9 @@ void MultiImageSampler::buildCommandBuffers()
         vkCmdSetViewport(drawCmdBuffers[i], 0, 8, &viewports);
         vkCmdSetScissor(drawCmdBuffers[i], 0, 8, &scissorRects);
 
-        m_vkCubeList[0]->build(drawCmdBuffers[i]);
+        for (size_t j=0;j<m_vkCubeList.size();j++) {
+            m_vkCubeList[j]->build(drawCmdBuffers[i]);
+        }
 
         drawUI(drawCmdBuffers[i]);
 
@@ -453,7 +347,9 @@ void MultiImageSampler::buildCommandBuffers()
 
 void MultiImageSampler::startAutoRotation(){
     if(m_autoRotation){
-        m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
+        for (size_t i=0;i<m_vkCubeList.size();i++) {
+            m_vkCubeList[i]->m_uboVS.model = glm::rotate(m_vkCubeList[i]->m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
     }
 }
 
