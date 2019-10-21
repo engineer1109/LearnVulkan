@@ -524,3 +524,7 @@ void VulkanBasicEngine::afterRender(){
         vkDeviceWaitIdle(device);
     }
 }
+
+void VulkanBasicEngine::handleMouse(int x,int y){
+    handleMouseMove(x,y);
+}
