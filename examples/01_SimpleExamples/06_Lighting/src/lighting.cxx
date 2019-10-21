@@ -42,11 +42,11 @@ void Lighting::createObjects(){
     camera.zoom=&zoom;
     camera.rotation=&rotation;
     camera.cameraPos=&cameraPos;
-    m_vkCubeList.resize(5);
+    m_vkCubeList.resize(1);
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         m_vkCubeList[i]=new VkCube();
         //m_vkCubeList[i]->setSize(i+1.f);
-        m_vkCubeList[i]->setLocation(-4.f+i*2,-4.f+i*2,0);
+        //m_vkCubeList[i]->setLocation(-4.f+i*2,-4.f+i*2,0);
         m_vkCubeList[i]->setObjectInfo(objectinfo);
         m_vkCubeList[i]->setCamera(camera);
         m_vkCubeList[i]->create();
@@ -242,8 +242,8 @@ void Lighting::preparePipelines()
     pipelineCreateInfo.pStages = shaderStages.data();
 
     //pipelineCreateInfo.subpass=1;
-    shaderStages[0] = loadShader(getShaderPath()+"shaders/04_MultiImageSampler/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(getShaderPath()+"shaders/04_MultiImageSampler/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(getShaderPath()+"shaders/06_Lighting/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(getShaderPath()+"shaders/06_Lighting/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_vkCubeList[i]->m_pipeline));
     }

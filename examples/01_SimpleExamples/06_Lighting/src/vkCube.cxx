@@ -63,47 +63,47 @@ void VkCube::generateVertex(){
     std::vector<Vertex> vertices =
     {
 
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
        { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
        { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
 
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f,-1.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f,-1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f,-1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f,-1.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f,-1.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f,-1.0f } },
 
        { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
        { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
 
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, {-1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, {-1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, {-1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, {-1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f } },
 
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
        { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } },
        { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
 
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } },
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f,-1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f,-1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f,-1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f,-1.0f, 0.0f } },
+       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f,-1.0f, 0.0f } },
+       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f,-1.0f, 0.0f } },
     };
 
     // Setup indices
@@ -205,6 +205,7 @@ void VkCube::updateUniformBuffers(bool viewchanged)
         m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_camera.rotation->x), glm::vec3(1.0f, 0.0f, 0.0f));
         m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_camera.rotation->y), glm::vec3(0.0f, 1.0f, 0.0f));
         m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_camera.rotation->z), glm::vec3(0.0f, 0.0f, 1.0f));
+        m_uboVS.viewPos = glm::vec4(0.0f, 0.0f, -*m_camera.zoom, 0.0f);
     }
     memcpy(m_uniformBufferVS.mapped, &m_uboVS, sizeof(m_uboVS));
 }
