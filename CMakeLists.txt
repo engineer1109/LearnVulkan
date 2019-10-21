@@ -37,6 +37,7 @@ include_directories(${PROJECT_SOURCE_DIR}/third_party/stb_image/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 include(${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/Report.cmake)
 
 add_subdirectory(src)
 add_subdirectory(examples)
