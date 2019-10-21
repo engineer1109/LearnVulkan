@@ -1,2 +1,2 @@
 add_subdirectory(01_SimpleExamples)
-add_subdirectory(03_QVulkan)
+add_subdirectory(03_QtVulkan)

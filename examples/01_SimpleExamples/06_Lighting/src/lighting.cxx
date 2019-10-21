@@ -1,11 +1,11 @@
-#include "multiobjects.h"
+#include "lighting.h"
 #include "vkCube.h"
 #define VERTEX_BUFFER_BIND_ID 0
-MultiImageSampler::MultiImageSampler(bool debugLayer):VulkanBasicEngine(debugLayer){
+Lighting::Lighting(bool debugLayer):VulkanBasicEngine(debugLayer){
     this->zoom=-4.f;
     this->settings.overlay=true;
 }
-MultiImageSampler::~MultiImageSampler(){
+Lighting::~Lighting(){
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         delete m_vkCubeList[i];
         m_vkCubeList[i]=nullptr;
@@ -14,7 +14,7 @@ MultiImageSampler::~MultiImageSampler(){
     vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
 }
 
-void MultiImageSampler::prepare(){
+void Lighting::prepare(){
     VulkanBasicEngine::prepare();
     createObjects();
     setupVertexDescriptions();
@@ -26,7 +26,7 @@ void MultiImageSampler::prepare(){
     this->prepared=true;
 }
 
-void MultiImageSampler::createObjects(){
+void Lighting::createObjects(){
     VkCube::ObjectInfo objectinfo;
     objectinfo.vulkanDevice=vulkanDevice;
     objectinfo.instance=instance;
@@ -53,7 +53,7 @@ void MultiImageSampler::createObjects(){
     }
 }
 
-void MultiImageSampler::render()
+void Lighting::render()
 {
     if (!prepared)
         return;
@@ -71,7 +71,7 @@ void MultiImageSampler::render()
     }
 }
 
-void MultiImageSampler::draw()
+void Lighting::draw()
 {
     VulkanBasicEngine::prepareFrame();
     // Command buffer to be sumitted to the queue
@@ -81,7 +81,7 @@ void MultiImageSampler::draw()
     VulkanBasicEngine::submitFrame();
 }
 
-void MultiImageSampler::OnUpdateUIOverlay(vks::UIOverlay *overlay)
+void Lighting::OnUpdateUIOverlay(vks::UIOverlay *overlay)
 {
     if (overlay->header("Settings")) {
         if (overlay->button("Auto Rotation")) {
@@ -90,7 +90,7 @@ void MultiImageSampler::OnUpdateUIOverlay(vks::UIOverlay *overlay)
      }
 }
 
-void MultiImageSampler::setupVertexDescriptions()
+void Lighting::setupVertexDescriptions()
 {
     // Binding description
     m_vertices.inputBinding.resize(1);
@@ -137,7 +137,7 @@ void MultiImageSampler::setupVertexDescriptions()
     m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.inputAttributes.data();
 }
 
-void MultiImageSampler::setupDescriptorSetLayout()
+void Lighting::setupDescriptorSetLayout()
 {
     uint32_t index=0;
     std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings;
@@ -171,7 +171,7 @@ void MultiImageSampler::setupDescriptorSetLayout()
     VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout));
 }
 
-void MultiImageSampler::preparePipelines()
+void Lighting::preparePipelines()
 {
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState =
         vks::initializers::pipelineInputAssemblyStateCreateInfo(
@@ -249,7 +249,7 @@ void MultiImageSampler::preparePipelines()
     }
 }
 
-void MultiImageSampler::setupDescriptorPool()
+void Lighting::setupDescriptorPool()
 {
     std::vector<VkDescriptorPoolSize> poolSizes;
     for (size_t i=0;i<m_vkCubeList.size();i++) {
@@ -266,7 +266,7 @@ void MultiImageSampler::setupDescriptorPool()
     VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &descriptorPool));
 }
 
-void MultiImageSampler::setupDescriptorSet()
+void Lighting::setupDescriptorSet()
 {
     VkDescriptorSetAllocateInfo allocInfo =
         vks::initializers::descriptorSetAllocateInfo(
@@ -298,12 +298,12 @@ void MultiImageSampler::setupDescriptorSet()
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
 }
 
-void MultiImageSampler::buildCommandBuffers()
+void Lighting::buildCommandBuffers()
 {
     VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
 
     VkClearValue clearValues[2];
-    clearValues[0].color = { { 0.1f, 0.2f, 0.3f, 0.0f } };
+    clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
     clearValues[1].depthStencil = { 1.0f, 0 };
 
     VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
@@ -345,7 +345,7 @@ void MultiImageSampler::buildCommandBuffers()
     vkQueueWaitIdle(queue);
 }
 
-void MultiImageSampler::startAutoRotation(){
+void Lighting::startAutoRotation(){
     if(m_autoRotation){
         for (size_t i=0;i<m_vkCubeList.size();i++) {
             m_vkCubeList[i]->m_uboVS.model = glm::rotate(m_vkCubeList[i]->m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));

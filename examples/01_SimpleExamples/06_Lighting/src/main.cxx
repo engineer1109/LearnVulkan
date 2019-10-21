@@ -1,11 +1,11 @@
-#include "multiobjects.h"
+#include "lighting.h"
 int main(int argc,char** argv){
     bool debug=false;
-    MultiImageSampler* pMultiImageSampler=new MultiImageSampler(debug);
-    pMultiImageSampler->initVulkan();
-    pMultiImageSampler->initWindow();
-    pMultiImageSampler->prepare();
-    pMultiImageSampler->renderLoop();
-    delete pMultiImageSampler;
+    Lighting* pVulkan=new Lighting(debug);
+    pVulkan->initVulkan();
+    pVulkan->initWindow();
+    pVulkan->prepare();
+    pVulkan->renderLoop();
+    delete pVulkan;
     return 1;
 }

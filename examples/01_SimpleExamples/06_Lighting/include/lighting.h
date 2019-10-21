@@ -7,10 +7,10 @@
 #include "vulkan_basicengine_texture.h"
 class VkCube;
 
-class MultiImageSampler:public VulkanBasicEngine{
+class Lighting:public VulkanBasicEngine{
 public:
-    MultiImageSampler(bool debugLayer);
-    ~MultiImageSampler();
+    Lighting(bool debugLayer);
+    ~Lighting();
 
     virtual void prepare();
     virtual void render();
