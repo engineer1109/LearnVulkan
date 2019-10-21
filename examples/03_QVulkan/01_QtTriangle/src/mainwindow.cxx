@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->widget_vulkan->setFlag(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
     connect(ui->button_render,SIGNAL(clicked()), this, SLOT(setAutoRotate()));
 }
 
@@ -33,13 +34,13 @@ void MainWindow::closeEvent(QCloseEvent *event){
 
 void MainWindow::vkRender()
 {
-    uint32_t window=this->ui->widget_vulkan->winId();
     m_pStatictriangle=new StaticTriangle(false);
     m_pStatictriangle->initVulkan();
-    m_pStatictriangle->setWindow(window);
+    m_pStatictriangle->setWindow(ui->widget_vulkan->getWindowHandle());
     m_pStatictriangle->prepare();
     m_pStatictriangle->renderAsyncThread();
     m_pStatictriangle->enableAutoRotation(true);
+    ui->widget_vulkan->setVulkanPtr(m_pStatictriangle);
 }
 
 void MainWindow::setAutoRotate(){

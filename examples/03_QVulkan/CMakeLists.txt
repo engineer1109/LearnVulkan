@@ -4,6 +4,8 @@ if(BUILD_QtExamples MATCHES ON)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTOUIC ON)
     set(CMAKE_AUTORCC ON)
+
+    include_directories(${PROJECT_SOURCE_DIR}/include/qtvulkanwindow)
     add_subdirectory(01_QtTriangle)
     add_subdirectory(02_FramelessVulkan)
 endif()

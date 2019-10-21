@@ -19,7 +19,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
     <item>
-     <widget class="QWidget" name="widget_vulkan" native="true"/>
+     <widget class="QtVulkanWindow" name="widget_vulkan" native="true"/>
     </item>
     <item>
      <widget class="QFrame" name="frame_controller">
@@ -76,6 +76,14 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QtVulkanWindow</class>
+   <extends>QWidget</extends>
+   <header location="global">qtvulkanwindow.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

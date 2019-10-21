@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setAutoFillBackground(false);
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground,true);
+    ui->widget_vulkan->setAutoFillBackground(false);
+    ui->widget_vulkan->setWindowFlags(Qt::FramelessWindowHint);
+    ui->widget_vulkan->setAttribute(Qt::WA_TranslucentBackground,true);
 }
 
 MainWindow::~MainWindow()
@@ -35,13 +38,14 @@ void MainWindow::closeEvent(QCloseEvent *event){
 
 void MainWindow::vkRender()
 {
-    uint32_t window=this->winId();
     m_pStatictriangle=new StaticTriangle(false);
     m_pStatictriangle->initVulkan();
-    m_pStatictriangle->setWindow(window);
+    m_pStatictriangle->setWindow(ui->widget_vulkan->getWindowHandle());
     m_pStatictriangle->prepare();
     m_pStatictriangle->renderAsyncThread();
-    m_pStatictriangle->enableAutoRotation(true);
+    m_pStatictriangle->enableAutoRotation(false);
+
+    ui->widget_vulkan->setVulkanPtr(m_pStatictriangle);
 }
 
 void MainWindow::setAutoRotate(){
