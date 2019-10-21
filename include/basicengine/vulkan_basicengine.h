@@ -23,6 +23,8 @@ public:
     void preRender();
     void singleRender();
     void afterRender();
+
+    void handleMouse(int x,int y);
 protected:
 
 private:
