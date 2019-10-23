@@ -26,6 +26,8 @@ private:
     void setupDescriptorSet();
     void buildCommandBuffers();
     void startAutoRotation();
+    void addLodBias();
+    void subLodBias();
 public:
     struct Vertex {
         float pos[3];

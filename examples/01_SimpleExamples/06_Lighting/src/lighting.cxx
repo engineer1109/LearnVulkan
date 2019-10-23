@@ -42,7 +42,7 @@ void Lighting::createObjects(){
     camera.zoom=&zoom;
     camera.rotation=&rotation;
     camera.cameraPos=&cameraPos;
-    m_vkCubeList.resize(6);
+    m_vkCubeList.resize(1);
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         m_vkCubeList[i]=new VkCube();
         //m_vkCubeList[i]->setSize(i+1.f);
@@ -87,6 +87,12 @@ void Lighting::OnUpdateUIOverlay(vks::UIOverlay *overlay)
         if (overlay->button("Auto Rotation")) {
             m_autoRotation=!m_autoRotation;
         }
+//        if (overlay->button("Add Lodbias")){
+//            addLodBias();
+//        }
+//        if (overlay->button("Sub Lodbias")){
+//            subLodBias();
+//        }
      }
 }
 
@@ -348,6 +354,24 @@ void Lighting::buildCommandBuffers()
 void Lighting::startAutoRotation(){
     if(m_autoRotation){
         rotation.y+=0.01f;
+    }
+}
+
+void Lighting::addLodBias(){
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        m_vkCubeList[i]->m_uboVS.lodBias+=0.1f;
+        if(m_vkCubeList[i]->m_uboVS.lodBias>10.0f){
+            m_vkCubeList[i]->m_uboVS.lodBias=1.0f;
+        }
+    }
+}
+
+void Lighting::subLodBias(){
+    for (size_t i=0;i<m_vkCubeList.size();i++) {
+        m_vkCubeList[i]->m_uboVS.lodBias-=0.1f;
+        if(m_vkCubeList[i]->m_uboVS.lodBias<0.0f){
+            m_vkCubeList[i]->m_uboVS.lodBias=0.0f;
+        }
     }
 }
 
