@@ -314,7 +314,7 @@ void StaticTriangle::buildCommandBuffers()
     VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
 
     VkClearValue clearValues[2];
-    clearValues[0].color = { { 0.1f, 0.2f, 0.3f, 0.0f } };
+    clearValues[0].color = { {m_backgroundRed, m_backgroundGreen, m_backgroundBlue, 0.0f } };
     clearValues[1].depthStencil = { 1.0f, 0 };
 
     VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
@@ -369,5 +369,12 @@ void StaticTriangle::renderAsyncThread(){
 
 void StaticTriangle::renderJoin(){
     m_thread->join();
+}
+
+void StaticTriangle::rebuildCommandBuffers(float r,float g,float b){
+    m_backgroundRed=r;
+    m_backgroundGreen=g;
+    m_backgroundBlue=b;
+    windowResize();
 }
 

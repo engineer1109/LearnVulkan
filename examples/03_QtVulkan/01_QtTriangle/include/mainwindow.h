@@ -24,6 +24,7 @@ private:
 
 private slots:
     void setAutoRotate();
+    void setBackground();
 
 private:
     Ui::MainWindow *ui=nullptr;

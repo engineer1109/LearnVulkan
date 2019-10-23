@@ -9,7 +9,17 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->widget_vulkan->setFlag(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    ui->slider_red->setMaximum(256);
+    ui->slider_red->setValue(int(0.1*256));
+    ui->slider_green->setMaximum(256);
+    ui->slider_green->setValue(int(0.2*256));
+    ui->slider_blue->setMaximum(256);
+    ui->slider_blue->setValue(int(0.3*256));
+    ui->comboBox_object->addItem("Triangle");
     connect(ui->button_render,SIGNAL(clicked()), this, SLOT(setAutoRotate()));
+    connect(ui->slider_red,SIGNAL(sliderReleased()),this,SLOT(setBackground()));
+    connect(ui->slider_green,SIGNAL(sliderReleased()),this,SLOT(setBackground()));
+    connect(ui->slider_blue,SIGNAL(sliderReleased()),this,SLOT(setBackground()));
 }
 
 MainWindow::~MainWindow()
@@ -46,4 +56,8 @@ void MainWindow::vkRender()
 void MainWindow::setAutoRotate(){
     m_pStatictriangle->enableAutoRotation(m_rotate);
     m_rotate=!m_rotate;
+}
+
+void MainWindow::setBackground(){
+    m_pStatictriangle->rebuildCommandBuffers(ui->slider_red->value()/256.f,ui->slider_green->value()/256.f,ui->slider_blue->value()/256.f);
 }

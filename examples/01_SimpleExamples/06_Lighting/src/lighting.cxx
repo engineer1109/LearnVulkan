@@ -42,11 +42,11 @@ void Lighting::createObjects(){
     camera.zoom=&zoom;
     camera.rotation=&rotation;
     camera.cameraPos=&cameraPos;
-    m_vkCubeList.resize(1);
+    m_vkCubeList.resize(6);
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         m_vkCubeList[i]=new VkCube();
         //m_vkCubeList[i]->setSize(i+1.f);
-        //m_vkCubeList[i]->setLocation(-4.f+i*2,-4.f+i*2,0);
+        m_vkCubeList[i]->setLocation(-4.f+i*2,-4.f+i*2,0);
         m_vkCubeList[i]->setObjectInfo(objectinfo);
         m_vkCubeList[i]->setCamera(camera);
         m_vkCubeList[i]->create();
@@ -347,9 +347,7 @@ void Lighting::buildCommandBuffers()
 
 void Lighting::startAutoRotation(){
     if(m_autoRotation){
-        for (size_t i=0;i<m_vkCubeList.size();i++) {
-            m_vkCubeList[i]->m_uboVS.model = glm::rotate(m_vkCubeList[i]->m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
-        }
+        rotation.y+=0.01f;
     }
 }
 

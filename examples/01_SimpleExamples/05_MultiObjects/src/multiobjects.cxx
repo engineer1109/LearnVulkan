@@ -347,9 +347,7 @@ void MultiImageSampler::buildCommandBuffers()
 
 void MultiImageSampler::startAutoRotation(){
     if(m_autoRotation){
-        for (size_t i=0;i<m_vkCubeList.size();i++) {
-            m_vkCubeList[i]->m_uboVS.model = glm::rotate(m_vkCubeList[i]->m_uboVS.model, glm::radians(0.01f), glm::vec3(0.0f, 1.0f, 0.0f));
-        }
+        rotation.y+=0.01f;
     }
 }
 

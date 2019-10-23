@@ -15,6 +15,7 @@ public:
     void enableAutoRotation(bool value=true){m_autoRotation=value;}
     void renderAsyncThread();
     void renderJoin();
+    void rebuildCommandBuffers(float r,float g,float b);
 private:
     void generateVertex();
     void setupVertexDescriptions();
@@ -52,6 +53,9 @@ private:
     uint32_t m_indexCount=0;
     bool m_autoRotation=false;
     std::thread* m_thread;
+    float m_backgroundRed=0.1f;
+    float m_backgroundGreen=0.2f;
+    float m_backgroundBlue=0.3f;
 };
 
 #endif
