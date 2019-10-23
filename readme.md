@@ -72,10 +72,18 @@ The programs will be installed in the {PROJECT_DIR}/bin .
 ```
 The programs will be installed in the {PROJECT_DIR}/Release .
 # PLANS
-1. Simple Examples (doing)
+1. Simple Examples (50%)
+>01_StaticTriangle
+>02_StaticCube
+>03_Texture2dCube
+>04_MultiImageSampler
+>05_MultiObjects
+>06_Lighting
 2. Advanced Examples
-3. CUDA and Vulkan
-4. Qt and Vulkan
+3. Qt Vulkan (20%)
+>01_QtTriangle
+>02_FramelessVulkan
+4. Cuda and Vulkan
 5. X11 and Vulkan
 6. Vulkan and deep learning
 7. Vulkan Server Rendering
