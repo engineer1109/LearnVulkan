@@ -42,7 +42,7 @@ void Lighting::createObjects(){
     camera.zoom=&zoom;
     camera.rotation=&rotation;
     camera.cameraPos=&cameraPos;
-    m_vkCubeList.resize(1);
+    m_vkCubeList.resize(6);
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         m_vkCubeList[i]=new VkCube();
         //m_vkCubeList[i]->setSize(i+1.f);
