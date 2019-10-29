@@ -38,6 +38,7 @@ link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 include(${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/FindQt.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/FindAssimp.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/Report.cmake)
 
 add_subdirectory(src)
