@@ -79,7 +79,8 @@ The programs will be installed in the {PROJECT_DIR}/Release .
 >04_MultiImageSampler  
 >05_MultiObjects  
 >06_Lighting  
-2. Advanced Examples
+2. Advanced Examples (10%)
+>01_Skybox
 3. Qt Vulkan (20%)
 >01_QtTriangle  
 >02_FramelessVulkan  
