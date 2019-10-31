@@ -2,7 +2,7 @@
 #include "qtvulkanwindow.h"
 #include <iostream>
 QtVulkanWindow::QtVulkanWindow(QWidget *parent):QMainWindow (parent){
-
+    this->setMouseTracking(true);
 }
 
 QtVulkanWindow::~QtVulkanWindow(){
