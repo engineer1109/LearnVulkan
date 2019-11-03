@@ -32,7 +32,6 @@ private:
     struct UBOVS {
         glm::mat4 projection;
         glm::mat4 model;
-        float lodBias = 0.0f;
     } m_uboVS;
 
     vks::VertexLayout m_vertexLayout = vks::VertexLayout({

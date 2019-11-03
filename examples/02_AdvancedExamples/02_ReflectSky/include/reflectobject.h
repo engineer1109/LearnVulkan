@@ -1,12 +1,11 @@
-#ifndef SKY_H
-#define SKY_H
+﻿#ifndef REFLECTOBJECT_H
+#define REFLECTOBJECT_H
 #include "VulkanModel.hpp"
 #include "vulkan_basicengine_object.h"
-#include "vulkan_basicengine_texture.h"
-class Sky:public VulkanBaseObject{
+class ReflectObject:public VulkanBaseObject{
 public:
-    Sky()=default;
-    ~Sky();
+    ReflectObject()=default;
+    ~ReflectObject();
 public:
     vks::Buffer m_uniformBuffers;
     VkPipeline m_pipeline=VK_NULL_HANDLE;
@@ -14,22 +13,21 @@ public:
     struct UboVS {
         glm::mat4 projection;
         glm::mat4 model;
+        float lodBias = 0.0f;
     } m_uboVS;
     struct ObjectCamera{
         float* zoom=nullptr;
         glm::vec3* rotation=nullptr;
         glm::vec3* cameraPos=nullptr;
     }m_camera;
-    vks::TextureCubeMapStbImage m_textureSkybox;
 public:
     void create();
     void build(VkCommandBuffer cmd);
     void update();
 
-    void setCamera(ObjectCamera camera){m_camera=camera;}
+    void setCamera(ObjectCamera camera);
 private:
-    void prepareTextures();
-    void prepareAssets();
+    void loadModel();
     void prepareUniformBuffers();
     void updateUniformBuffers();
 private:
@@ -40,4 +38,4 @@ private:
         vks::VERTEX_COMPONENT_UV,
     });
 };
-#endif // SKY_H
+#endif // REFLECTOBJECT_H
