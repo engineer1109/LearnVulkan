@@ -72,16 +72,16 @@ The programs will be installed in the {PROJECT_DIR}/bin .
 ```
 The programs will be installed in the {PROJECT_DIR}/Release .
 # PLANS
-1. Simple Examples (50%)
+1. Simple Examples (50%) (Only need Vulkan)
 >01_StaticTriangle  
 >02_StaticCube  
 >03_Texture2dCube  
 >04_MultiImageSampler  
 >05_MultiObjects  
 >06_Lighting  
-2. Advanced Examples (10%)
+2. Advanced Examples (10%) (Need Assimp)
 >01_Skybox
-3. Qt Vulkan (20%)
+3. Qt Vulkan (20%) (Need Qt, some need assimp)
 >01_QtTriangle  
 >02_FramelessVulkan  
 4. Cuda and Vulkan
