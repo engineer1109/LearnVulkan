@@ -330,7 +330,7 @@ public:
         // Turn RGB to RGBA
         else if(n==3){
             #pragma omp parallel for
-            for (size_t i=0;i<imgList.size();i++) {
+            for (int i=0;i<imgList.size();i++) {
                 for(uint32_t m=0;m<height;m++){
                     for (uint32_t n=0;n<width;n++) {
                         img[imgSize*i+(n+width*m)*4+0]=imgList[i][(n+width*m)*3+0];
@@ -343,7 +343,7 @@ public:
             }
         }
         #pragma omp parallel for
-        for (size_t i=0;i<imgList.size();i++) {
+        for (int i=0;i<imgList.size();i++) {
             if(i==2){
                 for(uint32_t m=0;m<height;m++){
                     for (uint32_t n=0;n<width;n++) {
