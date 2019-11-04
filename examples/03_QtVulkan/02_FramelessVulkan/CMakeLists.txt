@@ -10,11 +10,3 @@ add_executable(${LEARN_VULKAN_PROJECT} ${SRC_FILES} ${HEAD_FILES} ${UI_FILES})
 TARGET_LINK_LIBRARIES(${LEARN_VULKAN_PROJECT} qtvulkanwindow)
 
 set_property(TARGET ${LEARN_VULKAN_PROJECT} PROPERTY CXX_STANDARD 17)
-
-if(Win32)    #For windows VS cdebug can find data path.
-    SET(BUILD_DIR ${PROJECT_SOURCE_DIR}/$(Configuration))
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/windows/vstemplate.vcxproj.user.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${LEARN_VULKAN_PROJECT}.vcxproj.user
-        @ONLY
-    )
-endif()
