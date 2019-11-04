@@ -40,6 +40,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/FindQt.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/FindAssimp.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/Report.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/Softlink.cmake)
 
 add_subdirectory(src)
 add_subdirectory(examples)
