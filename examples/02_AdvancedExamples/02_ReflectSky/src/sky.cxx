@@ -13,9 +13,9 @@ void Sky::create(){
     prepareUniformBuffers();
 }
 
-void Sky::build(VkCommandBuffer cmd){
+void Sky::build(VkCommandBuffer cmd,VkPipelineLayout pipelineLayout){
     VkDeviceSize offsets[1] = { 0 };
-    //vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
+    vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
     vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
     vkCmdBindVertexBuffers(cmd, VERTEX_BUFFER_BIND_ID, 1,&m_model.vertices.buffer, offsets);
     vkCmdBindIndexBuffer(cmd, m_model.indices.buffer, 0, VK_INDEX_TYPE_UINT32);

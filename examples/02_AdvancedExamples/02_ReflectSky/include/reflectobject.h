@@ -22,7 +22,7 @@ public:
     }m_camera;
 public:
     void create();
-    void build(VkCommandBuffer cmd);
+    void build(VkCommandBuffer cmd,VkPipelineLayout pipelineLayout);
     void update();
 
     void setCamera(ObjectCamera camera);

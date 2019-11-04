@@ -60,7 +60,6 @@ void ReflectSky::createObjects(){
     objectinfo.vulkanDevice=vulkanDevice;
     objectinfo.instance=instance;
     objectinfo.cmdPool=cmdPool;
-    objectinfo.pipelineLayout=m_pipelineLayout;
     objectinfo.pipelineCache=pipelineCache;
     objectinfo.renderPass=renderPass;
     objectinfo.queue=queue;
@@ -137,19 +136,19 @@ void ReflectSky::setupDescriptorSets()
             1);
 
     // 3D object descriptor set
-    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_descriptorSets.reflectObject));
+    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_reflectObject->m_descriptorSet));
 
     std::vector<VkWriteDescriptorSet> writeDescriptorSets =
     {
         // Binding 0 : Vertex shader uniform buffer
         vks::initializers::writeDescriptorSet(
-            m_descriptorSets.reflectObject,
+            m_reflectObject->m_descriptorSet,
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             0,
             &(m_reflectObject->m_uniformBuffers).descriptor),
         // Binding 1 : Fragment shader cubemap sampler
         vks::initializers::writeDescriptorSet(
-            m_descriptorSets.reflectObject,
+            m_reflectObject->m_descriptorSet,
             VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
             1,
             &(m_sky->m_textureSkybox).descriptor)
@@ -157,19 +156,19 @@ void ReflectSky::setupDescriptorSets()
     vkUpdateDescriptorSets(device, writeDescriptorSets.size(), writeDescriptorSets.data(), 0, NULL);
 
     // Sky box descriptor set
-    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_descriptorSets.sky));
+    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_sky->m_descriptorSet));
 
     writeDescriptorSets =
     {
         // Binding 0 : Vertex shader uniform buffer
         vks::initializers::writeDescriptorSet(
-            m_descriptorSets.sky,
+            m_sky->m_descriptorSet,
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
             0,
             &(m_sky->m_uniformBuffers).descriptor),
         // Binding 1 : Fragment shader cubemap sampler
         vks::initializers::writeDescriptorSet(
-            m_descriptorSets.sky,
+            m_sky->m_descriptorSet,
             VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
             1,
             &(m_sky->m_textureSkybox).descriptor)
@@ -303,10 +302,8 @@ void ReflectSky::buildCommandBuffers(){
 
         VkDeviceSize offsets[1] = { 0 };
 
-        vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSets.sky, 0, NULL);
-        m_sky->build(drawCmdBuffers[i]);
-        vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSets.reflectObject, 0, NULL);
-        m_reflectObject->build(drawCmdBuffers[i]);
+        m_sky->build(drawCmdBuffers[i],m_pipelineLayout);
+        m_reflectObject->build(drawCmdBuffers[i],m_pipelineLayout);
 
         drawUI(drawCmdBuffers[i]);
 
