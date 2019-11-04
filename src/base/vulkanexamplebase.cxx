@@ -654,7 +654,7 @@ VulkanExampleBase::VulkanExampleBase(bool enableValidation)
 	if (stat(getAssetPath().c_str(), &info) != 0)
 	{
 #if defined(_WIN32)
-		std::string msg = "Could not locate asset path in \"" + getAssetPath() + "\" !";
+        std::string msg = "Could not locate asset path in \"" + getAssetPath() + "\" ! It may not be supported in visual studio. \nPlease Click the exe in the ${CMAKE_PROJECT_DIR}/Release Dir manually. ";
 		MessageBox(NULL, msg.c_str(), "Fatal error", MB_OK | MB_ICONERROR);
 #else
 		std::cerr << "Error: Could not find asset path in " << getAssetPath() << std::endl;
