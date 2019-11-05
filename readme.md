@@ -34,10 +34,11 @@ Finally, welcome to clone or fork my project, remember to star if you consider m
 ## Supported System:
    **Now:** Linux(Mainly)  Windows(Partly)
    **Planned supported:** Mac Android IOS
-## Libraries
+## Libraries and Tools
+   **CMake:** 3.14+ is recommended 
    **Vulkan:** 1.1.121+
    **Glm:** 0.9.9+
-   **Xcb & Xlib**
+   **Xcb & Xlib**    (Linux needs)
    **GLFW3**         
    **OpenCV:** 4.0+  (Some projects need)
    **CUDA:** 10.0+  (Some projects need)
