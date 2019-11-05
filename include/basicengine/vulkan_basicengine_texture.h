@@ -11,6 +11,9 @@ namespace vks {
 struct Texture2DStbImage: public Texture2D{
     uint32_t channels=0;
     uint32_t size=0;
+    std::vector<std::string> samplerNames{ "No mip maps" , "Mip maps (bilinear)" , "Mip maps (anisotropic)" };
+    std::vector<VkSampler> samplers;
+
     void loadFromFile(
         std::string filename,
         VkFormat format,
@@ -282,6 +285,264 @@ struct Texture2DStbImage: public Texture2D{
         // Update descriptor image info member that can be used for setting up descriptor sets
         updateDescriptor();
         stbi_image_free(img);
+    }
+
+    void loadFromFileAutoGenMipmap(
+            std::string filename,
+            VkFormat format,
+            vks::VulkanDevice *device,
+            VkQueue copyQueue,
+            VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_SAMPLED_BIT,
+            VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            bool forceLinear = false)
+    {
+        if (!vks::tools::fileExists(filename)) {
+            vks::tools::exitFatal("Could not load texture from " + filename + "\n\nThe file may be part of the additional asset pack.\n\nRun \"download_assets.py\" in the repository root to download the latest version.", -1);
+        }
+        int w,h,n;
+        unsigned char *img = stbi_load(filename.c_str(), &w, &h, &n, 0);
+
+        this->device = device;
+        width = static_cast<uint32_t>(w);
+        height = static_cast<uint32_t>(h);
+        channels=static_cast<uint32_t>(n);
+        size=width*height*channels;
+
+        VkFormatProperties formatProperties;
+
+        // calculate num of mip maps
+        // numLevels = 1 + floor(log2(max(w, h, d)))
+        // Calculated as log2(max(width, height, depth))c + 1 (see specs)
+        mipLevels = floor(log2(std::max(width, height))) + 1;
+
+        // Get device properites for the requested texture format
+        vkGetPhysicalDeviceFormatProperties(device->physicalDevice, format, &formatProperties);
+
+        // Mip-chain generation requires support for blit source and destination
+        assert(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT);
+        assert(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT);
+
+        VkMemoryAllocateInfo memAllocInfo = vks::initializers::memoryAllocateInfo();
+        VkMemoryRequirements memReqs = {};
+
+        // Create a host-visible staging buffer that contains the raw image data
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingMemory;
+
+        VkBufferCreateInfo bufferCreateInfo = vks::initializers::bufferCreateInfo();
+        bufferCreateInfo.size = size;
+        // This buffer is used as a transfer source for the buffer copy
+        bufferCreateInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        VK_CHECK_RESULT(vkCreateBuffer(device->logicalDevice, &bufferCreateInfo, nullptr, &stagingBuffer));
+        vkGetBufferMemoryRequirements(device->logicalDevice, stagingBuffer, &memReqs);
+        memAllocInfo.allocationSize = memReqs.size;
+        memAllocInfo.memoryTypeIndex = device->getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        VK_CHECK_RESULT(vkAllocateMemory(device->logicalDevice, &memAllocInfo, nullptr, &stagingMemory));
+        VK_CHECK_RESULT(vkBindBufferMemory(device->logicalDevice, stagingBuffer, stagingMemory, 0));
+
+        // Copy texture data into staging buffer
+        uint8_t *data;
+        VK_CHECK_RESULT(vkMapMemory(device->logicalDevice, stagingMemory, 0, memReqs.size, 0, (void **)&data));
+        memcpy(data, img, size);
+        vkUnmapMemory(device->logicalDevice, stagingMemory);
+
+        // Create optimal tiled target image
+        VkImageCreateInfo imageCreateInfo = vks::initializers::imageCreateInfo();
+        imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+        imageCreateInfo.format = format;
+        imageCreateInfo.mipLevels = mipLevels;
+        imageCreateInfo.arrayLayers = 1;
+        imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        imageCreateInfo.extent = { width, height, 1 };
+        imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+        VK_CHECK_RESULT(vkCreateImage(device->logicalDevice, &imageCreateInfo, nullptr, &image));
+        vkGetImageMemoryRequirements(device->logicalDevice, image, &memReqs);
+        memAllocInfo.allocationSize = memReqs.size;
+        memAllocInfo.memoryTypeIndex = device->getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        VK_CHECK_RESULT(vkAllocateMemory(device->logicalDevice, &memAllocInfo, nullptr, &deviceMemory));
+        VK_CHECK_RESULT(vkBindImageMemory(device->logicalDevice, image, deviceMemory, 0));
+
+        VkCommandBuffer copyCmd = device->createCommandBuffer(VK_COMMAND_BUFFER_LEVEL_PRIMARY, true);
+
+        VkImageSubresourceRange subresourceRange = {};
+        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresourceRange.levelCount = 1;
+        subresourceRange.layerCount = 1;
+
+        // Optimal image will be used as destination for the copy, so we must transfer from our initial undefined image layout to the transfer destination layout
+        vks::tools::setImageLayout(
+            copyCmd,
+            image,
+            VK_IMAGE_LAYOUT_UNDEFINED,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            subresourceRange);
+
+        // Copy the first mip of the chain, remaining mips will be generated
+        VkBufferImageCopy bufferCopyRegion = {};
+        bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        bufferCopyRegion.imageSubresource.mipLevel = 0;
+        bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
+        bufferCopyRegion.imageSubresource.layerCount = 1;
+        bufferCopyRegion.imageExtent.width = width;
+        bufferCopyRegion.imageExtent.height = height;
+        bufferCopyRegion.imageExtent.depth = 1;
+
+        vkCmdCopyBufferToImage(copyCmd, stagingBuffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &bufferCopyRegion);
+
+        // Transition first mip level to transfer source for read during blit
+        imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        vks::tools::setImageLayout(
+            copyCmd,
+            image,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            subresourceRange);
+
+        device->flushCommandBuffer(copyCmd, copyQueue, true);
+
+        // Clean up staging resources
+        vkFreeMemory(device->logicalDevice, stagingMemory, nullptr);
+        vkDestroyBuffer(device->logicalDevice, stagingBuffer, nullptr);
+
+        // Generate the mip chain
+        // ---------------------------------------------------------------
+        // We copy down the whole mip chain doing a blit from mip-1 to mip
+        // An alternative way would be to always blit from the first mip level and sample that one down
+        VkCommandBuffer blitCmd = device->createCommandBuffer(VK_COMMAND_BUFFER_LEVEL_PRIMARY, true);
+
+        // Copy down mips from n-1 to n
+        for (int32_t i = 1; i < mipLevels; i++)
+        {
+            VkImageBlit imageBlit{};
+
+            // Source
+            imageBlit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            imageBlit.srcSubresource.layerCount = 1;
+            imageBlit.srcSubresource.mipLevel = i-1;
+            imageBlit.srcOffsets[1].x = int32_t(width >> (i - 1));
+            imageBlit.srcOffsets[1].y = int32_t(height >> (i - 1));
+            imageBlit.srcOffsets[1].z = 1;
+
+            // Destination
+            imageBlit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            imageBlit.dstSubresource.layerCount = 1;
+            imageBlit.dstSubresource.mipLevel = i;
+            imageBlit.dstOffsets[1].x = int32_t(width >> i);
+            imageBlit.dstOffsets[1].y = int32_t(height >> i);
+            imageBlit.dstOffsets[1].z = 1;
+
+            VkImageSubresourceRange mipSubRange = {};
+            mipSubRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            mipSubRange.baseMipLevel = i;
+            mipSubRange.levelCount = 1;
+            mipSubRange.layerCount = 1;
+
+            // Transiton current mip level to transfer dest
+            vks::tools::setImageLayout(
+                blitCmd,
+                image,
+                VK_IMAGE_LAYOUT_UNDEFINED,
+                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                mipSubRange,
+                VK_PIPELINE_STAGE_TRANSFER_BIT,
+                VK_PIPELINE_STAGE_HOST_BIT);
+
+            // Blit from previous level
+            vkCmdBlitImage(
+                blitCmd,
+                image,
+                VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                image,
+                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                1,
+                &imageBlit,
+                VK_FILTER_LINEAR);
+
+            // Transiton current mip level to transfer source for read in next iteration
+            vks::tools::setImageLayout(
+                blitCmd,
+                image,
+                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                mipSubRange,
+                VK_PIPELINE_STAGE_HOST_BIT,
+                VK_PIPELINE_STAGE_TRANSFER_BIT);
+        }
+
+        // After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
+        subresourceRange.levelCount = mipLevels;
+        vks::tools::setImageLayout(
+            blitCmd,
+            image,
+            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            imageLayout,
+            subresourceRange);
+
+        device->flushCommandBuffer(blitCmd, copyQueue, true);
+        // ---------------------------------------------------------------
+
+        // Create samplers
+        samplers.resize(3);
+        VkSamplerCreateInfo sampler = vks::initializers::samplerCreateInfo();
+        sampler.magFilter = VK_FILTER_LINEAR;
+        sampler.minFilter = VK_FILTER_LINEAR;
+        sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        sampler.addressModeV = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        sampler.addressModeW = VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        sampler.mipLodBias = 0.0f;
+        sampler.compareOp = VK_COMPARE_OP_NEVER;
+        sampler.minLod = 0.0f;
+        sampler.maxLod = 0.0f;
+        sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+        sampler.maxAnisotropy = 1.0;
+        sampler.anisotropyEnable = VK_FALSE;
+
+        // Without mip mapping
+        VK_CHECK_RESULT(vkCreateSampler(device->logicalDevice, &sampler, nullptr, &samplers[0]));
+
+        // With mip mapping
+        sampler.maxLod = (float)mipLevels;
+        VK_CHECK_RESULT(vkCreateSampler(device->logicalDevice, &sampler, nullptr, &samplers[1]));
+
+        // With mip mapping and anisotropic filtering
+        if (device->features.samplerAnisotropy)
+        {
+            sampler.maxAnisotropy = device->properties.limits.maxSamplerAnisotropy;
+            sampler.anisotropyEnable = VK_TRUE;
+        }
+        VK_CHECK_RESULT(vkCreateSampler(device->logicalDevice, &sampler, nullptr, &samplers[2]));
+
+        // Create image view
+        VkImageViewCreateInfo viewCreateInfo = vks::initializers::imageViewCreateInfo();
+        viewCreateInfo.image = image;
+        viewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        viewCreateInfo.format = format;
+        viewCreateInfo.components = { VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A };
+        viewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        viewCreateInfo.subresourceRange.baseMipLevel = 0;
+        viewCreateInfo.subresourceRange.baseArrayLayer = 0;
+        viewCreateInfo.subresourceRange.layerCount = 1;
+        viewCreateInfo.subresourceRange.levelCount = mipLevels;
+        VK_CHECK_RESULT(vkCreateImageView(device->logicalDevice, &viewCreateInfo, nullptr, &view));
+    }
+
+    void destroy()
+    {
+        vkDestroyImageView(device->logicalDevice, view, nullptr);
+        vkDestroyImage(device->logicalDevice, image, nullptr);
+        if(sampler){
+            vkDestroySampler(device->logicalDevice, sampler, nullptr);
+        }
+        for (auto samplers_member : samplers)
+        {
+            vkDestroySampler(device->logicalDevice, samplers_member, nullptr);
+        }
+        vkFreeMemory(device->logicalDevice, deviceMemory, nullptr);
     }
 
 };
