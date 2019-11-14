@@ -7,8 +7,8 @@ MipmapGen::MipmapGen(bool debug): VulkanBasicEngine (debug){
 
     camera.type = Camera::CameraType::firstperson;
     camera.setPerspective(60.0f, (float)width / (float)height, 0.1f, 1024.0f);
-    camera.setRotation(glm::vec3(0.0f, 90.0f, 0.0f));
-    camera.setTranslation(glm::vec3(0.f, 0.0f, 0.0f));
+    camera.setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.setTranslation(glm::vec3(0.f, 0.0f, -3.0f));
     camera.movementSpeed = 2.5f;
     camera.rotationSpeed = 0.5f;
     settings.overlay = true;
@@ -223,7 +223,8 @@ void MipmapGen::preparePipelines()
 
     std::vector<VkDynamicState> dynamicStateEnables = {
         VK_DYNAMIC_STATE_VIEWPORT,
-        VK_DYNAMIC_STATE_SCISSOR
+        VK_DYNAMIC_STATE_SCISSOR,
+        VK_DYNAMIC_STATE_LINE_WIDTH,
     };
     VkPipelineDynamicStateCreateInfo dynamicState =
         vks::initializers::pipelineDynamicStateCreateInfo(
