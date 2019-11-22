@@ -33,7 +33,7 @@ Finally, welcome to clone or fork my project, remember to star if you consider m
 # Requirements
 ## Supported System:
    **Now:** Linux(Mainly)  Windows(Partly)
-   **Planned supported:** Mac Android IOS
+   **Planned supported:** Mac(I have successfully installed black Apple) Android IOS
 ## Libraries and Tools
    **CMake:** 3.14+ is recommended 
    **Vulkan:** 1.1.121+
@@ -67,7 +67,7 @@ The programs will be installed in the {PROJECT_DIR}/bin .
 ## For Windows
    Compile
 ```
-    cmake -G "Visual Studio 14 2015 Win64" -T host=x64 ..
+    cmake -G "Visual Studio 15 2017 Win64" -T host=x64 ..
     cmake --build . --config Release
     cmake --build . --config Release --target INSTALL
 ```
