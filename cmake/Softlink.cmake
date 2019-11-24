@@ -11,11 +11,11 @@ function(Softlink ag1)
 
 if(UNIX)
 message("Softlink ${ag1}")
-add_custom_command(TARGET ${LEARN_VULKAN_PROJECT}
-    PRE_BUILD
-    COMMAND rm ${ag1}/../data
-    COMMAND ln -s ${PROJECT_SOURCE_DIR}/data ${ag1}/../data
-)
+#add_custom_command(TARGET ${LEARN_VULKAN_PROJECT}
+#    PRE_BUILD
+#    COMMAND rm ${ag1}/../data
+#    COMMAND ln -s ${PROJECT_SOURCE_DIR}/data ${ag1}/../data
+#)
 elseif(WIN32)
     #if(CMAKE_MINOR_VERSION GREATER 12)
     #    add_custom_command(TARGET ${LEARN_VULKAN_PROJECT}
