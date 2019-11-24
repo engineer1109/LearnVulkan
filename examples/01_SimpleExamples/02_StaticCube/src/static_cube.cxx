@@ -1,3 +1,11 @@
+/*
+* LearnVulkan Examples
+*
+* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
+* 1292846099@qq.com
+*
+* This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+*/
 #include "static_cube.h"
 #define VERTEX_BUFFER_BIND_ID 0
 StaticCube::StaticCube(bool debugLayer):VulkanBasicEngine(debugLayer){

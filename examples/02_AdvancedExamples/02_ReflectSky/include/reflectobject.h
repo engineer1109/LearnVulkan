@@ -1,4 +1,12 @@
-﻿#ifndef REFLECTOBJECT_H
+﻿/*
+* LearnVulkan Examples
+*
+* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
+* 1292846099@qq.com
+*
+* This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+*/
+#ifndef REFLECTOBJECT_H
 #define REFLECTOBJECT_H
 #include "VulkanModel.hpp"
 #include "vulkan_basicengine_object.h"
