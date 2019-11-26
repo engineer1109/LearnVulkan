@@ -15,7 +15,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include/basicengine)
 add_library(${LIB_NAME} SHARED ${SRC_FILES} ${HEAD_FILES} ${STB_IMAGE})
 target_link_libraries(${LIB_NAME} vulkanbase ${Vulkan_LIBRARIES})
 if(UNIX)
-    target_link_libraries(${LIB_NAME} xcb)
+    target_link_libraries(${LIB_NAME} xcb stdc++fs)
 endif()
 
 INSTALL(TARGETS ${LIB_NAME} DESTINATION "${PROJECT_SOURCE_DIR}/lib")
