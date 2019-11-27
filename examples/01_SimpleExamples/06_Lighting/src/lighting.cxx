@@ -256,8 +256,8 @@ void Lighting::preparePipelines()
     pipelineCreateInfo.pStages = shaderStages.data();
 
     //pipelineCreateInfo.subpass=1;
-    shaderStages[0] = loadShader(getShaderPath()+"shaders/06_Lighting/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(getShaderPath()+"shaders/06_Lighting/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(FS::getAssetPath("shaders/06_Lighting/texture.so.vert"), VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(FS::getAssetPath("shaders/06_Lighting/texture.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT);
     for (size_t i=0;i<m_vkCubeList.size();i++) {
         VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_vkCubeList[i]->m_pipeline));
     }

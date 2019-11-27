@@ -6,6 +6,7 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
+#include "vulkan_basicengine_filesystem.h"
 #include "vkCube.h"
 #define VERTEX_BUFFER_BIND_ID 0
 VkCube::VkCube(){
@@ -187,8 +188,8 @@ void VkCube::setupVertexDescriptions()
 }
 
 void VkCube::loadTexture2D(){
-    m_textureA.loadFromFile("../data/textures/awesomeface.png",VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
-    m_textureB.loadFromFile("../data/textures/container.png",VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
+    m_textureA.loadFromFile(FS::getAssetPath("textures/awesomeface.png"),VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
+    m_textureB.loadFromFile(FS::getAssetPath("textures/container.png"),VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
 }
 
 void VkCube::prepareUniformBuffers()

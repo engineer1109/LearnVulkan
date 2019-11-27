@@ -63,12 +63,12 @@ void Skybox::OnUpdateUIOverlay(vks::UIOverlay *overlay){}
 
 void Skybox::prepareTextures(){
     m_skyboxPath.resize(6);
-    m_skyboxPath[0]="../data/textures/skybox/back.jpg";
-    m_skyboxPath[1]="../data/textures/skybox/front.jpg";
-    m_skyboxPath[2]="../data/textures/skybox/bottom.jpg";
-    m_skyboxPath[3]="../data/textures/skybox/top.jpg";
-    m_skyboxPath[4]="../data/textures/skybox/right.jpg";
-    m_skyboxPath[5]="../data/textures/skybox/left.jpg";
+    m_skyboxPath[0]=FS::getAssetPath("textures/skybox/back.jpg");
+    m_skyboxPath[1]=FS::getAssetPath("textures/skybox/front.jpg");
+    m_skyboxPath[2]=FS::getAssetPath("textures/skybox/bottom.jpg");
+    m_skyboxPath[3]=FS::getAssetPath("textures/skybox/top.jpg");
+    m_skyboxPath[4]=FS::getAssetPath("textures/skybox/right.jpg");
+    m_skyboxPath[5]=FS::getAssetPath("textures/skybox/left.jpg");
     m_textureSkybox.loadFromFile(m_skyboxPath,VK_FORMAT_R8G8B8A8_UNORM,vulkanDevice,queue);
 }
 
@@ -260,8 +260,8 @@ void Skybox::preparePipelines()
     pipelineCreateInfo.pVertexInputState = &vertexInputState;
 
     // Skybox pipeline (background cube)
-    shaderStages[0] = loadShader("../data/shaders/Adv_01_Skybox/skybox.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("../data/shaders/Adv_01_Skybox/skybox.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(FS::getAssetPath("shaders/Adv_01_Skybox/skybox.so.vert"), VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(FS::getAssetPath("shaders/Adv_01_Skybox/skybox.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT);
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipeline));
 }
 

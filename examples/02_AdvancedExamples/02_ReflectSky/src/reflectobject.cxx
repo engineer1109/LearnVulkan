@@ -6,6 +6,7 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
+#include "vulkan_basicengine_filesystem.h"
 #include "reflectobject.h"
 #define VERTEX_BUFFER_BIND_ID 0
 ReflectObject::~ReflectObject(){
@@ -33,7 +34,7 @@ void ReflectObject::update(){
 }
 
 void ReflectObject::loadModel(){
-    m_model.loadFromFile("../data/models/sphere.obj",m_vertexLayout,0.05f,m_vulkanDevice,m_queue);
+    m_model.loadFromFile(FS::getAssetPath("models/sphere.obj"),m_vertexLayout,0.05f,m_vulkanDevice,m_queue);
 }
 
 void ReflectObject::prepareUniformBuffers(){

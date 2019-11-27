@@ -6,6 +6,7 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
+#include "vulkan_basicengine_filesystem.h"
 #include "sky.h"
 #define VERTEX_BUFFER_BIND_ID 0
 Sky::~Sky(){
@@ -37,12 +38,12 @@ void Sky::update(){
 void Sky::prepareTextures(){
     std::vector<std::string> jpgPaths;
     jpgPaths.resize(6);
-    jpgPaths[0]="../data/textures/skybox/back.jpg";
-    jpgPaths[1]="../data/textures/skybox/front.jpg";
-    jpgPaths[2]="../data/textures/skybox/bottom.jpg";
-    jpgPaths[3]="../data/textures/skybox/top.jpg";
-    jpgPaths[4]="../data/textures/skybox/right.jpg";
-    jpgPaths[5]="../data/textures/skybox/left.jpg";
+    jpgPaths[0]=FS::getAssetPath("textures/skybox/back.jpg");
+    jpgPaths[1]=FS::getAssetPath("textures/skybox/front.jpg");
+    jpgPaths[2]=FS::getAssetPath("textures/skybox/bottom.jpg");
+    jpgPaths[3]=FS::getAssetPath("textures/skybox/top.jpg");
+    jpgPaths[4]=FS::getAssetPath("textures/skybox/right.jpg");
+    jpgPaths[5]=FS::getAssetPath("textures/skybox/left.jpg");
     m_textureSkybox.loadFromFile(jpgPaths,VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
 }
 

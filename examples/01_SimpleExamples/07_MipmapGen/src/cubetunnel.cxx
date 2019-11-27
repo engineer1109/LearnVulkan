@@ -6,6 +6,7 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
+#include "vulkan_basicengine_filesystem.h"
 #include "cubetunnel.h"
 #define VERTEX_BUFFER_BIND_ID 0
 CubeTunnel::~CubeTunnel(){
@@ -106,7 +107,7 @@ void CubeTunnel::generateVertex(){
 }
 
 void CubeTunnel::loadTextures(){
-    m_texture.loadFromFileAutoGenMipmap("../data/textures/container.png",VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
+    m_texture.loadFromFileAutoGenMipmap(FS::getAssetPath("textures/container.png"),VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
 }
 
 void CubeTunnel::prepareUniformBuffers()

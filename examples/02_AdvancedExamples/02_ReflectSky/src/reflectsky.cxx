@@ -262,13 +262,13 @@ void ReflectSky::preparePipelines(){
     pipelineCreateInfo.pVertexInputState = &vertexInputState;
 
     // Skybox pipeline (background cube)
-    shaderStages[0] = loadShader("../data/shaders/Adv_01_Skybox/skybox.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("../data/shaders/Adv_01_Skybox/skybox.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(FS::getAssetPath("shaders/Adv_01_Skybox/skybox.so.vert"), VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(FS::getAssetPath("shaders/Adv_01_Skybox/skybox.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT);
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &(m_sky->m_pipeline)));
 
     // Cube map reflect pipeline
-    shaderStages[0] = loadShader("../data/shaders/Adv_02_ReflectSky/reflectobject.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("../data/shaders/Adv_02_ReflectSky/reflectobject.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(FS::getAssetPath("shaders/Adv_02_ReflectSky/reflectobject.so.vert"), VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(FS::getAssetPath("shaders/Adv_02_ReflectSky/reflectobject.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT);
     // Enable depth test and write
     depthStencilState.depthWriteEnable = VK_TRUE;
     depthStencilState.depthTestEnable = VK_TRUE;

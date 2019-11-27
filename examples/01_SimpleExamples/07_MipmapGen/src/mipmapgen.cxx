@@ -243,8 +243,8 @@ void MipmapGen::preparePipelines()
     // Load shaders
     std::array<VkPipelineShaderStageCreateInfo,2> shaderStages;
 
-    shaderStages[0] = loadShader("../data/shaders/07_MipmapGen/texture.so.vert", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("../data/shaders/07_MipmapGen/texture.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader(FS::getAssetPath("shaders/07_MipmapGen/texture.so.vert"), VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(FS::getAssetPath("shaders/07_MipmapGen/texture.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT);
 
     VkGraphicsPipelineCreateInfo pipelineCreateInfo =
         vks::initializers::pipelineCreateInfo(
