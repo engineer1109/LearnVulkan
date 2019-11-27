@@ -5,7 +5,7 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-
+#include "vulkan_basicengine_filesystem.h"
 #include "VulkanUIOverlay.h"
 
 namespace vks 
@@ -72,7 +72,7 @@ namespace vks
 			delete[] fontAsset;
 		}
 #else
-		io.Fonts->AddFontFromFileTTF("./../data/Roboto-Medium.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF(FS::getAssetPath("Roboto-Medium.ttf").c_str(), 16.0f);
 #endif		
 		io.Fonts->GetTexDataAsRGBA32(&fontData, &texWidth, &texHeight);
 		VkDeviceSize uploadSize = texWidth*texHeight * 4 * sizeof(char);

@@ -40,7 +40,9 @@ include(${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/FindQt.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/FindAssimp.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/Report.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/Softlink.cmake)
+#include(${PROJECT_SOURCE_DIR}/cmake/Softlink.cmake)
+
+add_definitions(-DPROJECT_ABSOLUTE_PATH="${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(src)
 add_subdirectory(examples)

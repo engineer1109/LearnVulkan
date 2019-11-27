@@ -5,7 +5,7 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-
+#include "vulkan_basicengine_filesystem.h"
 #include "vulkanexamplebase.h"
 
 std::vector<const char*> VulkanExampleBase::args;
@@ -198,8 +198,8 @@ void VulkanExampleBase::prepare()
 		UIOverlay.device = vulkanDevice;
 		UIOverlay.queue = queue;
 		UIOverlay.shaders = {
-			loadShader(getAssetPath() + "shaders/base/uioverlay.vert.spv", VK_SHADER_STAGE_VERTEX_BIT),
-			loadShader(getAssetPath() + "shaders/base/uioverlay.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT),
+			loadShader(FS::getAssetPath("shaders/base/uioverlay.vert.spv"), VK_SHADER_STAGE_VERTEX_BIT),
+			loadShader(FS::getAssetPath("shaders/base/uioverlay.frag.spv"), VK_SHADER_STAGE_FRAGMENT_BIT),
 		};
 		UIOverlay.prepareResources();
 		UIOverlay.preparePipeline(pipelineCache, renderPass);
@@ -654,12 +654,12 @@ VulkanExampleBase::VulkanExampleBase(bool enableValidation)
 	if (stat(getAssetPath().c_str(), &info) != 0)
 	{
 #if defined(_WIN32)
-        std::string msg = "Could not locate asset path in \"" + getAssetPath() + "\" ! It may not be supported in visual studio. \nPlease Click the exe in the ${CMAKE_PROJECT_DIR}/Release Dir manually. ";
-		MessageBox(NULL, msg.c_str(), "Fatal error", MB_OK | MB_ICONERROR);
+        //std::string msg = "Could not locate asset path in \"" + getAssetPath() + "\" ! It may not be supported in visual studio. \nPlease Click the exe in the ${CMAKE_PROJECT_DIR}/Release Dir manually. ";
+		//MessageBox(NULL, msg.c_str(), "Fatal error", MB_OK | MB_ICONERROR);
 #else
-		std::cerr << "Error: Could not find asset path in " << getAssetPath() << std::endl;
+		//std::cerr << "Error: Could not find asset path in " << getAssetPath() << std::endl;
 #endif
-		exit(-1);
+		//exit(-1);
 	}
 #endif
 
