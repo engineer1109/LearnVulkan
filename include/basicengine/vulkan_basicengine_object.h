@@ -11,6 +11,7 @@
 #include "vulkan_basicengine_def.h"
 #include "vulkan_basicengine_help.h"
 #include "VulkanDevice.hpp"
+namespace VulkanTemplate {
 
 class VK_BASICENGINE_EXPORT VulkanBaseObject{
 public:
@@ -55,4 +56,6 @@ protected:
     uint32_t* m_screenWidth=nullptr;
     uint32_t* m_screenHeight=nullptr;
 };
+
+}
 #endif // VULKAN_BASICENGINE_OBJECT_H
