@@ -11,7 +11,7 @@
 #include "camera.hpp"
 #include "vulkan_basicengine_object.h"
 #include "vulkan_basicengine_texture.h"
-class CubeTunnel:public VulkanBaseObject{
+class CubeTunnel:public VulkanTemplate::VulkanBaseObject{
 public:
     CubeTunnel()=default;
     ~CubeTunnel();

@@ -3,7 +3,7 @@
 #include "vulkan_basicengine_object.h"
 #include "vulkan_basicengine_texture.h"
 
-class InstanceCube:public VulkanBaseObject{
+class InstanceCube:public VulkanTemplate::VulkanBaseObject{
 public:
     InstanceCube()=default;
     ~InstanceCube();

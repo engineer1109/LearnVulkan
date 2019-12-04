@@ -64,7 +64,7 @@ void ReflectSky::OnUpdateUIOverlay(vks::UIOverlay *overlay){
 }
 
 void ReflectSky::createObjects(){
-    VulkanBaseObject::ObjectInfo objectinfo;
+    VulkanTemplate::VulkanBaseObject::ObjectInfo objectinfo;
     objectinfo.vulkanDevice=vulkanDevice;
     objectinfo.instance=instance;
     objectinfo.cmdPool=cmdPool;

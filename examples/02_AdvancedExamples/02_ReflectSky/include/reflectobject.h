@@ -10,7 +10,7 @@
 #define REFLECTOBJECT_H
 #include "VulkanModel.hpp"
 #include "vulkan_basicengine_object.h"
-class ReflectObject:public VulkanBaseObject{
+class ReflectObject:public VulkanTemplate::VulkanBaseObject{
 public:
     ReflectObject()=default;
     ~ReflectObject();

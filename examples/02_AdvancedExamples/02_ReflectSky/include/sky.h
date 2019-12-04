@@ -11,7 +11,7 @@
 #include "VulkanModel.hpp"
 #include "vulkan_basicengine_object.h"
 #include "vulkan_basicengine_texture.h"
-class Sky:public VulkanBaseObject{
+class Sky:public VulkanTemplate::VulkanBaseObject{
 public:
     Sky()=default;
     ~Sky();

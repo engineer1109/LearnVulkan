@@ -55,7 +55,7 @@ void InstanceDraw::getEnabledFeatures()
 }
 
 void InstanceDraw::createObjects(){
-    VulkanBaseObject::ObjectInfo objectinfo;
+    VulkanTemplate::VulkanBaseObject::ObjectInfo objectinfo;
     objectinfo.vulkanDevice=vulkanDevice;
     objectinfo.instance=instance;
     objectinfo.cmdPool=cmdPool;

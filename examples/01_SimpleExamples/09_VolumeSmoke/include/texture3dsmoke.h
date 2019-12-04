@@ -3,7 +3,7 @@
 #include "vulkan_basicengine_object.h"
 #include "vulkan_basicengine_texture.h"
 
-class Texture3dSmoke:public VulkanBaseObject{
+class Texture3dSmoke:public VulkanTemplate::VulkanBaseObject{
 public:
     Texture3dSmoke()=default;
     ~Texture3dSmoke();
