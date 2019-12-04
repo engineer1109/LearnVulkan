@@ -35,7 +35,8 @@ public:
 
     void handleMouse(int x,int y);
 protected:
-
+    VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
+    VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
 private:
     void* m_window=nullptr;
     bool m_enableWindow=true;

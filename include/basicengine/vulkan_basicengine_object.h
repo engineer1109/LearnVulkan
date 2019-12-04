@@ -8,13 +8,11 @@
 */
 #ifndef VULKAN_BASICENGINE_OBJECT_H
 #define VULKAN_BASICENGINE_OBJECT_H
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <vulkan/vulkan.h>
-#include <glm/glm.hpp>
+#include "vulkan_basicengine_def.h"
+#include "vulkan_basicengine_help.h"
 #include "VulkanDevice.hpp"
 
-class VulkanBaseObject{
+class VK_BASICENGINE_EXPORT VulkanBaseObject{
 public:
     VulkanBaseObject()=default;
     ~VulkanBaseObject()=default;
