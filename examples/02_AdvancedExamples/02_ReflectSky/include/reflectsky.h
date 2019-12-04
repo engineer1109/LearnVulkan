@@ -41,9 +41,6 @@ private:
         vks::VERTEX_COMPONENT_NORMAL,
         vks::VERTEX_COMPONENT_UV,
     });
-    VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
-    //VkDescriptorSet m_descriptorSet=VK_NULL_HANDLE;
-    VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
     Sky* m_sky=nullptr;
     ReflectObject* m_reflectObject=nullptr;
 };

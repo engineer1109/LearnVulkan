@@ -50,8 +50,6 @@ private:
     std::vector<std::string> m_skyboxPath;
     vks::TextureCubeMapStbImage m_textureSkybox;
     vks::Model m_skyboxModel;
-    VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
-    VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
     VkDescriptorSet m_descriptorSet=VK_NULL_HANDLE;
     VkPipeline m_pipeline=VK_NULL_HANDLE;
 

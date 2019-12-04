@@ -30,8 +30,6 @@ private:
     void preparePipelines();
     void buildCommandBuffers();
 private:
-    VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
-    VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
     struct {
         VkPipelineVertexInputStateCreateInfo inputState;
         std::vector<VkVertexInputBindingDescription> bindingDescriptions;

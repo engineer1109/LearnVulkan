@@ -48,9 +48,7 @@ public:
         std::vector<VkVertexInputAttributeDescription> inputAttributes;
     } m_vertices;
 private:
-    VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
     VkDescriptorSet m_descriptorSet=VK_NULL_HANDLE;
-    VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
     bool m_autoRotation=false;
     std::vector<VkCube*> m_vkCubeList;
 };

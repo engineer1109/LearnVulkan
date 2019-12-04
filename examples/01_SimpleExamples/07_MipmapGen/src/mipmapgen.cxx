@@ -25,8 +25,7 @@ MipmapGen::MipmapGen(bool debug): VulkanBasicEngine (debug){
 }
 
 MipmapGen::~MipmapGen(){
-    vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
-    vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
+
 }
 
 void MipmapGen::prepare(){

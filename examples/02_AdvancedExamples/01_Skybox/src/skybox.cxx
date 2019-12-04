@@ -16,8 +16,6 @@ Skybox::~Skybox(){
     m_textureSkybox.destroy();
 
     vkDestroyPipeline(device, m_pipeline, nullptr);
-    vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
-    vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
 
     m_skyboxModel.destroy();
     m_uniformBuffers.destroy();

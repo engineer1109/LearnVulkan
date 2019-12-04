@@ -55,9 +55,7 @@ private:
     vks::Buffer m_indexBuffer;
     vks::Buffer m_uniformBufferVS;
     vks::Texture2DStbImage m_texture;
-    VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
     VkDescriptorSet m_descriptorSet=VK_NULL_HANDLE;
-    VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
     VkPipeline m_pipeline=VK_NULL_HANDLE;
     uint32_t m_indexCount=0;
     bool m_autoRotation=false;

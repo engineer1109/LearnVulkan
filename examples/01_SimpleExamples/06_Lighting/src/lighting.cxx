@@ -18,8 +18,6 @@ Lighting::~Lighting(){
         delete m_vkCubeList[i];
         m_vkCubeList[i]=nullptr;
     }
-    vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
-    vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
 }
 
 void Lighting::prepare(){

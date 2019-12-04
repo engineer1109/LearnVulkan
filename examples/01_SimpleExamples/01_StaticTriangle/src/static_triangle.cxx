@@ -14,8 +14,6 @@ StaticTriangle::StaticTriangle(bool debugLayer):VulkanBasicEngine(debugLayer){
 }
 StaticTriangle::~StaticTriangle(){
     vkDestroyPipeline(device, m_pipeline, nullptr);
-    vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
-    vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
     m_vertexBuffer.destroy();
     m_indexBuffer.destroy();
     m_uniformBufferVS.destroy();
