@@ -12,7 +12,12 @@ VulkanBasicEngine::VulkanBasicEngine(bool enableValidation):VulkanExampleBase(en
 }
 
 VulkanBasicEngine::~VulkanBasicEngine(){
-
+    if(m_pipelineLayout){
+        vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
+    }
+    if(m_descriptorSetLayout){
+        vkDestroyDescriptorSetLayout(device, m_descriptorSetLayout, nullptr);
+    }
 }
 
 std::string VulkanBasicEngine::getWindowTitle()
