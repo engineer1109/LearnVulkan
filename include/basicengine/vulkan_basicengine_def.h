@@ -1,8 +1,7 @@
 /*
 * LearnVulkan BasicEngine
 *
-* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
-* 1292846099@qq.com
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
@@ -18,5 +17,9 @@
 #else
     #define VK_BASICENGINE_EXPORT
 #endif
+
+#define BEGIN_NAMESPACE(n) namespace n{
+
+#define END_NAMESPACE(n) }
 
 #endif

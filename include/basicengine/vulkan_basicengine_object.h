@@ -1,8 +1,7 @@
 /*
 * LearnVulkan BasicEngine
 *
-* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
-* 1292846099@qq.com
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
@@ -11,7 +10,7 @@
 #include "vulkan_basicengine_def.h"
 #include "vulkan_basicengine_help.h"
 #include "VulkanDevice.hpp"
-namespace VulkanTemplate {
+BEGIN_NAMESPACE(VulkanTemplate)
 
 class VK_BASICENGINE_EXPORT VulkanBaseObject{
 public:
@@ -57,5 +56,5 @@ protected:
     uint32_t* m_screenHeight=nullptr;
 };
 
-}
+END_NAMESPACE(VulkanTemplate)
 #endif // VULKAN_BASICENGINE_OBJECT_H
