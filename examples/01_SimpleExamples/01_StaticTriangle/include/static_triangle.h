@@ -1,13 +1,14 @@
 /*
 * LearnVulkan Examples
 *
-* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
-* 1292846099@qq.com
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
+*
+* This is an example of a triangle rendering.
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
 #ifndef STATIC_TRIANGLE_H
-#define STATIC_TRIANGLE
+#define STATIC_TRIANGLE_H
 #include "vulkan_basicengine.h"
 class StaticTriangle:public VulkanBasicEngine{
 public:

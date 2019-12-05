@@ -1,13 +1,14 @@
 /*
 * LearnVulkan Examples
 *
-* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
-* 1292846099@qq.com
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
+*
+* A simple example of UV cube.
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#ifndef STATIC_TRIANGLE_H
-#define STATIC_TRIANGLE
+#ifndef STATIC_CUBE_H
+#define STATIC_CUBE_H
 #include "vulkan_basicengine.h"
 class StaticCube:public VulkanBasicEngine{
 public:

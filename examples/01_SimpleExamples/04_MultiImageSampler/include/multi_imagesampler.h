@@ -1,8 +1,9 @@
 /*
 * LearnVulkan Examples
 *
-* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
-* 1292846099@qq.com
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
+*
+* Texture using two images mixture.
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */

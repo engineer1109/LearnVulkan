@@ -1,3 +1,10 @@
+/*
+* LearnVulkan Examples
+*
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
+*
+* This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+*/
 #ifndef INSTANCECUBE_H
 #define INSTANCECUBE_H
 #include "vulkan_basicengine_object.h"

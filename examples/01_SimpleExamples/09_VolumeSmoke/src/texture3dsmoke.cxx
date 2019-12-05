@@ -1,3 +1,10 @@
+/*
+* LearnVulkan Examples
+*
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
+*
+* This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+*/
 #include "texture3dsmoke.h"
 Texture3dSmoke::~Texture3dSmoke(){
 

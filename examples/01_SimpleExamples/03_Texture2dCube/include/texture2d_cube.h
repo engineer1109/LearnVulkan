@@ -1,16 +1,15 @@
 /*
 * LearnVulkan Examples
 *
-* Copyright (C) by Jialiang Wang - https://github.com/engineer1109/LearnVulkan
-* 1292846099@qq.com
+* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
+*
+* A cube with 2D texture using my vulkanbasicengine template.
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#ifndef STATIC_TRIANGLE_H
-#define STATIC_TRIANGLE
-#ifdef WIN32
-    #define gli glm
-#endif
+#ifndef TEXTURE2DCUBE_H
+#define TEXTURE2DCUBE_H
+
 #include "vulkan_basicengine.h"
 #include "vulkan_basicengine_texture.h"
 class Texture2dCube:public VulkanBasicEngine{
