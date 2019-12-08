@@ -12,16 +12,15 @@
 ## What is more than SaschaWillems's Project
 This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  <br>
 Use sharelib (libvulkanbase.so, libvulkan_basicengine.so) instead of static lib.  <br>
-|  Features   | Status  |  
-|  ----  | ----  |  
-| Sharelib  | ✅ |  
-| Supported System  | Linux & Windows |  
-| PNG and JPEG Texture Load  | ✅ (Auto turn to RGBA8 format) |  
-| Volume Texture3d Load  | ⭕ (Will support nii and raw data) |  
-| Auto Mipmap-Gen  | ✅  |  
-| Qt-binding(vulkan widget)  | ✅  |  
-| Relative path and absolute path management for IDE  | ✅  |  
-| Basic object template(Ball & Square & Cube and so on)  | ⭕  |  
+
+* Sharelib : ✅  
+* Supported System : Linux & Windows   
+* PNG and JPEG Texture Load  : ✅ (Auto turn to RGBA8 format)  
+* Volume Texture3d Load : ⭕ (Will support nii and raw data)  
+* Auto Mipmap-Gen  : ✅  
+* Qt-binding(vulkan widget)  : ✅  
+* Relative path and absolute path management for IDE  : ✅  
+* Basic object template(Ball & Square & Cube and so on)  : ⭕  
 For examples of cross-platform api:  
 ```
 int main(int argc,char** argv){
