@@ -19,7 +19,15 @@ VertexObject::~VertexObject(){
 
 void VertexObject::create(){
     generateVertex();
-    prepareUniformBuffers();
+}
+
+void VertexObject::build(VkCommandBuffer cmd){
+    VkDeviceSize offsets[1] = { 0 };
+    vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_pPipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
+    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
+    vkCmdBindVertexBuffers(cmd, VERTEX_BUFFER_BIND_ID, 1,&m_vertexBuffer.buffer, offsets);
+    vkCmdBindIndexBuffer(cmd, m_indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+    vkCmdDrawIndexed(cmd, m_indexCount, 1, 0, 0, 0);
 }
 
 void VertexObject::update(){
@@ -30,19 +38,6 @@ void VertexObject::generateVertex(){
 
 }
 
-void VertexObject::prepareUniformBuffers(){
-    VK_CHECK_RESULT(m_vulkanDevice->createBuffer(
-        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        &m_uniformBuffers,
-        sizeof(m_uboVS),
-        &m_uboVS));
 
-    updateUniformBuffers();
-}
-
-void VertexObject::updateUniformBuffers(){
-
-}
 
 }
