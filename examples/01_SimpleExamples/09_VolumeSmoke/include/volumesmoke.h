@@ -22,8 +22,13 @@ public:
     virtual void getEnabledFeatures();
 private:
     void createObjects();
+    void setupDescriptorPool();
+    void setupDescriptorSetLayout();
+    void setupDescriptorSet();
+    void preparePipelines();
+    void buildCommandBuffers();
 private:
-    Texture3dSmoke* m_cube=nullptr;
+    Texture3dSmoke* m_volumeSmoke=nullptr;
 };
 
 #endif

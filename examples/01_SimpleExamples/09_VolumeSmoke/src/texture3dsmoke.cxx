@@ -5,179 +5,148 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
+#include "vulkan_basicengine_help.h"
+#include "vulkan_basicengine_algorithm.h"
 #include "texture3dsmoke.h"
-Texture3dSmoke::~Texture3dSmoke(){
+Texture3dSmoke::Texture3dSmoke(uint32_t width,uint32_t height,uint32_t depth){
+    m_width=width;
+    m_height=height;
+    m_depth=depth;
+    m_imgData=new uint8_t[width*height*depth];
+}
 
+Texture3dSmoke::~Texture3dSmoke(){
+    if(m_imgData){
+        delete m_imgData;
+        m_imgData=nullptr;
+    }
 }
 
 void Texture3dSmoke::create(){
-    setupVertexDescriptions();
     generateVertex();
-}
-
-void Texture3dSmoke::build(VkCommandBuffer cmd, VkPipelineLayout pipelineLayout){
-    VkDeviceSize offsets[1] = { 0 };
-    vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
-    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
-    vkCmdBindVertexBuffers(cmd, VERTEX_BUFFER_BIND_ID, 1,&m_vertexBuffer.buffer, offsets);
-    vkCmdBindIndexBuffer(cmd, m_indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
-    vkCmdDrawIndexed(cmd, m_indexCount, 1, 0, 0, 0);
+    prepareUniformBuffers();
+    setupVertexDescriptions();
+    generateNoise();
+    prepareModelBuffer();
+    prepareTransferFunctionImage();
 }
 
 void Texture3dSmoke::update(){
-
+    Texture3DPlane::update();
 }
 
-void Texture3dSmoke::setupVertexDescriptions(){
-    // Binding description
-    m_vertices.bindingDescriptions.resize(2);
-    m_vertices.bindingDescriptions[0] =
-        vks::initializers::vertexInputBindingDescription(
-            VERTEX_BUFFER_BIND_ID,
-            sizeof(Vertex),
-            VK_VERTEX_INPUT_RATE_VERTEX);
-    m_vertices.bindingDescriptions[1] =
-        vks::initializers::vertexInputBindingDescription(
-            INSTANCE_BUFFER_BIND_ID,
-            sizeof(InstanceData),
-            VK_VERTEX_INPUT_RATE_INSTANCE);
+void Texture3dSmoke::generateNoise(){
+    VulkanTemplate::PerlinNoise<float> perlinNoise;
+    VulkanTemplate::FractalNoise<float> fractalNoise(perlinNoise);
 
-    // Attribute descriptions
-    // Describes memory layout and shader positions
-    m_vertices.attributeDescriptions.resize(8);
-    // Location 0 : Position
-    m_vertices.attributeDescriptions[0] =
-        vks::initializers::vertexInputAttributeDescription(
-            VERTEX_BUFFER_BIND_ID,
-            0,
-            VK_FORMAT_R32G32B32_SFLOAT,
-            0);
-    // Location 1 : Texture coordinates
-    m_vertices.attributeDescriptions[1] =
-        vks::initializers::vertexInputAttributeDescription(
-            VERTEX_BUFFER_BIND_ID,
-            1,
-            VK_FORMAT_R32G32_SFLOAT,
-            3 * sizeof(float));
-    // Location 2 : Vertex normal
-    m_vertices.attributeDescriptions[2] =
-        vks::initializers::vertexInputAttributeDescription(
-            VERTEX_BUFFER_BIND_ID,
-            2,
-            VK_FORMAT_R32G32B32_SFLOAT,
-            5 * sizeof(float));
-    // Location 3 : Color
-    m_vertices.attributeDescriptions[3] =
-        vks::initializers::vertexInputAttributeDescription(
-            VERTEX_BUFFER_BIND_ID,
-            3,
-            VK_FORMAT_R32G32B32_SFLOAT,
-            8 * sizeof(float));
+    const int32_t noiseType = rand() % 2;
+    const float noiseScale = static_cast<float>(rand() % 10) + 4.0f;
 
-    // Location 4 : Cube Position
-    m_vertices.attributeDescriptions[4] =
-        vks::initializers::vertexInputAttributeDescription(
-            INSTANCE_BUFFER_BIND_ID,
-            4,
-            VK_FORMAT_R32G32B32_SFLOAT,
-            0);
-    // Location 5 : Cube Rotation
-    m_vertices.attributeDescriptions[5] =
-        vks::initializers::vertexInputAttributeDescription(
-            INSTANCE_BUFFER_BIND_ID,
-            5,
-            VK_FORMAT_R32G32B32_SFLOAT,
-            sizeof(float) * 3);
-    // Location 6 : Scale
-    m_vertices.attributeDescriptions[6] =
-        vks::initializers::vertexInputAttributeDescription(
-            INSTANCE_BUFFER_BIND_ID,
-            6,
-            VK_FORMAT_R32_SFLOAT,
-            sizeof(float) * 6);
-    // Location 7 : index
-    m_vertices.attributeDescriptions[7] =
-        vks::initializers::vertexInputAttributeDescription(
-            INSTANCE_BUFFER_BIND_ID,
-            7,
-            VK_FORMAT_R32_SFLOAT,
-            sizeof(float) * 7);
-
-    m_vertices.inputState = vks::initializers::pipelineVertexInputStateCreateInfo();
-    m_vertices.inputState.vertexBindingDescriptionCount = static_cast<uint32_t>(m_vertices.bindingDescriptions.size());
-    m_vertices.inputState.pVertexBindingDescriptions = m_vertices.bindingDescriptions.data();
-    m_vertices.inputState.vertexAttributeDescriptionCount = static_cast<uint32_t>(m_vertices.attributeDescriptions.size());
-    m_vertices.inputState.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
-}
-
-void Texture3dSmoke::generateVertex(){
-    std::vector<Vertex> vertices =
+    for (int32_t z = 0; z < m_width; z++)
     {
+        for (uint32_t y = 0; y < m_height; y++)
+        {
+            for (int32_t x = 0; x < m_depth; x++)
+            {
+                float nx = (float)x / (float)m_width;
+                float ny = (float)y / (float)m_height;
+                float nz = (float)z / (float)m_depth;
+#define FRACTAL
+#ifdef FRACTAL
+                float n = fractalNoise.noise(nx * noiseScale, ny * noiseScale, nz * noiseScale);
+#else
+                float n = 20.0 * perlinNoise.noise(nx, ny, nz);
+#endif
+                n = n - floor(n);
 
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } ,{0.0f,0.0f,0.0f}},
-
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f,-1.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 0.0f,-1.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f,-1.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 0.0f,-1.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 0.0f,-1.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 0.0f,-1.0f } ,{0.0f,0.0f,0.0f}},
-
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, {-1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, {-1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, {-1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, {-1.0f, 0.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x,  1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f,-1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f,-1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 0.0f, 1.0f }, { 0.0f,-1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y,  1.0f*m_size+m_z },{ 1.0f, 1.0f }, { 0.0f,-1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { {  1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 1.0f, 0.0f }, { 0.0f,-1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-       { { -1.0f*m_size+m_x, -1.0f*m_size+m_y, -1.0f*m_size+m_z },{ 0.0f, 0.0f }, { 0.0f,-1.0f, 0.0f } ,{0.0f,0.0f,0.0f}},
-    };
-
-    // Setup indices
-    std::vector<uint32_t> indices(vertices.size());
-    for(int i=0;i<indices.size();i++){
-        indices[i]=i;
+                m_imgData[x + y * m_width + z * m_height * m_depth] = static_cast<uint8_t>(floor(n * 255));
+            }
+        }
     }
-    m_indexCount = static_cast<uint32_t>(indices.size());
 
-    // Create buffers
-    // For the sake of simplicity we won't stage the vertex data to the gpu memory
-    // Vertex buffer
+    loadTexture3D(m_imgData,m_width,m_height,m_depth);
+}
+
+void Texture3dSmoke::prepareUniformBuffers(){
     VK_CHECK_RESULT(m_vulkanDevice->createBuffer(
-    VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        &m_vertexBuffer,
-        vertices.size() * sizeof(Vertex),
-        vertices.data()));
-    // Index buffer
+        &m_uniformBuffers,
+        sizeof(m_uboVS),
+        &m_uboVS));
+    VK_CHECK_RESULT(m_uniformBuffers.map());
+    updateUniformBuffers();
+}
+
+void Texture3dSmoke::updateUniformBuffers(){
+    m_uboVS.projection = glm::perspective(glm::radians(60.0f), float(*m_screenWidth) / float(*m_screenHeight), 0.001f, 256.0f);
+    glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, -sqrtf(3)/2.f));
+    m_uboVS.model = viewMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
+    m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.f), glm::vec3(1.0f, 0.0f, 0.0f));
+    m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.f), glm::vec3(0.0f, 1.0f, 0.0f));
+    m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.f), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_uboVS.viewPos = glm::vec4(0.0f, 0.0f, -sqrtf(3)/2.f, 0.0f);
+    memcpy(m_uniformBuffers.mapped, &m_uboVS, sizeof(m_uboVS));
+}
+
+void Texture3dSmoke::prepareModelBuffer(){
     VK_CHECK_RESULT(m_vulkanDevice->createBuffer(
-        VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        &m_indexBuffer,
-        indices.size() * sizeof(uint32_t),
-        indices.data()));
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            &m_modelVolumeBuffer,
+            sizeof(m_modelVolume),
+            &m_modelVolume));
+    VK_CHECK_RESULT(m_modelVolumeBuffer.map());
+    updateModelBuffer();
+}
+
+void Texture3dSmoke::updateModelBuffer(){
+    m_modelVolume.model=m_viewMat;
+    memcpy(m_modelVolumeBuffer.mapped, &m_modelVolume, sizeof(m_modelVolume));
+}
+
+void Texture3dSmoke::prepareTransferFunctionImage(){
+    std::vector<glm::vec4> sampleColorList=
+    {
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.2, 0.2, 0.2, 1.0, },
+        {  0.4, 0.4, 0.4, 1.0, },
+        {  1.0, 1.0, 1.0, 1.0, },
+        {  0.4, 0.4, 0.4, 0.0, },
+        {  0.2, 0.2, 0.2, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+        {  0.0, 0.0, 0.0, 0.0, },
+    };
+    std::vector<uint8_t> transferImg(sampleColorList.size()*4);
+    for (size_t i=0;i<transferImg.size()/4;i++) {
+        transferImg[i*4]=uint8_t(sampleColorList[i].x*255);
+        transferImg[i*4+1]=uint8_t(sampleColorList[i].y*255);
+        transferImg[i*4+2]=uint8_t(sampleColorList[i].z*255);
+        transferImg[i*4+3]=uint8_t(sampleColorList[i].w*255);
+    }
+    m_texture2d.loadFromArray(transferImg.data(),30,1,VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue,
+                                  VK_IMAGE_USAGE_SAMPLED_BIT,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                                  false,VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
 }

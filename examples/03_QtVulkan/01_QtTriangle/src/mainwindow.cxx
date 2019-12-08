@@ -51,13 +51,15 @@ void MainWindow::closeEvent(QCloseEvent *event){
 
 void MainWindow::vkRender()
 {
-    m_pStatictriangle=new StaticTriangle(false);
-    m_pStatictriangle->initVulkan();
-    m_pStatictriangle->setWindow(ui->widget_vulkan->getWindowHandle());
-    m_pStatictriangle->prepare();
-    m_pStatictriangle->renderAsyncThread();
-    m_pStatictriangle->enableAutoRotation(true);
-    ui->widget_vulkan->setVulkanPtr(m_pStatictriangle);
+    if(!m_pStatictriangle){
+        m_pStatictriangle=new StaticTriangle(false);
+        m_pStatictriangle->initVulkan();
+        m_pStatictriangle->setWindow(ui->widget_vulkan->getWindowHandle());
+        m_pStatictriangle->prepare();
+        m_pStatictriangle->renderAsyncThread();
+        m_pStatictriangle->enableAutoRotation(true);
+        ui->widget_vulkan->setVulkanPtr(m_pStatictriangle);
+    }
 }
 
 void MainWindow::setAutoRotate(){

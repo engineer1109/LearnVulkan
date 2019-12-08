@@ -67,8 +67,9 @@ void ReflectSky::createObjects(){
     objectinfo.vulkanDevice=vulkanDevice;
     objectinfo.instance=instance;
     objectinfo.cmdPool=cmdPool;
-    objectinfo.pipelineCache=pipelineCache;
-    objectinfo.renderPass=renderPass;
+    objectinfo.pPipelineLayout=&m_pipelineLayout;
+    objectinfo.pPipelineCache=&pipelineCache;
+    objectinfo.pRenderPass=&renderPass;
     objectinfo.queue=queue;
     objectinfo.screenWitdh=&width;
     objectinfo.screenHeight=&height;

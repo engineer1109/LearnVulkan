@@ -5,71 +5,37 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#ifndef INSTANCECUBE_H
-#define INSTANCECUBE_H
-#include "vulkan_basicengine_object.h"
+#ifndef TEXTURE3DSMOKE_H
+#define TEXTURE3DSMOKE_H
 #include "vulkan_basicengine_texture.h"
+#include "vulkan_basicengine_texture3dplane.h"
 
-class Texture3dSmoke:public VulkanTemplate::VulkanBaseObject{
+class Texture3dSmoke:public VulkanTemplate::Texture3DPlane{
 public:
-    Texture3dSmoke()=default;
+    Texture3dSmoke(uint32_t width,uint32_t height,uint32_t depth);
     ~Texture3dSmoke();
 
     void create();
-    void build(VkCommandBuffer cmd,VkPipelineLayout pipelineLayout);
     void update();
 public:
-    struct InstanceBuffer {
-        VkBuffer buffer = VK_NULL_HANDLE;
-        VkDeviceMemory memory = VK_NULL_HANDLE;
-        size_t size = 0;
-        VkDescriptorBufferInfo descriptor;
-    } m_instanceBuffer;
-
-    struct UBOVS {
-        glm::mat4 projection;
-        glm::mat4 view;
-        glm::vec4 lightPos = glm::vec4(0.0f, -5.0f, 0.0f, 1.0f);
-        float locSpeed = 0.0f;
-        float globSpeed = 0.0f;
-    } m_uboVS;
-
-    struct InstanceData {
-        glm::vec3 pos;
-        glm::vec3 rot;
-        float scale;
-        uint32_t texIndex;
-    };
-
-    struct {
-        VkPipelineVertexInputStateCreateInfo inputState;
-        std::vector<VkVertexInputBindingDescription> bindingDescriptions;
-        std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-    } m_vertices;
-
-    VkDescriptorSet m_descriptorSet;
-    VkPipeline m_pipeline;
-    vks::Buffer m_uniformBufferVS;
-    vks::Texture2DStbImage m_texture;
+    glm::mat4 m_viewMat;
+    struct{
+        glm::mat4 model;
+    }m_modelVolume;
+    vks::Buffer m_modelVolumeBuffer;
+    vks::Texture2DStbImage m_texture2d;
+protected:
+    void generateNoise();
+    void prepareUniformBuffers();
+    void updateUniformBuffers();
+    void prepareModelBuffer();
+    void updateModelBuffer();
+    void prepareTransferFunctionImage();
 private:
-    void setupVertexDescriptions();
-    void generateVertex();
-    void loadTextures();
-private:
-    vks::Buffer m_vertexBuffer;
-    vks::Buffer m_indexBuffer;
-    uint32_t m_indexCount=0;
-    struct Vertex {
-        float pos[3];
-        float uv[2];
-        float normal[3];
-        float color[3];
-    };
-
-    float m_size=1.f;
-    float m_x=0.f;
-    float m_y=0.f;
-    float m_z=0.f;
+    uint8_t* m_imgData=nullptr;
+    uint32_t m_width=0;
+    uint32_t m_height=0;
+    uint32_t m_depth=0;
 };
 
 #endif // INSTANCECUBE_H
