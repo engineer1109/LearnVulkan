@@ -21,9 +21,10 @@ public:
         vks::VulkanDevice* vulkanDevice=nullptr;
         VkInstance instance=VK_NULL_HANDLE;
         VkCommandPool cmdPool=VK_NULL_HANDLE;
-        VkPipelineCache pipelineCache=VK_NULL_HANDLE;
-        VkRenderPass renderPass=VK_NULL_HANDLE;
-        VkQueue queue=VK_NULL_HANDLE;
+        VkPipelineLayout* pPipelineLayout=nullptr;
+        VkPipelineCache* pPipelineCache=VK_NULL_HANDLE;
+        VkRenderPass* pRenderPass=nullptr;
+        VkQueue queue=nullptr;
         uint32_t* screenWitdh=nullptr;
         uint32_t* screenHeight=nullptr;
     }m_objectInfo;
@@ -34,13 +35,13 @@ public:
         this->m_physicalDevice=this->m_vulkanDevice->physicalDevice;
         this->m_instance=info.instance;
         this->m_cmdPool=info.cmdPool;
-        this->m_pipelineCache=info.pipelineCache;
-        this->m_renderPass=info.renderPass;
+        this->m_pPipelineLayout=info.pPipelineLayout;
+        this->m_pPipelineCache=info.pPipelineCache;
+        this->m_pRenderPass=info.pRenderPass;
         this->m_queue=info.queue;
         this->m_screenWidth=info.screenWitdh;
         this->m_screenHeight=info.screenHeight;
     }
-    void setPipelineLayout(VkPipelineLayout pipelineLayout){m_pipelineLayout=pipelineLayout;}
 
 protected:
     vks::VulkanDevice* m_vulkanDevice=nullptr;
@@ -48,10 +49,10 @@ protected:
     VkPhysicalDevice m_physicalDevice=VK_NULL_HANDLE;
     VkInstance m_instance=VK_NULL_HANDLE;
     VkCommandPool m_cmdPool=VK_NULL_HANDLE;
-    VkPipelineLayout m_pipelineLayout=nullptr;
-    VkPipelineCache m_pipelineCache=VK_NULL_HANDLE;
-    VkRenderPass m_renderPass=VK_NULL_HANDLE;
-    VkQueue m_queue=VK_NULL_HANDLE;
+    VkPipelineLayout* m_pPipelineLayout=nullptr;
+    VkPipelineCache* m_pPipelineCache=nullptr;
+    VkRenderPass* m_pRenderPass=nullptr;
+    VkQueue m_queue=nullptr;
     uint32_t* m_screenWidth=nullptr;
     uint32_t* m_screenHeight=nullptr;
 };

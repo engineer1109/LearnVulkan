@@ -9,8 +9,14 @@
 #define VULKAN_BASICENGINE_HELP_H
 // C++17 include
 #include <iostream>
+#include <algorithm>
 #include <memory>
 #include <thread>
+#include <numeric>
+#include <assert.h>
+#include <vector>
+#include <random>
+#include <ctime>
 #include <ciso646>
 #if defined(__GNUC__) && __GNUC__ > 7
     #include <filesystem>

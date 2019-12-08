@@ -5,8 +5,8 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#ifndef VULKAN_BASICENGINE_TEXTURE_H
-#define VULKAN_BASICENGINE_TEXTURE_H
+#ifndef VULKAN_BASICENGINE_TEXTURE3D_H
+#define VULKAN_BASICENGINE_TEXTURE3D_H
 #ifdef WIN32
     #define gli glm
 #endif
@@ -35,10 +35,9 @@ struct Texture3D: public Texture{
         VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
         bool forceLinear = false)
     {
-
         this->device = device;
-        uint32_t size=width*height*depth*sizeof(uint8_t);
-        mipLevels = 1;
+        mipLevels = static_cast<uint32_t>(1);
+        size_t size=width*height*depth;
 
         // Get device properites for the requested texture format
         VkFormatProperties formatProperties;
@@ -98,9 +97,9 @@ struct Texture3D: public Texture{
                 bufferCopyRegion.imageSubresource.mipLevel = i;
                 bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
                 bufferCopyRegion.imageSubresource.layerCount = 1;
-                bufferCopyRegion.imageExtent.width = width;
-                bufferCopyRegion.imageExtent.height = height;
-                bufferCopyRegion.imageExtent.depth = depth;
+                bufferCopyRegion.imageExtent.width = static_cast<uint32_t>(width);
+                bufferCopyRegion.imageExtent.height = static_cast<uint32_t>(height);
+                bufferCopyRegion.imageExtent.depth = static_cast<uint32_t>(depth);
                 bufferCopyRegion.bufferOffset = offset;
 
                 bufferCopyRegions.push_back(bufferCopyRegion);
@@ -118,7 +117,7 @@ struct Texture3D: public Texture{
             imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
             imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
             imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-            imageCreateInfo.extent = { width, height, 1 };
+            imageCreateInfo.extent = { width, height, depth };
             imageCreateInfo.usage = imageUsageFlags;
             // Ensure that the TRANSFER_DST bit is set for staging
             if (!(imageCreateInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT))
@@ -289,6 +288,7 @@ struct Texture3D: public Texture{
         // Update descriptor image info member that can be used for setting up descriptor sets
         updateDescriptor();
     }
+
 
 };
 
