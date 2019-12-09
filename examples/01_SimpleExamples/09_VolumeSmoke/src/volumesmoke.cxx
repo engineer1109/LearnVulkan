@@ -11,6 +11,7 @@
 VolumeSmoke::VolumeSmoke(bool debug):VulkanBasicEngine (debug){
     title="VolumeSmoke";
     settings.overlay = true;
+    zoom=4.f;
 }
 
 VolumeSmoke::~VolumeSmoke(){
@@ -35,6 +36,7 @@ void VolumeSmoke::render(){
     if (!prepared)
         return;
     draw();
+    m_volumeSmoke->update();
 
     if (frameCounter == 0)
     {
@@ -75,7 +77,7 @@ void VolumeSmoke::createObjects(){
     objectinfo.screenWitdh=&width;
     objectinfo.screenHeight=&height;
 
-    m_volumeSmoke=new Texture3dSmoke(128,128,128);
+    m_volumeSmoke=new Texture3dSmoke(512,512,512);
     m_volumeSmoke->setObjectInfo(objectinfo);
     float m_ModelView[16]=
     {
@@ -90,6 +92,11 @@ void VolumeSmoke::createObjects(){
             m_volumeSmoke->m_viewMat[i][j]=m_ModelView[4*i+j];
         }
     }
+    VulkanTemplate::VertexObject::ObjectCamera camera;
+    camera.zoom=&zoom;
+    camera.rotation=&rotation;
+    camera.cameraPos=&cameraPos;
+    m_volumeSmoke->setCamera(camera);
 
     m_volumeSmoke->create();
 }
@@ -260,6 +267,16 @@ void VolumeSmoke::preparePipelines(){
     pipelineCreateInfo.pStages = shaderStages.data();
 
     //pipelineCreateInfo.subpass=1;
+    blendAttachmentState.blendEnable = VK_TRUE;
+    blendAttachmentState.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    blendAttachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    blendAttachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    blendAttachmentState.colorBlendOp = VK_BLEND_OP_ADD;
+    blendAttachmentState.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    blendAttachmentState.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    blendAttachmentState.alphaBlendOp = VK_BLEND_OP_ADD;
+
+
     shaderStages[0] = loadShader(FS::getAssetPath("shaders/09_VolumeFog/volumefog.so.vert"), VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader(FS::getAssetPath("shaders/09_VolumeFog/volumefog.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT);
     VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_volumeSmoke->m_pipeline));

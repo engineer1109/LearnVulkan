@@ -32,7 +32,8 @@ void Texture3dSmoke::create(){
 }
 
 void Texture3dSmoke::update(){
-    Texture3DPlane::update();
+    updateModelBuffer();
+    updateUniformBuffers();
 }
 
 void Texture3dSmoke::generateNoise(){
@@ -79,7 +80,7 @@ void Texture3dSmoke::prepareUniformBuffers(){
 }
 
 void Texture3dSmoke::updateUniformBuffers(){
-    m_uboVS.projection = glm::perspective(glm::radians(60.0f), float(*m_screenWidth) / float(*m_screenHeight), 0.001f, 256.0f);
+    m_uboVS.projection = glm::perspective(glm::radians(60.0f), float(*m_screenWidth) / float(*m_screenHeight), 0.0f, 256.0f);
     glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, -sqrtf(3)/2.f));
     m_uboVS.model = viewMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(0.f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -101,7 +102,11 @@ void Texture3dSmoke::prepareModelBuffer(){
 }
 
 void Texture3dSmoke::updateModelBuffer(){
-    m_modelVolume.model=m_viewMat;
+    glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, *m_camera.zoom));
+    m_modelVolume.model = viewMatrix * glm::translate(glm::mat4(1.0f), *m_camera.cameraPos);
+    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->x), glm::vec3(1.0f, 0.0f, 0.0f));
+    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->y), glm::vec3(0.0f, 1.0f, 0.0f));
+    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->z), glm::vec3(0.0f, 0.0f, 1.0f));
     memcpy(m_modelVolumeBuffer.mapped, &m_modelVolume, sizeof(m_modelVolume));
 }
 
@@ -110,10 +115,10 @@ void Texture3dSmoke::prepareTransferFunctionImage(){
     {
         {  0.0, 0.0, 0.0, 0.0, },
         {  0.2, 0.2, 0.2, 1.0, },
-        {  0.4, 0.4, 0.4, 1.0, },
+        {  0.8, 0.8, 0.8, 1.0, },
         {  1.0, 1.0, 1.0, 1.0, },
-        {  0.4, 0.4, 0.4, 0.0, },
-        {  0.2, 0.2, 0.2, 0.0, },
+        {  0.8, 0.8, 0.8, 1.0, },
+        {  0.2, 0.2, 0.2, 1.0, },
         {  0.0, 0.0, 0.0, 0.0, },
         {  0.0, 0.0, 0.0, 0.0, },
         {  0.0, 0.0, 0.0, 0.0, },

@@ -9,7 +9,7 @@ layout (location = 1) in mat4 inVolumeModel;
 layout (location = 0) out vec4 outFragColor;
 
 const float zFar=256.f;
-const float zNear=0.001f;
+const float zNear=0.0f;
 
 struct Ray
 {
@@ -83,12 +83,12 @@ vec4 depthTest(float fragDepth){
 void main() 
 {
     const int maxSteps = 1000;
-    const float singleStep = 0.0025f;
+    const float singleStep = 0.00125f;
     const float opacityThreshold = 0.95f;
 
     const float brightness=1.0f;
-    const float density=0.05f;
-    const float transferOffset=0.60f;
+    const float density=0.02f;
+    const float transferOffset=0.55f;
     const float transferScale=1.f;
 
     const vec3 textureBoxMin = vec3(-1.0f, -1.0f, -1.0f);
