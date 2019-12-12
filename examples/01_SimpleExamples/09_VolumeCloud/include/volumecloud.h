@@ -5,14 +5,14 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#ifndef INSTANCEDRAW_H
-#define INSTANCEDRAW_H
+#ifndef VOLUMECLOUD_H
+#define VOLUMECLOUD_H
 #include "vulkan_basicengine.h"
-class Texture3dSmoke;
-class VolumeSmoke:public VulkanBasicEngine{
+class Texture3dCloud;
+class VolumeCloud:public VulkanBasicEngine{
 public:
-    VolumeSmoke(bool debug=false);
-    ~VolumeSmoke();
+    VolumeCloud(bool debug=false);
+    ~VolumeCloud();
 
     virtual void prepare();
     virtual void render();
@@ -28,7 +28,7 @@ private:
     void preparePipelines();
     void buildCommandBuffers();
 private:
-    Texture3dSmoke* m_volumeSmoke=nullptr;
+    Texture3dCloud* m_volumeCloud=nullptr;
 };
 
 #endif

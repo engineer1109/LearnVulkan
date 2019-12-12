@@ -5,10 +5,10 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#include "volumesmoke.h"
+#include "volumecloud.h"
 int main(int argc,char** argv){
     bool debug=false;
-    VolumeSmoke* pVulkan=new VolumeSmoke(debug);
+    VolumeCloud* pVulkan=new VolumeCloud(debug);
     pVulkan->initVulkan();
     pVulkan->initWindow();
     pVulkan->prepare();

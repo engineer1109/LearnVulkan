@@ -7,22 +7,22 @@
 */
 #include "vulkan_basicengine_help.h"
 #include "vulkan_basicengine_algorithm.h"
-#include "texture3dsmoke.h"
-Texture3dSmoke::Texture3dSmoke(uint32_t width,uint32_t height,uint32_t depth){
+#include "texture3dcloud.h"
+Texture3dCloud::Texture3dCloud(uint32_t width,uint32_t height,uint32_t depth){
     m_width=width;
     m_height=height;
     m_depth=depth;
     m_imgData=new uint8_t[width*height*depth];
 }
 
-Texture3dSmoke::~Texture3dSmoke(){
+Texture3dCloud::~Texture3dCloud(){
     if(m_imgData){
         delete m_imgData;
         m_imgData=nullptr;
     }
 }
 
-void Texture3dSmoke::create(){
+void Texture3dCloud::create(){
     generateVertex();
     prepareUniformBuffers();
     setupVertexDescriptions();
@@ -31,18 +31,19 @@ void Texture3dSmoke::create(){
     prepareTransferFunctionImage();
 }
 
-void Texture3dSmoke::update(){
+void Texture3dCloud::update(){
     updateModelBuffer();
     updateUniformBuffers();
 }
 
-void Texture3dSmoke::generateNoise(){
+void Texture3dCloud::generateNoise(){
     VulkanTemplate::PerlinNoise<float> perlinNoise;
     VulkanTemplate::FractalNoise<float> fractalNoise(perlinNoise);
 
     const int32_t noiseType = rand() % 2;
     const float noiseScale = static_cast<float>(rand() % 10) + 4.0f;
 
+#pragma omp parallel for num_threads(8)
     for (int32_t z = 0; z < m_width; z++)
     {
         for (uint32_t y = 0; y < m_height; y++)
@@ -68,7 +69,7 @@ void Texture3dSmoke::generateNoise(){
     loadTexture3D(m_imgData,m_width,m_height,m_depth);
 }
 
-void Texture3dSmoke::prepareUniformBuffers(){
+void Texture3dCloud::prepareUniformBuffers(){
     VK_CHECK_RESULT(m_vulkanDevice->createBuffer(
         VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -79,7 +80,7 @@ void Texture3dSmoke::prepareUniformBuffers(){
     updateUniformBuffers();
 }
 
-void Texture3dSmoke::updateUniformBuffers(){
+void Texture3dCloud::updateUniformBuffers(){
     m_uboVS.projection = glm::perspective(glm::radians(60.0f), float(*m_screenWidth) / float(*m_screenHeight), 0.0f, 256.0f);
     glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, -sqrtf(3)/2.f));
     m_uboVS.model = viewMatrix * glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
@@ -90,7 +91,7 @@ void Texture3dSmoke::updateUniformBuffers(){
     memcpy(m_uniformBuffers.mapped, &m_uboVS, sizeof(m_uboVS));
 }
 
-void Texture3dSmoke::prepareModelBuffer(){
+void Texture3dCloud::prepareModelBuffer(){
     VK_CHECK_RESULT(m_vulkanDevice->createBuffer(
             VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -101,24 +102,29 @@ void Texture3dSmoke::prepareModelBuffer(){
     updateModelBuffer();
 }
 
-void Texture3dSmoke::updateModelBuffer(){
-    glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, *m_camera.zoom));
-    m_modelVolume.model = viewMatrix * glm::translate(glm::mat4(1.0f), *m_camera.cameraPos);
-    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->x), glm::vec3(1.0f, 0.0f, 0.0f));
-    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->y), glm::vec3(0.0f, 1.0f, 0.0f));
-    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->z), glm::vec3(0.0f, 0.0f, 1.0f));
+void Texture3dCloud::updateModelBuffer(){
+//    glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.0f, *m_camera.zoom));
+//    m_modelVolume.model = viewMatrix * glm::translate(glm::mat4(1.0f), *m_camera.cameraPos);
+//    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->x), glm::vec3(1.0f, 0.0f, 0.0f));
+//    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->y), glm::vec3(0.0f, 1.0f, 0.0f));
+//    m_modelVolume.model = glm::rotate(m_modelVolume.model, glm::radians(m_camera.rotation->z), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_modelVolume.model=glm::mat4(1.f);
+    m_modelVolume.model=VulkanTemplate::VolumeGLM::translate(m_modelVolume.model,glm::vec3(0.0f,0.0f,*m_camera.zoom));
+    m_modelVolume.model=VulkanTemplate::VolumeGLM::rotate(m_modelVolume.model,glm::radians(m_camera.rotation->x),glm::vec3(1.0f,0.0f,0.0f));
+    m_modelVolume.model=VulkanTemplate::VolumeGLM::rotate(m_modelVolume.model,glm::radians(m_camera.rotation->y),glm::vec3(0.0f,1.0f,0.0f));
+    m_modelVolume.model=VulkanTemplate::VolumeGLM::rotate(m_modelVolume.model,glm::radians(m_camera.rotation->z),glm::vec3(0.0f,0.0f,1.0f));
     memcpy(m_modelVolumeBuffer.mapped, &m_modelVolume, sizeof(m_modelVolume));
 }
 
-void Texture3dSmoke::prepareTransferFunctionImage(){
+void Texture3dCloud::prepareTransferFunctionImage(){
     std::vector<glm::vec4> sampleColorList=
     {
         {  0.0, 0.0, 0.0, 0.0, },
-        {  0.2, 0.2, 0.2, 1.0, },
+        //{  0.2, 0.2, 0.2, 1.0, },
         {  0.8, 0.8, 0.8, 1.0, },
         {  1.0, 1.0, 1.0, 1.0, },
         {  0.8, 0.8, 0.8, 1.0, },
-        {  0.2, 0.2, 0.2, 1.0, },
+        //{  0.2, 0.2, 0.2, 1.0, },
         {  0.0, 0.0, 0.0, 0.0, },
         {  0.0, 0.0, 0.0, 0.0, },
         {  0.0, 0.0, 0.0, 0.0, },

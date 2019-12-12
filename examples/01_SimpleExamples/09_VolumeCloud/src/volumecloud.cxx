@@ -6,22 +6,22 @@
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
 
-#include "texture3dsmoke.h"
-#include "volumesmoke.h"
-VolumeSmoke::VolumeSmoke(bool debug):VulkanBasicEngine (debug){
-    title="VolumeSmoke";
+#include "texture3dcloud.h"
+#include "volumecloud.h"
+VolumeCloud::VolumeCloud(bool debug):VulkanBasicEngine (debug){
+    title="VolumeCloud";
     settings.overlay = true;
     zoom=4.f;
 }
 
-VolumeSmoke::~VolumeSmoke(){
-    if(m_volumeSmoke!=nullptr){
-        delete m_volumeSmoke;
-        m_volumeSmoke=nullptr;
+VolumeCloud::~VolumeCloud(){
+    if(m_volumeCloud!=nullptr){
+        delete m_volumeCloud;
+        m_volumeCloud=nullptr;
     }
 }
 
-void VolumeSmoke::prepare(){
+void VolumeCloud::prepare(){
     VulkanBasicEngine::prepare();
     createObjects();
     setupDescriptorPool();
@@ -32,11 +32,11 @@ void VolumeSmoke::prepare(){
     prepared=true;
 }
 
-void VolumeSmoke::render(){
+void VolumeCloud::render(){
     if (!prepared)
         return;
     draw();
-    m_volumeSmoke->update();
+    m_volumeCloud->update();
 
     if (frameCounter == 0)
     {
@@ -44,7 +44,7 @@ void VolumeSmoke::render(){
     }
 }
 
-void VolumeSmoke::draw(){
+void VolumeCloud::draw(){
     VulkanBasicEngine::prepareFrame();
     // Command buffer to be sumitted to the queue
     submitInfo.commandBufferCount = 1;
@@ -53,11 +53,11 @@ void VolumeSmoke::draw(){
     VulkanBasicEngine::submitFrame();
 }
 
-void VolumeSmoke::OnUpdateUIOverlay(vks::UIOverlay *overlay){
+void VolumeCloud::OnUpdateUIOverlay(vks::UIOverlay *overlay){
 
 }
 
-void VolumeSmoke::getEnabledFeatures()
+void VolumeCloud::getEnabledFeatures()
 {
     // Enable anisotropic filtering if supported
     if (deviceFeatures.samplerAnisotropy) {
@@ -65,7 +65,7 @@ void VolumeSmoke::getEnabledFeatures()
     }
 }
 
-void VolumeSmoke::createObjects(){
+void VolumeCloud::createObjects(){
     VulkanTemplate::VulkanBaseObject::ObjectInfo objectinfo;
     objectinfo.vulkanDevice=vulkanDevice;
     objectinfo.instance=instance;
@@ -77,8 +77,8 @@ void VolumeSmoke::createObjects(){
     objectinfo.screenWitdh=&width;
     objectinfo.screenHeight=&height;
 
-    m_volumeSmoke=new Texture3dSmoke(512,512,512);
-    m_volumeSmoke->setObjectInfo(objectinfo);
+    m_volumeCloud=new Texture3dCloud(512,512,512);
+    m_volumeCloud->setObjectInfo(objectinfo);
     float m_ModelView[16]=
     {
         1.0f,0.0f,0.0f,0.0f,
@@ -89,19 +89,19 @@ void VolumeSmoke::createObjects(){
 
     for (int i=0;i<4;i++) {
         for (int j=0;j<4;j++) {
-            m_volumeSmoke->m_viewMat[i][j]=m_ModelView[4*i+j];
+            m_volumeCloud->m_viewMat[i][j]=m_ModelView[4*i+j];
         }
     }
     VulkanTemplate::VertexObject::ObjectCamera camera;
     camera.zoom=&zoom;
     camera.rotation=&rotation;
     camera.cameraPos=&cameraPos;
-    m_volumeSmoke->setCamera(camera);
+    m_volumeCloud->setCamera(camera);
 
-    m_volumeSmoke->create();
+    m_volumeCloud->create();
 }
 
-void VolumeSmoke::setupDescriptorPool()
+void VolumeCloud::setupDescriptorPool()
 {
     std::vector<VkDescriptorPoolSize> poolSizes =
     {
@@ -118,7 +118,7 @@ void VolumeSmoke::setupDescriptorPool()
     VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &descriptorPool));
 }
 
-void VolumeSmoke::setupDescriptorSetLayout()
+void VolumeCloud::setupDescriptorSetLayout()
 {
     std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings;
 
@@ -158,7 +158,7 @@ void VolumeSmoke::setupDescriptorSetLayout()
     VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout));
 }
 
-void VolumeSmoke::setupDescriptorSet()
+void VolumeCloud::setupDescriptorSet()
 {
     VkDescriptorSetAllocateInfo allocInfo =
         vks::initializers::descriptorSetAllocateInfo(
@@ -166,38 +166,38 @@ void VolumeSmoke::setupDescriptorSet()
             &m_descriptorSetLayout,
             1);
 
-    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_volumeSmoke->m_descriptorSet));
+    VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &m_volumeCloud->m_descriptorSet));
 
     std::vector<VkWriteDescriptorSet> writeDescriptorSets;
 
     // Binding 0: Vertex shader uniform buffer
     writeDescriptorSets.push_back(vks::initializers::writeDescriptorSet(
-                                      m_volumeSmoke->m_descriptorSet,
+                                      m_volumeCloud->m_descriptorSet,
                                       VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                       0,
-                                      &(m_volumeSmoke->m_uniformBuffers).descriptor));
+                                      &(m_volumeCloud->m_uniformBuffers).descriptor));
     writeDescriptorSets.push_back(vks::initializers::writeDescriptorSet(
-                                      m_volumeSmoke->m_descriptorSet,
+                                      m_volumeCloud->m_descriptorSet,
                                       VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                       1,
-                                      &(m_volumeSmoke->m_modelVolumeBuffer).descriptor));
+                                      &(m_volumeCloud->m_modelVolumeBuffer).descriptor));
 
     // Binding 1: Sampled image
     writeDescriptorSets.push_back(vks::initializers::writeDescriptorSet(
-                                      m_volumeSmoke->m_descriptorSet,
+                                      m_volumeCloud->m_descriptorSet,
                                       VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                                       2,
-                                      &(m_volumeSmoke->m_texture3d).descriptor));
+                                      &(m_volumeCloud->m_texture3d).descriptor));
     writeDescriptorSets.push_back(vks::initializers::writeDescriptorSet(
-                                      m_volumeSmoke->m_descriptorSet,
+                                      m_volumeCloud->m_descriptorSet,
                                       VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                                       3,
-                                      &(m_volumeSmoke->m_texture2d).descriptor));
+                                      &(m_volumeCloud->m_texture2d).descriptor));
 
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(writeDescriptorSets.size()), writeDescriptorSets.data(), 0, NULL);
 }
 
-void VolumeSmoke::preparePipelines(){
+void VolumeCloud::preparePipelines(){
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState =
         vks::initializers::pipelineInputAssemblyStateCreateInfo(
             VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
@@ -255,7 +255,7 @@ void VolumeSmoke::preparePipelines(){
             renderPass,
             0);
 
-    pipelineCreateInfo.pVertexInputState = &m_volumeSmoke->m_vertices.inputState;
+    pipelineCreateInfo.pVertexInputState = &m_volumeCloud->m_vertices.inputState;
     pipelineCreateInfo.pInputAssemblyState = &inputAssemblyState;
     pipelineCreateInfo.pRasterizationState = &rasterizationState;
     pipelineCreateInfo.pColorBlendState = &colorBlendState;
@@ -279,10 +279,10 @@ void VolumeSmoke::preparePipelines(){
 
     shaderStages[0] = loadShader(FS::getAssetPath("shaders/09_VolumeFog/volumefog.so.vert"), VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader(FS::getAssetPath("shaders/09_VolumeFog/volumefog.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT);
-    VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_volumeSmoke->m_pipeline));
+    VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_volumeCloud->m_pipeline));
 }
 
-void VolumeSmoke::buildCommandBuffers(){
+void VolumeCloud::buildCommandBuffers(){
     VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
 
     VkClearValue clearValues[2];
@@ -315,7 +315,7 @@ void VolumeSmoke::buildCommandBuffers(){
         vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewports);
         vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissorRects);
 
-        m_volumeSmoke->build(drawCmdBuffers[i]);
+        m_volumeCloud->build(drawCmdBuffers[i]);
 
         drawUI(drawCmdBuffers[i]);
 

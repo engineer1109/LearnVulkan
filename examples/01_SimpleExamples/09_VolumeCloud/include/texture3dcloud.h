@@ -5,15 +5,15 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#ifndef TEXTURE3DSMOKE_H
-#define TEXTURE3DSMOKE_H
+#ifndef TEXTURE3DCLOUD_H
+#define TEXTURE3DCLOUD_H
 #include "vulkan_basicengine_texture.h"
 #include "vulkan_basicengine_texture3dplane.h"
 
-class Texture3dSmoke:public VulkanTemplate::Texture3DPlane{
+class Texture3dCloud:public VulkanTemplate::Texture3DPlane{
 public:
-    Texture3dSmoke(uint32_t width,uint32_t height,uint32_t depth);
-    ~Texture3dSmoke();
+    Texture3dCloud(uint32_t width,uint32_t height,uint32_t depth);
+    ~Texture3dCloud();
 
     void create();
     void update();
