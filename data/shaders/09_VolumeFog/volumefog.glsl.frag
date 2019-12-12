@@ -15,6 +15,7 @@ struct Ray
 {
     vec3 originPos;
     vec3 direction;
+    vec3 endPos;
 };
 
 struct RayHitStatus{
