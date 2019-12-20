@@ -57,3 +57,15 @@ void QtVulkanWindow::mouseReleaseEvent(QMouseEvent *event){
 void QtVulkanWindow::mouseMoveEvent(QMouseEvent *event){
     m_vulkan->handleMouse(event->pos().x(),event->pos().y());
 }
+
+void QtVulkanWindow::showEvent(QShowEvent *event){
+    m_vulkan->initVulkan();
+    m_vulkan->setWindow(uint32_t(winId()));
+    m_vulkan->prepare();
+    m_vulkan->renderAsyncThread();
+}
+
+void QtVulkanWindow::closeEvent(QCloseEvent *event){
+    m_vulkan->quitRender();
+    m_vulkan->renderJoin();
+}

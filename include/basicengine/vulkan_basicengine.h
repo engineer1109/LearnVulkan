@@ -22,6 +22,9 @@ public:
     virtual void setWindow(uint32_t window);
     virtual void renderLoop();
 
+    virtual void renderAsyncThread();
+    virtual void renderJoin();
+
     void* getWindowPtr(){return m_window;}
     void setWindowFrameVisible(bool value){m_enableWindow=value;}
 
@@ -38,6 +41,7 @@ protected:
     VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;
 private:
     void* m_window=nullptr;
+    std::thread* m_thread=nullptr;
     bool m_enableWindow=true;
     bool m_quit=false;
 };

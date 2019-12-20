@@ -27,36 +27,34 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->slider_red,SIGNAL(sliderReleased()),this,SLOT(setBackground()));
     connect(ui->slider_green,SIGNAL(sliderReleased()),this,SLOT(setBackground()));
     connect(ui->slider_blue,SIGNAL(sliderReleased()),this,SLOT(setBackground()));
+
+    vkRender();
 }
 
 MainWindow::~MainWindow()
 {
-    if(m_pStatictriangle!=nullptr){
-        delete m_pStatictriangle;
-        m_pStatictriangle=nullptr;
-    }
     if(ui!=nullptr){
         delete ui;
         ui=nullptr;
     }
+    if(m_pStatictriangle!=nullptr){
+        delete m_pStatictriangle;
+        m_pStatictriangle=nullptr;
+    }
 }
 
 void MainWindow::showEvent(QShowEvent *event){
-    vkRender();
+
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
-    m_pStatictriangle->quitRender();
+    ui->widget_vulkan->close();  //Vulkan Window need close first
 }
 
 void MainWindow::vkRender()
 {
     if(!m_pStatictriangle){
         m_pStatictriangle=new StaticTriangle(false);
-        m_pStatictriangle->initVulkan();
-        m_pStatictriangle->setWindow(ui->widget_vulkan->getWindowHandle());
-        m_pStatictriangle->prepare();
-        m_pStatictriangle->renderAsyncThread();
         m_pStatictriangle->enableAutoRotation(true);
         ui->widget_vulkan->setVulkanPtr(m_pStatictriangle);
     }

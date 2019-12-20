@@ -10,7 +10,7 @@
 #ifndef QTVULKANWINDOW_H
 #define QTVULKANWINDOW_H
 #include <QMainWindow>
-#include "qtvulkanwindow_def.h"
+#include "qtvulkanwindow_export.h"
 #include "vulkan_basicengine.h"
 class VK_QTVULKANWINDOW_EXPORT QtVulkanWindow:public QMainWindow{
     Q_OBJECT
@@ -26,6 +26,9 @@ public slots:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+
+    void showEvent(QShowEvent *event);
+    void closeEvent(QCloseEvent *event);
 private:
     VulkanBasicEngine* m_vulkan=nullptr;
     glm::vec2* m_mousePos=nullptr;

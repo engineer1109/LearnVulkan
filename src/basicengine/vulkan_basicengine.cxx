@@ -11,6 +11,10 @@ VulkanBasicEngine::VulkanBasicEngine(bool enableValidation):VulkanExampleBase(en
 }
 
 VulkanBasicEngine::~VulkanBasicEngine(){
+    if(m_thread){
+        delete m_thread;
+        m_thread=nullptr;
+    }
     if(m_pipelineLayout){
         vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
     }
@@ -539,4 +543,12 @@ void VulkanBasicEngine::afterRender(){
 
 void VulkanBasicEngine::handleMouse(int x,int y){
     handleMouseMove(x,y);
+}
+
+void VulkanBasicEngine::renderAsyncThread(){
+    m_thread=new std::thread(&VulkanBasicEngine::renderLoop,this);
+}
+
+void VulkanBasicEngine::renderJoin(){
+    m_thread->join();
 }

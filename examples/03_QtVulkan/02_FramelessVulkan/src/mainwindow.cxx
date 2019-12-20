@@ -21,38 +21,35 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_vulkan->setAutoFillBackground(false);
     ui->widget_vulkan->setWindowFlags(Qt::FramelessWindowHint);
     ui->widget_vulkan->setAttribute(Qt::WA_TranslucentBackground,true);
+
+    vkRender();
 }
 
 MainWindow::~MainWindow()
 {
-    if(m_pStatictriangle!=nullptr){
-        delete m_pStatictriangle;
-        m_pStatictriangle=nullptr;
-    }
     if(ui!=nullptr){
         delete ui;
         ui=nullptr;
     }
+    if(m_pStatictriangle!=nullptr){
+        delete m_pStatictriangle;
+        m_pStatictriangle=nullptr;
+    }
 }
 
 void MainWindow::showEvent(QShowEvent *event){
-    vkRender();
+
 }
 
 void MainWindow::closeEvent(QCloseEvent *event){
-    m_pStatictriangle->quitRender();
+    ui->widget_vulkan->close();
 }
 
 void MainWindow::vkRender()
 {
     if(!m_pStatictriangle){
         m_pStatictriangle=new StaticTriangle(false);
-        m_pStatictriangle->initVulkan();
-        m_pStatictriangle->setWindow(ui->widget_vulkan->getWindowHandle());
-        m_pStatictriangle->prepare();
-        m_pStatictriangle->renderAsyncThread();
         m_pStatictriangle->enableAutoRotation(false);
-
         ui->widget_vulkan->setVulkanPtr(m_pStatictriangle);
     }
 }
