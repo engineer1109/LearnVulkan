@@ -3,11 +3,11 @@
 😀This project is mainly faced to GUI engineering applications and advanced backend computing, such as X11, Qt, ffmpeg, OpenCV, CUDA and so on. Combining Vulkan with engineering applications, not a pure demo.  <br>
 ## Planned Application Areas: 
    1. Imaging Proceessing of Vulkan😁  
-   2. Medical Imaging of Vulkan😂  
-   3. Vulkan on Qt (GAMES)🤣  
-   4. Vulkan on XWindow (GAMES)😃  
-   5. Vulkan with CUDA😅  
-   6. Vulkan server rendering with ffmpeg😆  
+   2. Vulkan on Qt 🤣  
+   3. Vulkan on XWindow 😃  
+   4. Vulkan with CUDA😅  
+   5. Vulkan offscreen rendering with ffmpeg😆  
+   6. Vulkan with physical engine😆  
     <br>
 ## What is more than SaschaWillems's Project
 This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  <br>
