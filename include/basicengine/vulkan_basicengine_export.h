@@ -5,8 +5,8 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#ifndef VULKAN_BASICENGINE_DEF_H
-#define VULKAN_BASICENGINE_DEF_H
+#ifndef VULKAN_BASICENGINE_EXPORT_H
+#define VULKAN_BASICENGINE_EXPORT_H
 
 #ifdef VK_BASICENGINE_EXPORT_API
     #ifdef WIN32

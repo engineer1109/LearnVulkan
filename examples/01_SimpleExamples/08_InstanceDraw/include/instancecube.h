@@ -55,6 +55,8 @@ private:
     void setupVertexDescriptions();
     void generateVertex();
     void loadTextures();
+    void prepareUniformBuffer();
+    void preparePipelines();
 private:
     vks::Buffer m_vertexBuffer;
     vks::Buffer m_indexBuffer;

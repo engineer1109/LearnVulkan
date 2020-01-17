@@ -5,6 +5,7 @@
 *
 * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
+#include "vulkan_basicengine_filesystem.h"
 #include "instancecube.h"
 #define VERTEX_BUFFER_BIND_ID 0
 #define INSTANCE_BUFFER_BIND_ID 1
@@ -15,6 +16,9 @@ InstanceCube::~InstanceCube(){
 void InstanceCube::create(){
     setupVertexDescriptions();
     generateVertex();
+    loadTextures();
+    prepareUniformBuffer();
+    preparePipelines();
 }
 
 void InstanceCube::build(VkCommandBuffer cmd, VkPipelineLayout pipelineLayout){
@@ -182,4 +186,22 @@ void InstanceCube::generateVertex(){
         &m_indexBuffer,
         indices.size() * sizeof(uint32_t),
         indices.data()));
+}
+
+void InstanceCube::loadTextures(){
+    m_texture.loadFromFileAutoGenMipmap(FS::getAssetPath("textures/container.png"),VK_FORMAT_R8G8B8A8_UNORM,m_vulkanDevice,m_queue);
+}
+
+void InstanceCube::prepareUniformBuffer(){
+    // Vertex shader uniform buffer block
+    VK_CHECK_RESULT(m_vulkanDevice->createBuffer(
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        &m_uniformBufferVS,
+        sizeof(m_uboVS),
+        &m_uboVS));
+}
+
+void InstanceCube::preparePipelines(){
+
 }

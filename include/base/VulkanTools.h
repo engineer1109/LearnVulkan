@@ -10,7 +10,7 @@
 
 #include "vulkan/vulkan.h"
 #include "VulkanInitializers.hpp"
-#include "vulkanexamplebase_def.h"
+#include "vulkanexamplebase_export.h"
 
 #include <math.h>
 #include <stdlib.h>

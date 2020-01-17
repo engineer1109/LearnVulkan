@@ -7,7 +7,7 @@
 */
 #ifndef VULKAN_BASICENGINE_OBJECT_H
 #define VULKAN_BASICENGINE_OBJECT_H
-#include "vulkan_basicengine_def.h"
+#include "vulkan_basicengine_export.h"
 #include "vulkan_basicengine_help.h"
 #include "VulkanDevice.hpp"
 BEGIN_NAMESPACE(VulkanTemplate)

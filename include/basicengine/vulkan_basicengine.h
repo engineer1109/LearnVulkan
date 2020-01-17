@@ -10,7 +10,7 @@
 #include "vulkanexamplebase.h"
 #include "vulkan_basicengine_help.h"
 #include "vulkan_basicengine_filesystem.h"
-#include "vulkan_basicengine_def.h"
+#include "vulkan_basicengine_export.h"
 
 class VK_BASICENGINE_EXPORT VulkanBasicEngine:public VulkanExampleBase{
 public:

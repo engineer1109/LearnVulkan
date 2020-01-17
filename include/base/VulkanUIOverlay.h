@@ -22,7 +22,7 @@
 #include "VulkanBuffer.hpp"
 #include "VulkanDevice.hpp"
 
-#include "vulkanexamplebase_def.h"
+#include "vulkanexamplebase_export.h"
 
 #include "imgui.h"
 

@@ -54,7 +54,7 @@
 #include "camera.hpp"
 #include "benchmark.hpp"
 
-#include "vulkanexamplebase_def.h"
+#include "vulkanexamplebase_export.h"
 
 class VK_BASE_EXPORT VulkanExampleBase
 {

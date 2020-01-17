@@ -22,6 +22,11 @@ public:
     virtual void getEnabledFeatures();
 private:
     void createObjects();
+    void setupDescriptorPool();
+    void setupDescriptorSetLayout();
+    void setupDescriptorSet();
+    void preparePipelines();
+    void buildCommandBuffers();
 private:
     VkPipelineLayout m_pipelineLayout=VK_NULL_HANDLE;
     VkDescriptorSetLayout m_descriptorSetLayout=VK_NULL_HANDLE;

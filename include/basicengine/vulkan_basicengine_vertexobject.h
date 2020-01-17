@@ -7,7 +7,7 @@
 */
 #ifndef VULKAN_BASICENGINE_VERTEXOBJECT_H
 #define VULKAN_BASICENGINE_VERTEXOBJECT_H
-#include "vulkan_basicengine_def.h"
+#include "vulkan_basicengine_export.h"
 #include "vulkan_basicengine_object.h"
 BEGIN_NAMESPACE(VulkanTemplate)
 

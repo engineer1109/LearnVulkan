@@ -1,7 +1,7 @@
 #ifndef VULKAN_BASICENGINE_ALGORITHM_H
 #define VULKAN_BASICENGINE_ALGORITHM_H
 #include "vulkan_basicengine_help.h"
-#include "vulkan_basicengine_def.h"
+#include "vulkan_basicengine_export.h"
 #include "vulkan_basicengine_algorithm_graphics.h"
 BEGIN_NAMESPACE(VulkanTemplate)
 
