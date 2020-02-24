@@ -1,23 +1,26 @@
 /*
-* LearnVulkan Examples
-*
-* Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
-*
-* This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
-*/
+ * LearnVulkan Examples
+ *
+ * Copyright (C) by engineer1109 - https://github.com/engineer1109/LearnVulkan
+ *
+ * This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
+ */
 #ifndef INSTANCECUBE_H
 #define INSTANCECUBE_H
 #include "vulkan_basicengine_object.h"
 #include "vulkan_basicengine_texture.h"
 
-class InstanceCube:public VulkanTemplate::VulkanBaseObject{
+#define INSTANCE_COUNT 100
+
+class InstanceCube : public VulkanTemplate::VulkanBaseObject {
 public:
-    InstanceCube()=default;
+    InstanceCube() = default;
     ~InstanceCube();
 
     void create();
-    void build(VkCommandBuffer cmd,VkPipelineLayout pipelineLayout);
+    void build(VkCommandBuffer cmd, VkPipelineLayout pipelineLayout);
     void update();
+
 public:
     struct InstanceBuffer {
         VkBuffer buffer = VK_NULL_HANDLE;
@@ -28,7 +31,7 @@ public:
 
     struct UBOVS {
         glm::mat4 projection;
-        glm::mat4 view;
+        glm::mat4 model;
         glm::vec4 lightPos = glm::vec4(0.0f, -5.0f, 0.0f, 1.0f);
         float locSpeed = 0.0f;
         float globSpeed = 0.0f;
@@ -38,8 +41,14 @@ public:
         glm::vec3 pos;
         glm::vec3 rot;
         float scale;
-        uint32_t texIndex;
+        float texIndex;
     };
+
+    struct ObjectCamera {
+        float *zoom = nullptr;
+        glm::vec3 *rotation = nullptr;
+        glm::vec3 *cameraPos = nullptr;
+    } m_camera;
 
     struct {
         VkPipelineVertexInputStateCreateInfo inputState;
@@ -51,16 +60,24 @@ public:
     VkPipeline m_pipeline;
     vks::Buffer m_uniformBufferVS;
     vks::Texture2DStbImage m_texture;
+
+public:
+    void setCamera(ObjectCamera camera) { m_camera = camera; }
+
 private:
     void setupVertexDescriptions();
     void generateVertex();
+    void prepareInstanceData();
     void loadTextures();
     void prepareUniformBuffer();
+    void updateUniformBuffers();
     void preparePipelines();
+
 private:
     vks::Buffer m_vertexBuffer;
+    // vks::Buffer m_instanceBuffer;
     vks::Buffer m_indexBuffer;
-    uint32_t m_indexCount=0;
+    uint32_t m_indexCount = 0;
     struct Vertex {
         float pos[3];
         float uv[2];
@@ -68,10 +85,10 @@ private:
         float color[3];
     };
 
-    float m_size=1.f;
-    float m_x=0.f;
-    float m_y=0.f;
-    float m_z=0.f;
+    float m_size = 1.f;
+    float m_x = 0.f;
+    float m_y = 0.f;
+    float m_z = 0.f;
 };
 
 #endif // INSTANCECUBE_H
