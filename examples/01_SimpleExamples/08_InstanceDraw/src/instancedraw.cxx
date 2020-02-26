@@ -39,7 +39,6 @@ void InstanceDraw::render() {
     if (!prepared) return;
     draw();
     m_cube->update();
-    // std::cout << zoom << std::endl;
 
     if (frameCounter == 0) {
         vkDeviceWaitIdle(device);
