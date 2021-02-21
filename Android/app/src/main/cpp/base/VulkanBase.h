@@ -7,10 +7,13 @@
 
 #include "render_common.h"
 #include "VulkanTools.h"
+#include "VulkanDevice.hpp"
+#include "VulkanSwapChain.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-BEGIN_NAMESPACE(LearnVulkan)
+BEGIN_NAMESPACE(VulkanEngine)
 
 class VulkanBase {
 public:
@@ -46,12 +49,52 @@ public:
 
     virtual void defaultTouchOperation();
 
+    void setTouchPos(const float &x, const float &y){
+        m_mousePos[0] = {x, y};
+    }
+
+    void setTouchPosSecond(const float &x, const float &y){
+        m_mousePos[1] = {x, y};
+    }
+
+    void setTouchMode(TouchMode mode){
+        m_touchMode = mode;
+    }
+
+    void resetTouch(){
+        m_mousePos[0] = {0.f,0.f};
+        m_mousePos[1] = {0.f,0.f};
+        m_mousePosOld[0] = {0.f,0.f};
+        m_mousePosOld[1] = {0.f,0.f};
+        m_touchMode = TouchMode::NONE;
+    }
+
 protected:
     void createInstance();
 
     void pickPhysicalDevice();
 
-    virtual void getDeviceFeatures() = 0;
+    virtual void getDeviceFeatures() {}
+
+    void createLogicalDevice();
+
+    void initSwapchain();
+
+    void createCommandPool();
+
+    void setupSwapChain();
+
+    void createCommandBuffers();
+
+    void createSynchronizationPrimitives();
+
+    void setupDepthStencil();
+
+    void setupRenderPass();
+
+    void createPipelineCache();
+
+    void setupFrameBuffer();
 
 protected:
     ANativeWindow *m_window = nullptr;
@@ -70,13 +113,54 @@ protected:
 
     std::vector<const char *> m_enabledDeviceExtensions;
     std::vector<const char *> m_enabledInstanceExtensions;
+    VkPhysicalDeviceFeatures m_enabledFeatures;
+    void *m_deviceCreatepNextChain = nullptr;
 
     VkPhysicalDeviceProperties m_deviceProperties;
     VkPhysicalDeviceFeatures m_deviceFeatures;
     VkPhysicalDeviceMemoryProperties m_deviceMemoryProperties;
+
+    vks::VulkanDevice *m_vulkanDevice = nullptr;
+    VulkanSwapChain m_swapChain;
+    struct RenderSemaphores {
+        // Swap chain image presentation
+        VkSemaphore presentComplete = VK_NULL_HANDLE;
+        // Command buffer submission and execution
+        VkSemaphore renderComplete = VK_NULL_HANDLE;
+    } m_semaphores;
+
+    struct {
+        VkImage image = VK_NULL_HANDLE;
+        VkDeviceMemory mem = VK_NULL_HANDLE;
+        VkImageView view = VK_NULL_HANDLE;
+    } m_depthStencil;
+
+    std::vector<VkFence> m_waitFences;
+
+    VkFormat m_depthFormat = VK_FORMAT_D16_UNORM_S8_UINT;
+    VkSubmitInfo m_submitInfo;
+    VkPipelineStageFlags m_submitPipelineStages = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+
+    //Render Context
+    std::vector<VkCommandBuffer> m_drawCmdBuffers;
+    VkRenderPass m_renderPass;
+    std::vector<VkFramebuffer> m_frameBuffers;
+    uint32_t m_currentBuffer = 0;
+    VkDescriptorPool m_descriptorPool = VK_NULL_HANDLE;
+    std::vector<VkShaderModule> m_shaderModules;
+    VkPipelineCache m_pipelineCache;
+
+    bool m_quit = false;
+
+    glm::vec2 m_mousePos[2];
+    glm::vec2 m_mousePosOld[2];
+    TouchMode m_touchMode = TouchMode::NONE;
+
+    float m_distance = 0.f;
+    float m_oldDistance = 0.f;
 };
 
-END_NAMESPACE(LearnVulkan)
+END_NAMESPACE(VulkanEngine)
 
 
 #endif //LEARNVULKAN_VULKANBASE_H

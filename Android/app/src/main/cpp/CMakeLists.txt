@@ -28,6 +28,20 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/stb_image/include/
 )
 
+add_library(
+        VulkanEngine
+
+        SHARED
+
+        examples/StaticTriangle/StaticTriangle.cpp
+        examples/StaticCube/StaticCube.cpp
+)
+
+target_link_libraries(
+        VulkanEngine
+        VulkanBase
+)
+
 add_library( # Sets the name of the library.
         VulkanBase
 

@@ -41,4 +41,4 @@
 
 #define DELETE_PTR(x) if(x) { delete x; x = nullptr; }
 
-#endif //OPENGLESTEST_RENDER_COMMON_H
+#endif //LEARNVULKAN_RENDER_COMMON_H
