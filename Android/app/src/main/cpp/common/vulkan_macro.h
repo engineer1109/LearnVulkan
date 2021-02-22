@@ -1,0 +1,8 @@
+//
+// Created by wjl on 21-2-23.
+//
+
+#ifndef LEARNVULKAN_VULKAN_MACRO_H
+#define LEARNVULKAN_VULKAN_MACRO_H
+
+#endif //LEARNVULKAN_VULKAN_MACRO_H

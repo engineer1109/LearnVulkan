@@ -1,0 +1,14 @@
+//
+// Created by wjl on 21-2-23.
+//
+
+#ifndef LEARNVULKAN_VULKANDESCRIPTORSET_H
+#define LEARNVULKAN_VULKANDESCRIPTORSET_H
+
+
+class VulkanDescriptorSet {
+
+};
+
+
+#endif //LEARNVULKAN_VULKANDESCRIPTORSET_H
