@@ -6,6 +6,8 @@
 #define LEARNVULKAN_VULKANBASE_H
 
 #include "render_common.h"
+#include "base_template.h"
+
 #include "VulkanTools.h"
 #include "VulkanDevice.hpp"
 #include "VulkanSwapChain.hpp"

@@ -7,7 +7,9 @@
 BEGIN_NAMESPACE(VulkanEngine)
 VulkanBase::VulkanBase() {}
 
-VulkanBase::~VulkanBase() {}
+VulkanBase::~VulkanBase() {
+    delete_ptr(m_vulkanDevice);
+}
 
 void VulkanBase::initVulkan() {
     createInstance();

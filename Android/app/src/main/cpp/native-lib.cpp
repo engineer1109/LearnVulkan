@@ -116,14 +116,14 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_deleteVulkan(JNIEnv *env, jo
                                                                  jlong instance, jint id) {
     // TODO: implement deleteVulkan()
     if (instance) {
-        if (id == 0) {
-        } else if (id == 1) {
-        }
-        else if (id == 2) {
-        }
-        else {
+//        if (id == 0) {
+//        } else if (id == 1) {
+//        }
+//        else if (id == 2) {
+//        }
+//        else {
             VulkanEngine::VulkanBase *engine = reinterpret_cast<VulkanEngine::VulkanBase *>(instance);
             delete (engine);
-        }
+//        }
     }
 }

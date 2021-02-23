@@ -21,6 +21,7 @@ add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/base
+        ${PROJECT_SOURCE_DIR}/core
         ${PROJECT_SOURCE_DIR}/common
         ${PROJECT_SOURCE_DIR}/utils
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/glm
@@ -50,6 +51,8 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         base/VulkanBase.cpp
+        base/VulkanBaseEngine.cpp
+        core/VulkanDescriptorSet.cpp
         utils/VulkanTools.cpp
         native-lib.cpp )
 
