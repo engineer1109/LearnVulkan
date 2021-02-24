@@ -53,6 +53,7 @@ add_library( # Sets the name of the library.
         base/VulkanBase.cpp
         base/VulkanBaseEngine.cpp
         core/VulkanDescriptorSet.cpp
+        core/VulkanVertexDescriptions.cpp
         utils/VulkanTools.cpp
         native-lib.cpp )
 

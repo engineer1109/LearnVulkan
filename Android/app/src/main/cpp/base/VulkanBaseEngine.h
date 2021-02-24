@@ -24,6 +24,11 @@ public:
     virtual void processPrepareCallback();
 
 protected:
+    void prepareDescriptorSets();
+
+protected:
+    int m_maxSets = 1;
+
     VulkanDescriptorSet *m_VulkanDescriptorSet = nullptr;
 };
 
