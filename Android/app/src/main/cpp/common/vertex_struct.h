@@ -7,7 +7,7 @@
 
 #include "render_common.h"
 
-BEGIN_NAMESPACE(OpenGLESEngine)
+BEGIN_NAMESPACE(VulkanEngine)
 
 struct Vertex {
     float pos[3];
@@ -21,6 +21,12 @@ struct VertexUVW {
     float normal[3];
 };
 
-END_NAMESPACE(OpenGLESEngine)
+struct VertexTexVec4 {
+    float pos[3];
+    float uv[4];
+    float normal[3];
+};
+
+END_NAMESPACE(VulkanEngine)
 
 #endif //LEARNVULKAN_VERTEX_STRUCT_H

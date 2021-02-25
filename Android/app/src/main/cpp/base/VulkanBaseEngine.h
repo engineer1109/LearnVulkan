@@ -11,6 +11,8 @@ BEGIN_NAMESPACE(VulkanEngine)
 
 class VulkanDescriptorSet;
 
+class VulkanVertexDescriptions;
+
 class VulkanBaseEngine : public VulkanBase {
 public:
     VulkanBaseEngine();
@@ -26,10 +28,13 @@ public:
 protected:
     void prepareDescriptorSets();
 
+    void prepareVertexDescriptions();
+
 protected:
     int m_maxSets = 1;
 
     VulkanDescriptorSet *m_VulkanDescriptorSet = nullptr;
+    VulkanVertexDescriptions *m_VulkanVertexDescriptions = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)

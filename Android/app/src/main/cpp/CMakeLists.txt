@@ -23,6 +23,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/base
         ${PROJECT_SOURCE_DIR}/core
         ${PROJECT_SOURCE_DIR}/common
+        ${PROJECT_SOURCE_DIR}/template
         ${PROJECT_SOURCE_DIR}/utils
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/glm
         ${PROJECT_SOURCE_DIR}/third_party/stb_image/include
@@ -54,6 +55,8 @@ add_library( # Sets the name of the library.
         base/VulkanBaseEngine.cpp
         core/VulkanDescriptorSet.cpp
         core/VulkanVertexDescriptions.cpp
+        core/VulkanPipelines.cpp
+        template/object/VulkanObject.cpp
         utils/VulkanTools.cpp
         native-lib.cpp )
 

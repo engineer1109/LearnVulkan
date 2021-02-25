@@ -41,4 +41,6 @@
 
 #define DELETE_PTR(x) if(x) { delete x; x = nullptr; }
 
+#define VERTEX_BUFFER_BIND_ID 0
+
 #endif //LEARNVULKAN_RENDER_COMMON_H
