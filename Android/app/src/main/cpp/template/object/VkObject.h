@@ -5,8 +5,10 @@
 #ifndef LEARNVULKAN_VKOBJECT_H
 #define LEARNVULKAN_VKOBJECT_H
 
-#include "render_common.h"
+#include "vulkan_macro.h"
+#include "vulkan_template.h"
 #include "VulkanDevice.hpp"
+#include "VulkanContext.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
@@ -16,20 +18,16 @@ public:
 
     virtual ~VkObject() = default;
 
+    virtual void setContext(VulkanContext* context){
+        m_context = context;
+    }
+
     virtual void prepare() = 0;
 
     virtual void update() = 0;
 
 protected:
-    vks::VulkanDevice *m_vulkanDevice = nullptr;
-    VkCommandBuffer m_copyCmd;
-    VkCommandPool m_cmdPool;
-    VkPipelineLayout *m_pPipelineLayout = nullptr;
-    VkPipelineCache m_pipelineCache;
-    VkRenderPass m_renderPass;
-    VkQueue m_queue;
-    uint32_t *m_pScreenWidth = nullptr;
-    uint32_t *m_pScreenHeight = nullptr;
+    VulkanContext* m_context = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)

@@ -2,12 +2,13 @@
 #include <string>
 
 #include "VulkanBase.h"
+#include "StaticTriangle.h"
 
 extern "C"
 JNIEXPORT jlong JNICALL
 Java_com_engineer1109_learnvulkan_render_BaseRender_createInstance(JNIEnv *env, jobject thiz,
                                                                    jint id) {
-    VulkanEngine::VulkanBase *engine = new VulkanEngine::VulkanBase();
+    auto *engine = new VulkanEngine::StaticTriangle();
     return (jlong) engine;
 }
 
@@ -122,7 +123,7 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_deleteVulkan(JNIEnv *env, jo
 //        else if (id == 2) {
 //        }
 //        else {
-            VulkanEngine::VulkanBase *engine = reinterpret_cast<VulkanEngine::VulkanBase *>(instance);
+            VulkanEngine::StaticTriangle *engine = reinterpret_cast<VulkanEngine::StaticTriangle *>(instance);
             delete (engine);
 //        }
     }

@@ -5,10 +5,10 @@
 #include "VulkanBase.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
-VulkanBase::VulkanBase() {}
-
 VulkanBase::~VulkanBase() {
+    m_swapChain.cleanup();
     delete_ptr(m_vulkanDevice);
+    VK_SAFE_DELETE(m_instance, vkDestroyInstance(m_instance, nullptr));
 }
 
 void VulkanBase::initVulkan() {
@@ -35,11 +35,48 @@ void VulkanBase::prepareBase() {
 
 void VulkanBase::renderLoop() {}
 
-void VulkanBase::renderFrame() {}
+void VulkanBase::renderFrame() {
+    if (m_prepared and !m_pause) {
+        render();
+        draw();
+        vkDeviceWaitIdle(m_device);
+    }
+}
 
 void VulkanBase::render() {}
 
-void VulkanBase::defaultTouchOperation() {}
+void VulkanBase::draw() {
+    if (m_stop) return;
+    prepareFrame();
+
+    // Command buffer to be sumitted to the queue
+    m_submitInfo.commandBufferCount = 1;
+    m_submitInfo.pCommandBuffers = &m_drawCmdBuffers[m_currentBuffer];
+
+    // Submit to queue
+    VK_CHECK_RESULT(vkQueueSubmit(m_queue, 1, &m_submitInfo, VK_NULL_HANDLE));
+
+    submitFrame();
+}
+
+void VulkanBase::defaultTouchOperation() {
+    if (m_touchMode == TouchMode::SINGLE) {
+        if (m_mousePosOld[0].x == 0 and m_mousePosOld[0].y == 0) {
+            m_mousePosOld[0].x = m_mousePos[0].x;
+            m_mousePosOld[0].y = m_mousePos[0].y;
+        }
+    } else if (m_touchMode == TouchMode::DOUBLE) {
+        float distance =
+                (m_mousePos[1].x - m_mousePos[0].x) * (m_mousePos[1].x - m_mousePos[0].x) +
+                (m_mousePos[1].y - m_mousePos[0].y) * (m_mousePos[1].y - m_mousePos[0].y);
+        if (m_oldDistance == 0.f) { m_oldDistance = distance; }
+        else {
+            if (distance > m_oldDistance) { m_distance -= 0.1f; }
+            else if (distance < m_oldDistance) { m_distance += 0.1f; }
+        }
+        m_oldDistance = distance;
+    }
+}
 
 void VulkanBase::createInstance() {
     VkApplicationInfo appInfo = {};
@@ -330,6 +367,42 @@ void VulkanBase::setupFrameBuffer(){
         attachments[0] = m_swapChain.buffers[i].view;
         VK_CHECK_RESULT(vkCreateFramebuffer(m_device, &frameBufferCreateInfo, nullptr, &m_frameBuffers[i]));
     }
+}
+
+void VulkanBase::prepareFrame(){
+    if (m_pause) {
+        return;
+    }
+    // Acquire the next image from the swap chain
+    VkResult err = m_swapChain.acquireNextImage(m_semaphores.presentComplete, &m_currentBuffer);
+    // Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE) or no longer optimal for presentation (SUBOPTIMAL)
+    if ((err == VK_ERROR_OUT_OF_DATE_KHR) || (err == VK_SUBOPTIMAL_KHR) || (err != VK_SUCCESS)) {
+        //windowResize();
+        m_pause = true;
+        LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
+    } else {
+        VK_CHECK_RESULT(err);
+    }
+    VK_CHECK_RESULT(vkQueueWaitIdle(m_queue));
+}
+
+void VulkanBase::submitFrame() {
+    if (m_pause) {
+        return;
+    }
+    VkResult res = m_swapChain.queuePresent(m_queue, m_currentBuffer, m_semaphores.renderComplete);
+    if (!((res == VK_SUCCESS) || (res == VK_SUBOPTIMAL_KHR))) {
+        if (res == VK_ERROR_OUT_OF_DATE_KHR) {
+            // Swap chain is no longer compatible with the surface and needs to be recreated
+            //windowResize();
+            m_pause = true;
+            LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
+            return;
+        } else {
+            VK_CHECK_RESULT(res);
+        }
+    }
+    VK_CHECK_RESULT(vkQueueWaitIdle(m_queue));
 }
 
 END_NAMESPACE(VulkanEngine)

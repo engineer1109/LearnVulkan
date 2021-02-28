@@ -7,6 +7,8 @@
 
 #include "render_common.h"
 #include "base_template.h"
+#include "vulkan_macro.h"
+#include "vulkan_template.h"
 
 #include "VulkanTools.h"
 #include "VulkanDevice.hpp"
@@ -25,9 +27,9 @@ public:
         DOUBLE = 2,
     };
 public:
-    VulkanBase();
+    VulkanBase() = default;
 
-    ~VulkanBase();
+    virtual ~VulkanBase();
 
     void setWindow(ANativeWindow *window) { m_window = window;}
 
@@ -48,6 +50,8 @@ public:
     virtual void renderFrame();
 
     virtual void render();
+
+    virtual void draw();
 
     virtual void defaultTouchOperation();
 
@@ -97,6 +101,12 @@ protected:
     void createPipelineCache();
 
     void setupFrameBuffer();
+
+    virtual void buildCommandBuffers(){};
+
+    void prepareFrame();
+
+    void submitFrame();
 
 protected:
     ANativeWindow *m_window = nullptr;
@@ -152,7 +162,10 @@ protected:
     std::vector<VkShaderModule> m_shaderModules;
     VkPipelineCache m_pipelineCache;
 
+    bool m_stop = false;
     bool m_quit = false;
+    bool m_pause = false;
+    bool m_prepared = false;
 
     glm::vec2 m_mousePos[2];
     glm::vec2 m_mousePosOld[2];

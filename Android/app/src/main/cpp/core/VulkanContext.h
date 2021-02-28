@@ -21,6 +21,14 @@ struct VulkanContext {
     uint32_t *pScreenHeight = nullptr;
 
     AAssetManager *m_asset = nullptr;
+
+    VkDevice &getDevice(){
+        return vulkanDevice->logicalDevice;
+    }
+
+    VkPhysicalDevice &getPhysicalDevice(){
+        return vulkanDevice->physicalDevice;
+    }
 };
 
 END_NAMESPACE(VulkanEngine)

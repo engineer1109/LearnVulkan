@@ -7,20 +7,37 @@
 
 #include "render_common.h"
 
-#include "object/VkObject.h"
+#include "object/VulkanShader.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
 class VulkanPipelines {
 public:
-    VulkanPipelines() = default;
+    VulkanPipelines(VkDevice &device);
     ~VulkanPipelines() = default;
 
-protected:
+    void createBasePipelineInfo(const VkPipelineLayout &pipelineLayout, const VkRenderPass &renderPass);
+
+    void createPipeline(VulkanShader* shader, VkPolygonMode mode= VK_POLYGON_MODE_FILL, VkCullModeFlags cullMode = VK_CULL_MODE_NONE);
+
+public:
     VkDevice m_device;
     VkGraphicsPipelineCreateInfo m_pipelineCreateInfo;
-    VkPipelineVertexInputStateCreateInfo *m_pVertexInputState;
+    VkPipelineVertexInputStateCreateInfo m_vertexInputState;
     VkPipelineCache m_pipelineCache;
+
+    VkPipelineInputAssemblyStateCreateInfo m_inputAssemblyState;
+    VkPipelineRasterizationStateCreateInfo m_rasterizationState;
+    VkPipelineColorBlendAttachmentState m_blendAttachmentState;
+    VkPipelineColorBlendStateCreateInfo m_colorBlendState;
+    VkPipelineDepthStencilStateCreateInfo m_depthStencilState;
+    VkPipelineViewportStateCreateInfo m_viewportState;
+    VkPipelineMultisampleStateCreateInfo m_multisampleState;
+    std::vector<VkDynamicState> m_dynamicStateEnables = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR,
+                                                         VK_DYNAMIC_STATE_LINE_WIDTH};
+    VkPipelineDynamicStateCreateInfo m_dynamicState;
+
+    std::array<VkPipelineShaderStageCreateInfo, 2> m_shaderStages;
 };
 
 END_NAMESPACE(VulkanEngine)

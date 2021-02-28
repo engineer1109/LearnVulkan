@@ -5,16 +5,40 @@
 #ifndef LEARNVULKAN_STATICTRIANGLE_H
 #define LEARNVULKAN_STATICTRIANGLE_H
 
-#include "VulkanBase.h"
+#include "ThirdPersonEngine.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class StaticTriangle : public VulkanBase{
+class Triangle;
+
+class TriangleShader;
+
+class TriangleUniform;
+
+class StaticTriangle : public ThirdPersonEngine{
 public:
-    StaticTriangle();
+    StaticTriangle() = default;
 
-    ~StaticTriangle();
+    virtual ~StaticTriangle();
 
+public:
+
+    void prepareMyObjects() override ;
+
+    void buildMyObjects(VkCommandBuffer &cmd) override ;
+
+    void render() override;
+
+    void setDescriptorSet();
+
+    void createPipelines();
+
+    void createTriangle();
+
+private:
+    Triangle* m_triangle = nullptr;
+    TriangleShader* m_triangleShader = nullptr;
+    TriangleUniform* m_triangleUniform = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)

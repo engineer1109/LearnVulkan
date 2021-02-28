@@ -23,25 +23,18 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/base
         ${PROJECT_SOURCE_DIR}/core
         ${PROJECT_SOURCE_DIR}/common
+        ${PROJECT_SOURCE_DIR}/engines
         ${PROJECT_SOURCE_DIR}/template
+        ${PROJECT_SOURCE_DIR}/template/object
+        ${PROJECT_SOURCE_DIR}/template/object/camera
         ${PROJECT_SOURCE_DIR}/utils
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/glm
         ${PROJECT_SOURCE_DIR}/third_party/stb_image/include
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/stb_image/include/
 )
 
-add_library(
-        VulkanEngine
-
-        SHARED
-
-        examples/StaticTriangle/StaticTriangle.cpp
-        examples/StaticCube/StaticCube.cpp
-)
-
-target_link_libraries(
-        VulkanEngine
-        VulkanBase
+include_directories(
+        ${PROJECT_SOURCE_DIR}/examples/StaticTriangle
 )
 
 add_library( # Sets the name of the library.
@@ -56,9 +49,14 @@ add_library( # Sets the name of the library.
         core/VulkanDescriptorSet.cpp
         core/VulkanVertexDescriptions.cpp
         core/VulkanPipelines.cpp
-        template/object/VulkanObject.cpp
+        engines/ThirdPersonEngine.cpp
+        template/object/VulkanShader.cpp
+        template/object/VulkanBuffer.cpp
+        template/object/MeshObject.cpp
+        template/object/camera/UniformCamera.cpp
+        template/object/camera/ThirdPersonCamera.cpp
         utils/VulkanTools.cpp
-        native-lib.cpp )
+)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -84,3 +82,20 @@ target_link_libraries( # Specifies the target library.
         # included in the NDK.
         android
         ${log-lib} )
+
+add_library(
+        VulkanEngine
+
+        SHARED
+        native-lib.cpp
+        examples/StaticTriangle/StaticTriangle.cpp
+        examples/StaticTriangle/myobjects/Triangle.cpp
+        examples/StaticTriangle/myobjects/TriangleShader.cpp
+        examples/StaticTriangle/myobjects/TriangleUniform.cpp
+        examples/StaticCube/StaticCube.cpp
+)
+
+target_link_libraries(
+        VulkanEngine
+        VulkanBase
+)

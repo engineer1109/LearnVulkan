@@ -34,10 +34,10 @@
 
 #define END_NAMESPACE(n) }
 
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "opengles", __VA_ARGS__))
-#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "opengles", __VA_ARGS__))
-#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, "opengles", __VA_ARGS__))
-#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "opengles", __VA_ARGS__))
+//#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "vulkan", __VA_ARGS__))
+//#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "vulkan", __VA_ARGS__))
+//#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, "vulkan", __VA_ARGS__))
+//#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "vulkan", __VA_ARGS__))
 
 #define DELETE_PTR(x) if(x) { delete x; x = nullptr; }
 

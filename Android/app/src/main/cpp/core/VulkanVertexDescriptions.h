@@ -82,7 +82,7 @@ public:
         // Binding description
         m_inputBinding.resize(1);
         m_inputBinding[0] = vks::initializers::vertexInputBindingDescription(
-                VERTEX_BUFFER_BIND_ID, sizeof(VertexUVW), VK_VERTEX_INPUT_RATE_VERTEX);
+                VERTEX_BUFFER_BIND_ID, sizeof(VertexTexVec4), VK_VERTEX_INPUT_RATE_VERTEX);
         //    vertices.inputBinding[1] =
         //    vks::initializers::vertexInputBindingDescription(
         //        VERTEX_BUFFER_BIND_ID,

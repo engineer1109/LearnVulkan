@@ -7,6 +7,7 @@ import android.view.Surface;
 public class BaseRender {
     static {
         System.loadLibrary("VulkanBase");
+        System.loadLibrary("VulkanEngine");
     }
 
     static final String TAG = "OpenGLESRender";
