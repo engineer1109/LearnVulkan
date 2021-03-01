@@ -16,7 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.BaseRenderActivity"></activity>
+        <activity
+            android:name=".activities.BaseRenderActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>

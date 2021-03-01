@@ -75,6 +75,7 @@ void VulkanBaseEngine::buildCommandBuffers() {
         // Set target frame buffer
         renderPassBeginInfo.framebuffer = m_frameBuffers[i];
 
+        LOGI("m_drawCmdBuffers %ld",m_drawCmdBuffers[i]);
         VK_CHECK_RESULT(vkBeginCommandBuffer(m_drawCmdBuffers[i], &cmdBufInfo));
 
         vkCmdBeginRenderPass(m_drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);

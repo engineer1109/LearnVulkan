@@ -18,11 +18,14 @@ public class BaseRender {
 
     private boolean mQuit = false;
 
+    private boolean mStarted = false;
+
     class RenderThread extends Thread {
         @Override
         public void run() {
             initVulkan(mInstance);
-            while (mQuit == false) {
+            mStarted = true;
+            while (!mQuit) {
                 renderFrame(mInstance);
             }
             deleteVulkan(mInstance, mID);
@@ -66,12 +69,22 @@ public class BaseRender {
         setTouchMode(mInstance, mode);
     }
 
+    public boolean isStarted() {return mStarted;}
+
     public void resetTouch() {
         resetTouch(mInstance);
     }
 
     public void quit() {
         mQuit = true;
+    }
+
+    public void destroySurface(){
+        destroySurface(mInstance);
+    }
+
+    public void rebuildSurface(){
+        rebuildSurface(mInstance);
     }
 
     public long getInstance() {
@@ -99,4 +112,8 @@ public class BaseRender {
     public native void resetTouch(long instance);
 
     public native void deleteVulkan(long instance, int id);
+
+    public native void destroySurface(long instance);
+
+    public native void rebuildSurface(long instance);
 }

@@ -18,6 +18,13 @@ public:
 
     virtual ~VkObject() = default;
 
+    template<class T>
+    static T* New(VulkanContext* context){
+        T* object = new T();
+        object->setContext(context);
+        return object;
+    }
+
     virtual void setContext(VulkanContext* context){
         m_context = context;
     }

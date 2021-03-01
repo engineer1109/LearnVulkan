@@ -35,16 +35,13 @@ void StaticTriangle::render() {
 }
 
 void StaticTriangle::createTriangle() {
-    m_triangle = new Triangle();
-    m_triangle->setContext(m_context);
+    m_triangle = VkObject::New<Triangle>(m_context);
     m_triangle->prepare();
 
-    m_triangleShader = new TriangleShader();
-    m_triangleShader->setContext(m_context);
+    m_triangleShader = VkObject::New<TriangleShader>(m_context);
     m_triangleShader->prepare();
 
-    m_triangleUniform = new TriangleUniform();
-    m_triangleUniform->setContext(m_context);
+    m_triangleUniform = VkObject::New<TriangleUniform>(m_context);
     m_triangleUniform->m_pCameraPos = &m_cameraPos;
     m_triangleUniform->m_pRotation = &m_rotation;
     m_triangleUniform->m_pZoom = &m_zoom;

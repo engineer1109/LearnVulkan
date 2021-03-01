@@ -6,7 +6,23 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 VulkanBase::~VulkanBase() {
-    m_swapChain.cleanup();
+    VK_CHECK_RESULT(vkQueueWaitIdle(m_queue));
+    vkDeviceWaitIdle(m_device);
+    VK_SAFE_DELETE(m_descriptorPool, vkDestroyDescriptorPool(m_device, m_descriptorPool, nullptr));
+    VK_SAFE_DELETE(m_renderPass, vkDestroyRenderPass(m_device, m_renderPass, nullptr));
+    for (auto &shaderModule : m_shaderModules) {
+        VK_SAFE_DELETE(shaderModule, vkDestroyShaderModule(m_device, shaderModule, nullptr));
+    }
+    VK_SAFE_DELETE(m_pipelineCache, vkDestroyPipelineCache(m_device, m_pipelineCache, nullptr));
+
+    VK_SAFE_DELETE(m_cmdPool, vkDestroyCommandPool(m_device, m_cmdPool, nullptr));
+
+    VK_SAFE_DELETE(m_semaphores.presentComplete, vkDestroySemaphore(m_device, m_semaphores.presentComplete, nullptr));
+    VK_SAFE_DELETE(m_semaphores.renderComplete, vkDestroySemaphore(m_device, m_semaphores.renderComplete, nullptr));
+    for (auto &fence : m_waitFences) {
+        VK_SAFE_DELETE(fence, vkDestroyFence(m_device, fence, nullptr));
+    }
+    destroySurface();
     delete_ptr(m_vulkanDevice);
     VK_SAFE_DELETE(m_instance, vkDestroyInstance(m_instance, nullptr));
 }
@@ -54,7 +70,9 @@ void VulkanBase::draw() {
     m_submitInfo.pCommandBuffers = &m_drawCmdBuffers[m_currentBuffer];
 
     // Submit to queue
-    VK_CHECK_RESULT(vkQueueSubmit(m_queue, 1, &m_submitInfo, VK_NULL_HANDLE));
+    if(m_prepared){
+        VK_CHECK_RESULT(vkQueueSubmit(m_queue, 1, &m_submitInfo, VK_NULL_HANDLE));
+    }
 
     submitFrame();
 }
@@ -71,8 +89,8 @@ void VulkanBase::defaultTouchOperation() {
                 (m_mousePos[1].y - m_mousePos[0].y) * (m_mousePos[1].y - m_mousePos[0].y);
         if (m_oldDistance == 0.f) { m_oldDistance = distance; }
         else {
-            if (distance > m_oldDistance) { m_distance -= 0.1f; }
-            else if (distance < m_oldDistance) { m_distance += 0.1f; }
+            if (distance > m_oldDistance) { m_distance += 0.1f; }
+            else if (distance < m_oldDistance) { m_distance -= 0.1f; }
         }
         m_oldDistance = distance;
     }
@@ -370,15 +388,15 @@ void VulkanBase::setupFrameBuffer(){
 }
 
 void VulkanBase::prepareFrame(){
-    if (m_pause) {
+    if (m_pause or !m_prepared) {
         return;
     }
     // Acquire the next image from the swap chain
     VkResult err = m_swapChain.acquireNextImage(m_semaphores.presentComplete, &m_currentBuffer);
     // Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE) or no longer optimal for presentation (SUBOPTIMAL)
-    if ((err == VK_ERROR_OUT_OF_DATE_KHR) || (err == VK_SUBOPTIMAL_KHR) || (err != VK_SUCCESS)) {
-        //windowResize();
-        m_pause = true;
+    if ((err == VK_ERROR_OUT_OF_DATE_KHR) || (err == VK_SUBOPTIMAL_KHR)) {
+        destroySurface();
+        //rebuildSurface();
         LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
     } else {
         VK_CHECK_RESULT(err);
@@ -394,8 +412,8 @@ void VulkanBase::submitFrame() {
     if (!((res == VK_SUCCESS) || (res == VK_SUBOPTIMAL_KHR))) {
         if (res == VK_ERROR_OUT_OF_DATE_KHR) {
             // Swap chain is no longer compatible with the surface and needs to be recreated
-            //windowResize();
-            m_pause = true;
+            destroySurface();
+            //rebuildSurface();
             LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
             return;
         } else {
@@ -403,6 +421,47 @@ void VulkanBase::submitFrame() {
         }
     }
     VK_CHECK_RESULT(vkQueueWaitIdle(m_queue));
+}
+
+void VulkanBase::destroySurface() {
+    if (!m_prepared) {
+        return;
+    }
+    LOGI("destroySurface");
+    m_swapChain.cleanup();
+    destroyCommandBuffers();
+    if(m_window){
+        ANativeWindow_release(m_window);
+        m_window = nullptr;
+    }
+    VK_SAFE_DELETE(m_depthStencil.view, vkDestroyImageView(m_device, m_depthStencil.view, nullptr));
+    VK_SAFE_DELETE(m_depthStencil.image, vkDestroyImage(m_device, m_depthStencil.image, nullptr));
+    VK_SAFE_DELETE(m_depthStencil.mem, vkFreeMemory(m_device, m_depthStencil.mem, nullptr));
+    for (uint32_t i = 0; i < m_frameBuffers.size(); i++) {
+        VK_SAFE_DELETE(m_frameBuffers[i], vkDestroyFramebuffer(m_device, m_frameBuffers[i], nullptr));
+    }
+    m_prepared = false;
+}
+
+void VulkanBase::destroyCommandBuffers(){
+    if(m_drawCmdBuffers.size()>0){
+        vkFreeCommandBuffers(m_device, m_cmdPool, static_cast<uint32_t>(m_drawCmdBuffers.size()), m_drawCmdBuffers.data());
+    }
+    m_drawCmdBuffers.resize(0);
+}
+
+void VulkanBase::rebuildSurface() {
+    m_swapChain.connect(m_instance, m_physicalDevice, m_device);
+    initSwapchain();
+    setupSwapChain();
+    setupDepthStencil();
+    setupFrameBuffer();
+    createCommandBuffers();
+    buildCommandBuffers();
+
+    vkDeviceWaitIdle(m_device);
+
+    m_prepared = true;
 }
 
 END_NAMESPACE(VulkanEngine)

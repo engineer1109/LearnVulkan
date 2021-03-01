@@ -108,6 +108,14 @@ protected:
 
     void submitFrame();
 
+public:
+
+    void destroySurface();
+
+    void destroyCommandBuffers();
+
+    void rebuildSurface();
+
 protected:
     ANativeWindow *m_window = nullptr;
     AAssetManager *m_asset = nullptr;

@@ -473,7 +473,12 @@ public:
 	{
 		// By setting timeout to UINT64_MAX we will always wait until the next image has been acquired or an actual error is thrown
 		// With that we don't have to handle VK_NOT_READY
-		return fpAcquireNextImageKHR(device, swapChain, UINT64_MAX, presentCompleteSemaphore, (VkFence)nullptr, imageIndex);
+		if(swapChain){
+			return fpAcquireNextImageKHR(device, swapChain, UINT64_MAX, presentCompleteSemaphore, (VkFence)nullptr, imageIndex);
+		}
+		else{
+			return VK_SUCCESS;
+		}
 	}
 
 	/**
@@ -499,7 +504,12 @@ public:
 			presentInfo.pWaitSemaphores = &waitSemaphore;
 			presentInfo.waitSemaphoreCount = 1;
 		}
-		return vkQueuePresentKHR(queue, &presentInfo);
+		if(swapChain){
+			return vkQueuePresentKHR(queue, &presentInfo);
+		}
+		else{
+			return VK_SUCCESS;
+		}
 	}
 
 
@@ -521,7 +531,7 @@ public:
 			}
         if (swapChain != VK_NULL_HANDLE)
         {
-            //vkDestroySwapchainKHR(device, swapChain, nullptr);
+            vkDestroySwapchainKHR(device, swapChain, nullptr);
             swapChain = VK_NULL_HANDLE;
         }
 		if (surface != VK_NULL_HANDLE)

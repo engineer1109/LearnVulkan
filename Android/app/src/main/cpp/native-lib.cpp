@@ -44,6 +44,7 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_setSurface(JNIEnv *env, jobj
 
     if (instance) {
         VulkanEngine::VulkanBase *engine = (VulkanEngine::VulkanBase *) instance;
+        LOGI("New Surface %ld", window);
         engine->setWindow(window);
         uint32_t width = static_cast<uint32_t >(ANativeWindow_getWidth(window));
         uint32_t height = static_cast<uint32_t >(ANativeWindow_getHeight(window));
@@ -126,5 +127,27 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_deleteVulkan(JNIEnv *env, jo
             VulkanEngine::StaticTriangle *engine = reinterpret_cast<VulkanEngine::StaticTriangle *>(instance);
             delete (engine);
 //        }
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_engineer1109_learnvulkan_render_BaseRender_destroySurface(JNIEnv *env, jobject thiz,
+                                                                   jlong instance) {
+    // TODO: implement destroySurface()
+    if(instance){
+        auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
+        engine->destroySurface();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_engineer1109_learnvulkan_render_BaseRender_rebuildSurface(JNIEnv *env, jobject thiz,
+                                                                   jlong instance) {
+    // TODO: implement rebuildSurface()
+    if(instance){
+        auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
+        engine->rebuildSurface();
     }
 }

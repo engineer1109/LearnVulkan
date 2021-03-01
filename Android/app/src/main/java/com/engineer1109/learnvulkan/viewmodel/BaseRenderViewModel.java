@@ -34,6 +34,14 @@ public class BaseRenderViewModel extends ViewModel {
         mRender.quit();
     }
 
+    public void destroySurface(){
+        mRender.destroySurface();
+    }
+
+    public void rebuildSurface(){
+        mRender.rebuildSurface();
+    }
+
     public void setTouchPos(float x, float y){ mRender.setTouchPos(x, y);}
 
     public void setTouchPosSecond(float x, float y){ mRender.setTouchPosSecond(x, y);}
@@ -45,6 +53,8 @@ public class BaseRenderViewModel extends ViewModel {
     public void resetTouch(){ mRender.resetTouch();}
 
     public int getRenderStatus() {return 1;}
+
+    public boolean isStarted() {return mRender.isStarted();}
 
     public void quitRender(View view){
         mRender.quit();
