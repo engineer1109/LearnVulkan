@@ -29,7 +29,6 @@ public class BaseRenderViewModel extends ViewModel {
     public void render() {
         mRender.render();
     }
-
     public void destroyRender(){
         mRender.quit();
     }
@@ -40,6 +39,22 @@ public class BaseRenderViewModel extends ViewModel {
 
     public void rebuildSurface(){
         mRender.rebuildSurface();
+    }
+    
+    public void pause(){
+        mRender.pause();
+    }
+
+    public void resume(){
+        mRender.resume();
+    }
+
+    public void waitCurrentFrameComplete(){
+        mRender.waitCurrentFrameComplete();
+    }
+
+    public void destroyANativeWindow(){
+        mRender.destroyANativeWindow();
     }
 
     public void setTouchPos(float x, float y){ mRender.setTouchPos(x, y);}

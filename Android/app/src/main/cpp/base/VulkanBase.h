@@ -55,6 +55,8 @@ public:
 
     virtual void defaultTouchOperation();
 
+    void waitForCurrentFrameComplete();
+
     void setTouchPos(const float &x, const float &y){
         m_mousePos[0] = {x, y};
     }
@@ -73,6 +75,14 @@ public:
         m_mousePosOld[0] = {0.f,0.f};
         m_mousePosOld[1] = {0.f,0.f};
         m_touchMode = TouchMode::NONE;
+    }
+
+    void pause(){
+        m_pause = true;
+    }
+
+    void resume(){
+        m_pause = false;
     }
 
 protected:
@@ -115,6 +125,8 @@ public:
     void destroyCommandBuffers();
 
     void rebuildSurface();
+
+    void destroyANativeWindow();
 
 protected:
     ANativeWindow *m_window = nullptr;
@@ -174,6 +186,7 @@ protected:
     bool m_quit = false;
     bool m_pause = false;
     bool m_prepared = false;
+    bool m_signalFrame = true;
 
     glm::vec2 m_mousePos[2];
     glm::vec2 m_mousePosOld[2];

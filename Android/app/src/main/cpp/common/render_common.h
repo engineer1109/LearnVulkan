@@ -15,6 +15,7 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include <thread>
 
 //Unix
 #include <unistd.h>

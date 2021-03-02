@@ -25,10 +25,13 @@ public class SurfaceAdapters {
 
             @Override
             public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+                Log.i(TAG, "surfaceChanged");
                 viewModel.setSurface(view.getHolder().getSurface());
                 viewModel.setAssetManager(view.getContext().getAssets());
                 if(viewModel.isStarted()){
+                    viewModel.destroySurface();
                     viewModel.rebuildSurface();
+                    viewModel.resume();
                 }
                 else{
                     viewModel.render();
@@ -37,7 +40,8 @@ public class SurfaceAdapters {
 
             @Override
             public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
-                viewModel.destroySurface();
+                Log.i(TAG, "surfaceDestroyed");
+                //viewModel.destroySurface();
             }
         });
     }

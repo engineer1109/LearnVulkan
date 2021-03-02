@@ -25,6 +25,7 @@ VulkanBase::~VulkanBase() {
     destroySurface();
     delete_ptr(m_vulkanDevice);
     VK_SAFE_DELETE(m_instance, vkDestroyInstance(m_instance, nullptr));
+    destroyANativeWindow();
 }
 
 void VulkanBase::initVulkan() {
@@ -62,7 +63,8 @@ void VulkanBase::renderFrame() {
 void VulkanBase::render() {}
 
 void VulkanBase::draw() {
-    if (m_stop) return;
+    if (m_stop or m_pause) return;
+    m_signalFrame = false;
     prepareFrame();
 
     // Command buffer to be sumitted to the queue
@@ -75,6 +77,7 @@ void VulkanBase::draw() {
     }
 
     submitFrame();
+    m_signalFrame = true;
 }
 
 void VulkanBase::defaultTouchOperation() {
@@ -93,6 +96,13 @@ void VulkanBase::defaultTouchOperation() {
             else if (distance < m_oldDistance) { m_distance -= 0.1f; }
         }
         m_oldDistance = distance;
+    }
+}
+
+void VulkanBase::waitForCurrentFrameComplete() {
+    m_pause = true;
+    while(m_signalFrame == false){
+        std::this_thread::sleep_for(std::chrono::microseconds(1));
     }
 }
 
@@ -396,7 +406,7 @@ void VulkanBase::prepareFrame(){
     // Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE) or no longer optimal for presentation (SUBOPTIMAL)
     if ((err == VK_ERROR_OUT_OF_DATE_KHR) || (err == VK_SUBOPTIMAL_KHR)) {
         destroySurface();
-        //rebuildSurface();
+        rebuildSurface();
         LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
     } else {
         VK_CHECK_RESULT(err);
@@ -413,7 +423,7 @@ void VulkanBase::submitFrame() {
         if (res == VK_ERROR_OUT_OF_DATE_KHR) {
             // Swap chain is no longer compatible with the surface and needs to be recreated
             destroySurface();
-            //rebuildSurface();
+            rebuildSurface();
             LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
             return;
         } else {
@@ -430,10 +440,10 @@ void VulkanBase::destroySurface() {
     LOGI("destroySurface");
     m_swapChain.cleanup();
     destroyCommandBuffers();
-    if(m_window){
-        ANativeWindow_release(m_window);
-        m_window = nullptr;
-    }
+//    if(m_window){
+//        ANativeWindow_release(m_window);
+//        m_window = nullptr;
+//    }
     VK_SAFE_DELETE(m_depthStencil.view, vkDestroyImageView(m_device, m_depthStencil.view, nullptr));
     VK_SAFE_DELETE(m_depthStencil.image, vkDestroyImage(m_device, m_depthStencil.image, nullptr));
     VK_SAFE_DELETE(m_depthStencil.mem, vkFreeMemory(m_device, m_depthStencil.mem, nullptr));
@@ -451,6 +461,7 @@ void VulkanBase::destroyCommandBuffers(){
 }
 
 void VulkanBase::rebuildSurface() {
+    if(m_window == nullptr) return;
     m_swapChain.connect(m_instance, m_physicalDevice, m_device);
     initSwapchain();
     setupSwapChain();
@@ -462,6 +473,13 @@ void VulkanBase::rebuildSurface() {
     vkDeviceWaitIdle(m_device);
 
     m_prepared = true;
+}
+
+void VulkanBase::destroyANativeWindow() {
+    if(m_window){
+        ANativeWindow_release(m_window);
+        m_window = nullptr;
+    }
 }
 
 END_NAMESPACE(VulkanEngine)

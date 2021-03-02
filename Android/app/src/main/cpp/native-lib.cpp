@@ -42,6 +42,8 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_setSurface(JNIEnv *env, jobj
     // TODO: implement setSurface()
     auto window = ANativeWindow_fromSurface(env, surface);
 
+    assert(window);
+
     if (instance) {
         VulkanEngine::VulkanBase *engine = (VulkanEngine::VulkanBase *) instance;
         LOGI("New Surface %ld", window);
@@ -149,5 +151,52 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_rebuildSurface(JNIEnv *env, 
     if(instance){
         auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
         engine->rebuildSurface();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_engineer1109_learnvulkan_render_BaseRender_pause(JNIEnv *env, jobject thiz,
+                                                          jlong instance) {
+    // TODO: implement pause()
+    if(instance){
+        auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
+        engine->pause();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_engineer1109_learnvulkan_render_BaseRender_resume(JNIEnv *env, jobject thiz,
+                                                           jlong instance) {
+    // TODO: implement resume()
+    if(instance){
+        auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
+        engine->resume();
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_engineer1109_learnvulkan_render_BaseRender_waitCurrentFrameComplete(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jlong instance) {
+    // TODO: implement waitCurrentFrameComplete()
+    if(instance){
+        auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
+        engine->waitForCurrentFrameComplete();
+        LOGI("waitForCurrentFrameComplete");
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_engineer1109_learnvulkan_render_BaseRender_destroyANativeWindow(JNIEnv *env, jobject thiz,
+                                                                         jlong instance) {
+    // TODO: implement destroyANativeWindow()
+    if(instance){
+        auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
+        engine->destroyANativeWindow();
+        LOGI("destroyANativeWindow");
     }
 }

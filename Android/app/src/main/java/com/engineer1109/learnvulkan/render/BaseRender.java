@@ -87,6 +87,22 @@ public class BaseRender {
         rebuildSurface(mInstance);
     }
 
+    public void pause(){
+        pause(mInstance);
+    }
+
+    public void resume(){
+        resume(mInstance);
+    }
+
+    public void waitCurrentFrameComplete(){
+        waitCurrentFrameComplete(mInstance);
+    }
+
+    public void destroyANativeWindow(){
+        destroyANativeWindow(mInstance);
+    }
+
     public long getInstance() {
         return mInstance;
     }
@@ -116,4 +132,12 @@ public class BaseRender {
     public native void destroySurface(long instance);
 
     public native void rebuildSurface(long instance);
+
+    public native void pause(long instance);
+
+    public native void resume(long instance);
+
+    public native void waitCurrentFrameComplete(long instance);
+
+    public native void destroyANativeWindow(long instance);
 }
