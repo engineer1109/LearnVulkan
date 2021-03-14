@@ -26,7 +26,9 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/engines
         ${PROJECT_SOURCE_DIR}/template
         ${PROJECT_SOURCE_DIR}/template/object
+        ${PROJECT_SOURCE_DIR}/template/object/mesh
         ${PROJECT_SOURCE_DIR}/template/object/camera
+        ${PROJECT_SOURCE_DIR}/template/object/shader
         ${PROJECT_SOURCE_DIR}/utils
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/glm
         ${PROJECT_SOURCE_DIR}/third_party/stb_image/include
@@ -35,6 +37,7 @@ include_directories(
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/examples/StaticTriangle
+        ${PROJECT_SOURCE_DIR}/examples/StaticCube
 )
 
 add_library( # Sets the name of the library.
@@ -44,17 +47,18 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        base/VulkanBase.cpp
-        base/VulkanBaseEngine.cpp
-        core/VulkanDescriptorSet.cpp
-        core/VulkanVertexDescriptions.cpp
-        core/VulkanPipelines.cpp
-        engines/ThirdPersonEngine.cpp
-        template/object/VulkanShader.cpp
-        template/object/VulkanBuffer.cpp
-        template/object/MeshObject.cpp
-        template/object/camera/UniformCamera.cpp
-        template/object/camera/ThirdPersonCamera.cpp
+        base/VulkanBase.cxx
+        base/VulkanBaseEngine.cxx
+        core/VulkanDescriptorSet.cxx
+        core/VulkanVertexDescriptions.cxx
+        core/VulkanPipelines.cxx
+        engines/ThirdPersonEngine.cxx
+        template/object/VulkanShader.cxx
+        template/object/VulkanBuffer.cxx
+        template/object/mesh/MeshObject.cxx
+        template/object/mesh/VulkanCube.cxx
+        template/object/camera/UniformCamera.cxx
+        template/object/camera/ThirdPersonCamera.cxx
         utils/VulkanTools.cpp
 )
 
@@ -88,11 +92,11 @@ add_library(
 
         SHARED
         native-lib.cpp
-        examples/StaticTriangle/StaticTriangle.cpp
-        examples/StaticTriangle/myobjects/Triangle.cpp
-        examples/StaticTriangle/myobjects/TriangleShader.cpp
-        examples/StaticTriangle/myobjects/TriangleUniform.cpp
-        examples/StaticCube/StaticCube.cpp
+        examples/StaticTriangle/StaticTriangle.cxx
+        examples/StaticTriangle/myobjects/Triangle.cxx
+        examples/StaticTriangle/myobjects/TriangleShader.cxx
+        examples/StaticTriangle/myobjects/TriangleUniform.cxx
+        examples/StaticCube/StaticCube.cxx
 )
 
 target_link_libraries(

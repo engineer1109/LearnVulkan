@@ -29,6 +29,9 @@ public:
 public:
     CameraMatrix m_uboVS;
 
+    glm::vec3 *m_pRotation = nullptr;
+    glm::vec3 *m_pCameraPos = nullptr;
+    float *m_pZoom = nullptr;
 
 };
 

@@ -3,13 +3,27 @@
 
 #include "VulkanBase.h"
 #include "StaticTriangle.h"
+#include "StaticCube.h"
 
 extern "C"
 JNIEXPORT jlong JNICALL
 Java_com_engineer1109_learnvulkan_render_BaseRender_createInstance(JNIEnv *env, jobject thiz,
                                                                    jint id) {
-    auto *engine = new VulkanEngine::StaticTriangle();
-    return (jlong) engine;
+    if(id == 0){
+        auto *engine = new VulkanEngine::StaticTriangle();
+        LOGI("CreateInstance %ld", engine);
+        return (jlong) engine;
+    }
+    else if(id == 1){
+        auto *engine = new VulkanEngine::StaticCube();
+        LOGI("CreateInstance %ld", engine);
+        return (jlong) engine;
+    }
+    else{
+        auto *engine = new VulkanEngine::StaticTriangle();
+        LOGI("CreateInstance %ld", engine);
+        return (jlong) engine;
+    }
 }
 
 extern "C"
@@ -120,15 +134,18 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_deleteVulkan(JNIEnv *env, jo
                                                                  jlong instance, jint id) {
     // TODO: implement deleteVulkan()
     if (instance) {
-//        if (id == 0) {
-//        } else if (id == 1) {
-//        }
-//        else if (id == 2) {
-//        }
-//        else {
-            VulkanEngine::StaticTriangle *engine = reinterpret_cast<VulkanEngine::StaticTriangle *>(instance);
+        if(id == 0){
+            auto *engine = reinterpret_cast<VulkanEngine::StaticTriangle*>(instance);
             delete (engine);
-//        }
+        }
+        else if(id == 1){
+            auto *engine = reinterpret_cast<VulkanEngine::StaticCube*>(instance);
+            delete (engine);
+        }
+        else{
+            auto *engine = reinterpret_cast<VulkanEngine::StaticTriangle*>(instance);
+            delete (engine);
+        }
     }
 }
 

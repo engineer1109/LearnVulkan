@@ -5,7 +5,7 @@
 #ifndef LEARNVULKAN_TRIANGLE_H
 #define LEARNVULKAN_TRIANGLE_H
 
-#include "object/MeshObject.h"
+#include "object/mesh/MeshObject.h"
 #include "vertex_struct.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
