@@ -36,8 +36,9 @@ include_directories(
 )
 
 include_directories(
-        ${PROJECT_SOURCE_DIR}/examples/StaticTriangle
-        ${PROJECT_SOURCE_DIR}/examples/StaticCube
+        ${PROJECT_SOURCE_DIR}/examples/01_StaticTriangle
+        ${PROJECT_SOURCE_DIR}/examples/02_StaticCube
+        ${PROJECT_SOURCE_DIR}/examples/03_Texture2dCube
 )
 
 add_library( # Sets the name of the library.
@@ -59,6 +60,7 @@ add_library( # Sets the name of the library.
         template/object/mesh/VulkanCube.cxx
         template/object/camera/UniformCamera.cxx
         template/object/camera/ThirdPersonCamera.cxx
+        template/object/texture/VulkanTexture2D.cxx
         utils/VulkanTools.cpp
 )
 
@@ -92,11 +94,12 @@ add_library(
 
         SHARED
         native-lib.cpp
-        examples/StaticTriangle/StaticTriangle.cxx
-        examples/StaticTriangle/myobjects/Triangle.cxx
-        examples/StaticTriangle/myobjects/TriangleShader.cxx
-        examples/StaticTriangle/myobjects/TriangleUniform.cxx
-        examples/StaticCube/StaticCube.cxx
+        examples/01_StaticTriangle/StaticTriangle.cxx
+        examples/01_StaticTriangle/myobjects/Triangle.cxx
+        examples/01_StaticTriangle/myobjects/TriangleShader.cxx
+        examples/01_StaticTriangle/myobjects/TriangleUniform.cxx
+        examples/02_StaticCube/StaticCube.cxx
+        examples/03_Texture2dCube/Texture2dCube.cxx
 )
 
 target_link_libraries(

@@ -35,6 +35,8 @@
 
 #define END_NAMESPACE(n) }
 
+#define interface class
+
 //#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "vulkan", __VA_ARGS__))
 //#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "vulkan", __VA_ARGS__))
 //#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, "vulkan", __VA_ARGS__))
