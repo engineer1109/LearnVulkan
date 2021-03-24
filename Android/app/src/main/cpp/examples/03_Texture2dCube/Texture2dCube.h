@@ -11,11 +11,17 @@ BEGIN_NAMESPACE(VulkanEngine)
 
 class VulkanCube;
 
+class VulkanVertFragShader;
+
+class UniformCamera;
+
+class VulkanTexture2D;
+
 class Texture2dCube : public ThirdPersonEngine {
 public:
     Texture2dCube() = default;
 
-    ~Texture2dCube();
+    virtual ~Texture2dCube();
 
     void prepareMyObjects() override;
 
@@ -31,6 +37,10 @@ public:
 
 protected:
     VulkanCube *m_cube = nullptr;
+    VulkanVertFragShader *m_cubeShader = nullptr;
+    UniformCamera *m_cubeUniform = nullptr;
+    VulkanTexture2D *m_cubeTextureA = nullptr;
+    VulkanTexture2D *m_cubeTextureB = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)

@@ -6,20 +6,28 @@
 #define LEARNVULKAN_VULKANTEXTURE_H
 
 #include "render_common.h"
+#include "vulkan_template.h"
 #include "VulkanDevice.hpp"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
 interface VulkanTexture {
 public:
+    VulkanTexture() = default;
+    virtual ~VulkanTexture(){
+        destroy();
+    }
+
     vks::VulkanDevice *device = nullptr;
     VkImage image = VK_NULL_HANDLE;
     VkImageLayout imageLayout;
     VkDeviceMemory deviceMemory = VK_NULL_HANDLE;
     VkImageView view = VK_NULL_HANDLE;
     uint32_t width, height = 0;
+    uint32_t channels = 0;
     uint32_t mipLevels = 0;
     uint32_t layerCount = 0;
+    size_t m_size = 0;
     VkDescriptorImageInfo descriptor;
 
     /** @brief Optional sampler to use with this texture */

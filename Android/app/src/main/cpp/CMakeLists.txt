@@ -29,6 +29,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/template/object/mesh
         ${PROJECT_SOURCE_DIR}/template/object/camera
         ${PROJECT_SOURCE_DIR}/template/object/shader
+        ${PROJECT_SOURCE_DIR}/template/object/texture
         ${PROJECT_SOURCE_DIR}/utils
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/glm
         ${PROJECT_SOURCE_DIR}/third_party/stb_image/include
@@ -62,6 +63,8 @@ add_library( # Sets the name of the library.
         template/object/camera/ThirdPersonCamera.cxx
         template/object/texture/VulkanTexture2D.cxx
         utils/VulkanTools.cpp
+
+        ${PROJECT_SOURCE_DIR}/../../../../../third_party/stb_image/src/stb_image_aug.c
 )
 
 # Searches for a specified prebuilt library and stores the path as a
