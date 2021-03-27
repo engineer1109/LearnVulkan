@@ -7,16 +7,20 @@
 
 #include "render_common.h"
 #include "vulkan_template.h"
-#include "VulkanDevice.hpp"
+#include "VkObject.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-interface VulkanTexture {
+interface VulkanTexture : public VkObject {
 public:
     VulkanTexture() = default;
     virtual ~VulkanTexture(){
         destroy();
     }
+
+    virtual void prepare() override {}
+
+    virtual void update() override {}
 
     vks::VulkanDevice *device = nullptr;
     VkImage image = VK_NULL_HANDLE;

@@ -40,6 +40,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/examples/01_StaticTriangle
         ${PROJECT_SOURCE_DIR}/examples/02_StaticCube
         ${PROJECT_SOURCE_DIR}/examples/03_Texture2dCube
+        ${PROJECT_SOURCE_DIR}/examples/04_Skybox
 )
 
 add_library( # Sets the name of the library.
@@ -62,6 +63,7 @@ add_library( # Sets the name of the library.
         template/object/camera/UniformCamera.cxx
         template/object/camera/ThirdPersonCamera.cxx
         template/object/texture/VulkanTexture2D.cxx
+        template/object/texture/VulkanTextureCubeMap.cxx
         utils/VulkanTools.cpp
 
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/stb_image/src/stb_image_aug.c
@@ -103,6 +105,7 @@ add_library(
         examples/01_StaticTriangle/myobjects/TriangleUniform.cxx
         examples/02_StaticCube/StaticCube.cxx
         examples/03_Texture2dCube/Texture2dCube.cxx
+        examples/04_Skybox/SkyboxCube.cxx
 )
 
 target_link_libraries(

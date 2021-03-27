@@ -1,33 +1,32 @@
 //
-// Created by wjl on 21-3-22.
+// Created by wjl on 21-3-28.
 //
 
-#ifndef LEARNVULKAN_VULKANTEXTURE2D_H
-#define LEARNVULKAN_VULKANTEXTURE2D_H
+#ifndef LEARNVULKAN_VULKANTEXTURECUBEMAP_H
+#define LEARNVULKAN_VULKANTEXTURECUBEMAP_H
 
 #include "VulkanTexture.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanTexture2D : public VulkanTexture {
+class VulkanTextureCubeMap : public VulkanTexture {
 public:
-    VulkanTexture2D() = default;
+    VulkanTextureCubeMap() = default;
+    virtual ~VulkanTextureCubeMap() = default;
 
-    virtual ~VulkanTexture2D() = default;
-
-    void loadFromFile(std::string file, AAssetManager *asset, VkFormat format,
+    void loadFromFile(std::vector<std::string> files, AAssetManager *asset, VkFormat format,
                       vks::VulkanDevice *device,
                       VkQueue copyQueue,
                       VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_SAMPLED_BIT,
                       VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
                       bool forceLinear = false);
 
-    void loadFromFile(std::string file, VkFormat format,
+    void loadFromFile(std::vector<std::string> files, VkFormat format,
                       VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_SAMPLED_BIT,
                       VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
                       bool forceLinear = false) {
         if (m_context) {
-            loadFromFile(file, m_context->m_asset, format, m_context->vulkanDevice,
+            loadFromFile(files, m_context->m_asset, format, m_context->vulkanDevice,
                          m_context->queue,
                          imageUsageFlags, imageLayout, forceLinear);
         }
@@ -36,4 +35,4 @@ public:
 
 END_NAMESPACE(VulkanEngine)
 
-#endif //LEARNVULKAN_VULKANTEXTURE2D_H
+#endif //LEARNVULKAN_VULKANTEXTURECUBEMAP_H

@@ -72,13 +72,11 @@ void Texture2dCube::createCube() {
     m_cubeUniform->m_pZoom = &m_zoom;
     m_cubeUniform->prepare();
 
-    m_cubeTextureA = new VulkanTexture2D();
-    m_cubeTextureA->loadFromFile("textures/awesomeface.png", m_asset, VK_FORMAT_R8G8B8A8_UNORM,
-                                 m_vulkanDevice, m_queue);
+    m_cubeTextureA = VkObject::New<VulkanTexture2D>(m_context);
+    m_cubeTextureA->loadFromFile("textures/awesomeface.png", VK_FORMAT_R8G8B8A8_UNORM);
 
-    m_cubeTextureB = new VulkanTexture2D();
-    m_cubeTextureB->loadFromFile("textures/container.png", m_asset, VK_FORMAT_R8G8B8A8_UNORM,
-                                 m_vulkanDevice, m_queue);
+    m_cubeTextureB = VkObject::New<VulkanTexture2D>(m_context);
+    m_cubeTextureB->loadFromFile("textures/container.png", VK_FORMAT_R8G8B8A8_UNORM);
 }
 
 END_NAMESPACE(VulkanEngine)
