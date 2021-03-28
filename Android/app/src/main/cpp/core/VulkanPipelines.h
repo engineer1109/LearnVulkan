@@ -18,7 +18,7 @@ public:
 
     void createBasePipelineInfo(const VkPipelineLayout &pipelineLayout, const VkRenderPass &renderPass);
 
-    void createPipeline(VulkanShader* shader, VkPolygonMode mode= VK_POLYGON_MODE_FILL, VkCullModeFlags cullMode = VK_CULL_MODE_NONE);
+    void createPipeline(VulkanShader* shader, VkPolygonMode mode= VK_POLYGON_MODE_FILL);
 
 public:
     VkDevice m_device;

@@ -20,6 +20,7 @@ add_definitions(-DSTBI_NO_DDS)
 add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR)
 
 include_directories(
+        ${PROJECT_SOURCE_DIR}/algorithm
         ${PROJECT_SOURCE_DIR}/base
         ${PROJECT_SOURCE_DIR}/core
         ${PROJECT_SOURCE_DIR}/common
@@ -50,6 +51,7 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
+        algorithm/ImageAlgorithm.cxx
         base/VulkanBase.cxx
         base/VulkanBaseEngine.cxx
         core/VulkanDescriptorSet.cxx

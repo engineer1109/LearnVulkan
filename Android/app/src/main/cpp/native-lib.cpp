@@ -5,6 +5,7 @@
 #include "StaticTriangle.h"
 #include "StaticCube.h"
 #include "Texture2dCube.h"
+#include "SkyboxCube.h"
 
 extern "C"
 JNIEXPORT jlong JNICALL
@@ -22,6 +23,11 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_createInstance(JNIEnv *env, 
     }
     else if(id == 2){
         auto *engine = new VulkanEngine::Texture2dCube();
+        LOGI("CreateInstance %ld", engine);
+        return (jlong) engine;
+    }
+    else if(id == 3){
+        auto *engine = new VulkanEngine::SkyboxCube();
         LOGI("CreateInstance %ld", engine);
         return (jlong) engine;
     }

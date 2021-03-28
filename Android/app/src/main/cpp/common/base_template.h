@@ -25,6 +25,13 @@ void delete_array(T* &ptr){
     }
 }
 
+template<class T>
+T clamp(T value, T minValue, T maxValue){
+    T res = std::min(maxValue, value);
+    res = std::max(minValue, value);
+    return res;
+}
+
 END_NAMESPACE(VulkanEngine)
 
 #endif //LEARNVULKAN_BASE_TEMPLATE_H

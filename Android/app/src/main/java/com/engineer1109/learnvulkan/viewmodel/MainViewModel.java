@@ -60,24 +60,17 @@ public class MainViewModel extends ViewModel {
 
     private List<MenuData> generateMenus() {
         List<MenuData> datas = new ArrayList<>();
-        {
-            MenuData data = new MenuData();
-            data.setID(1);
-            data.setMenuText("Triangle");
-            datas.add(data);
-        }
-        {
-            MenuData data = new MenuData();
-            data.setID(2);
-            data.setMenuText("StaticCube");
-            datas.add(data);
-        }
-        {
-            MenuData data = new MenuData();
-            data.setID(3);
-            data.setMenuText("Texture2dCube");
-            datas.add(data);
-        }
+        addMenuButton(datas, 1, "Triangle");
+        addMenuButton(datas, 2, "StaticCube");
+        addMenuButton(datas, 3, "Texture2dCube");
+        addMenuButton(datas, 4, "SkyboxCube");
         return datas;
+    }
+
+    private void addMenuButton(List<MenuData> datas, int id, String text){
+        MenuData data = new MenuData();
+        data.setID(id);
+        data.setMenuText(text);
+        datas.add(data);
     }
 }

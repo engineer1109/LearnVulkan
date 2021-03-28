@@ -63,14 +63,13 @@ void VulkanPipelines::createBasePipelineInfo(const VkPipelineLayout &pipelineLay
     m_blendAttachmentState.alphaBlendOp = VK_BLEND_OP_ADD;
 }
 
-void VulkanPipelines::createPipeline(VulkanShader *shader, VkPolygonMode mode,
-                                     VkCullModeFlags cullMode) {
+void VulkanPipelines::createPipeline(VulkanShader *shader, VkPolygonMode mode) {
     if (shader) {
         if (shader->getPipeLine()) {
             vkDestroyPipeline(m_device, shader->getPipeLine(), nullptr);
         }
         m_rasterizationState.polygonMode = mode;
-        m_rasterizationState.cullMode = cullMode;
+        m_rasterizationState.cullMode = shader->getCullFlag();
         m_shaderStages[0] = shader->getShaderStages()[0];
         m_shaderStages[1] = shader->getShaderStages()[1];
         VK_CHECK_RESULT(

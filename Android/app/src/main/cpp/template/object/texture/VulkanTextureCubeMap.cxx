@@ -5,6 +5,7 @@
 #include "VulkanTextureCubeMap.h"
 
 #include "AssetReader.h"
+#include "ImageAlgorithm.h"
 
 #include <stb_image_aug.h>
 
@@ -36,12 +37,29 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, AAssetMa
     mipLevels = static_cast<uint32_t>(1);
     channels = static_cast<uint32_t>(c);
 
+    if(c==3){
+        channels = 4;
+    }
+
     m_size = width * height * channels * files.size();
     uint8_t *img = new uint8_t[m_size];
 
-    for (int i = 0; i < files.size(); i++) {
-        memcpy(img + i * width * height * channels, imgList[i], width * height * channels);
+    if(c==3){
+        for (size_t i = 0; i < files.size(); i++) {
+            ImageAlgorithm::turnRGB2RGBA(imgList[i], img + width * height * channels * i, width, height);
+        }
     }
+    else {
+        for (int i = 0; i < files.size(); i++) {
+            memcpy(img + i * width * height * channels, imgList[i], width * height * channels);
+        }
+    }
+
+    ImageAlgorithm::mirrorX(img + 2 * width * height * channels, width, height);
+    ImageAlgorithm::mirrorX(img + 3 * width * height * channels, width, height);
+
+    ImageAlgorithm::mirror_X_Y(img + 2 * width * height * channels, width, height);
+    ImageAlgorithm::mirrorXY(img + 3 * width * height * channels, width, height);
 
     VkMemoryAllocateInfo memAllocInfo = vks::initializers::memoryAllocateInfo();
     VkMemoryRequirements memReqs;
@@ -122,7 +140,7 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, AAssetMa
     // This flag is required for cube map images
     imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
-
+    LOGI("%ld", device->logicalDevice);
     VK_CHECK_RESULT(vkCreateImage(device->logicalDevice, &imageCreateInfo, nullptr, &image));
 
     vkGetImageMemoryRequirements(device->logicalDevice, image, &memReqs);

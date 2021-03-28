@@ -64,6 +64,7 @@ void Texture2dCube::createCube() {
     m_cubeShader = VkObject::New<VulkanVertFragShader>(m_context);
     m_cubeShader->setShaderObjPath("shaders/Texture2dCube/texture2d.so.vert",
                                    "shaders/Texture2dCube/texture2d.so.frag");
+    m_cubeShader->setCullFlag(VK_CULL_MODE_BACK_BIT);
     m_cubeShader->prepare();
 
     m_cubeUniform = VkObject::New<UniformCamera>(m_context);
