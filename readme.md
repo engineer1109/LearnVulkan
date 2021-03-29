@@ -11,16 +11,18 @@
     <br>
 ## What is more than SaschaWillems's Project
 This project is partly based on [SaschaWillems's Project](https://github.com/SaschaWillems/Vulkan.git), add some functions of cross-platform window operation , deleted MFC code of the main function(WinMain), and provides a unified interface api for cross-platform.  <br>
+For Android, use the jni and android java surface activity instead of native glue. You can use the java widgets of Android Sdk on the Vulkan Surface. The front-end UI uses MVVM framework to better meet the application requirements. <br>
 Use sharelib (libvulkanbase.so, libvulkan_basicengine.so) instead of static lib.  <br>
 
 * Sharelib : ✅  
-* Supported System : Linux & Windows   
+* Supported System : Linux & Windows & Android  
 * PNG and JPEG Texture Load  : ✅ (Auto turn to RGBA8 format)  
 * Volume Texture3d Load : ⭕ (Will support nii and raw data)  
 * Auto Mipmap-Gen  : ✅  
 * Qt-binding(vulkan widget)  : ✅  
 * Relative path and absolute path management for IDE  : ✅  
 * Basic object template(Ball & Square & Cube and so on)  : ⭕  
+* Android Vulkan Surface Activity (Java)  : ✅  
 For examples of cross-platform api:  
 ```
 int main(int argc,char** argv){
@@ -34,6 +36,31 @@ int main(int argc,char** argv){
     return 1;
 }
 ```
+
+Simple object-oriented package reduces the amount of code and makes it easier to use and understand Vulkan.  
+
+```
+    m_sky = VkObject::New<VulkanCube>(m_context);
+    m_sky->prepare();
+
+    m_skyShader = VkObject::New<VulkanVertFragShader>(m_context);
+    m_skyShader->setShaderObjPath("shaders/Skybox/skybox.so.vert",
+                                   "shaders/Skybox/skybox.so.frag");
+    m_skyShader->setCullFlag(VK_CULL_MODE_FRONT_BIT);
+    m_skyShader->prepare();
+
+    std::vector<std::string> skyImages = {
+            "textures/skybox/back.jpg",
+            "textures/skybox/front.jpg",
+            "textures/skybox/top.jpg",
+            "textures/skybox/bottom.jpg",
+            "textures/skybox/right.jpg",
+            "textures/skybox/left.jpg",
+    };
+    m_skyTexture = VkObject::New<VulkanTextureCubeMap>(m_context);
+    m_skyTexture->loadFromFile(skyImages, VK_FORMAT_R8G8B8A8_UNORM);
+```
+
 ![image](https://github.com/engineer1109/LearnVulkan/blob/master/data/gif/output.gif) <br>
 The libvulkan_basicengine.so also integrates 'stb_image' from [https://github.com/JoeyDeVries/LearnOpenGL](https://github.com/SaschaWillems/Vulkan.git), supporting jpg and png image loading, and you don't need to generate ktx images for Vulkan Texture now. See 'vulkan_basicengine_texture.h'.
 
@@ -41,8 +68,8 @@ Finally, welcome to clone or fork my project, remember to star if you consider m
 
 # Requirements
 ## Supported System:
-   **Now:** Linux(Mainly)  Windows(Partly)
-   **Planned supported:** Mac(I have successfully installed black Apple) Android IOS
+   **Now:** Linux(Mainly)  Windows(Partly) Android(Partly)
+   **Planned supported:** Mac(I have successfully installed black Apple) IOS
 ## Libraries and Tools
    **CMake:** 3.14+ is recommended 
    **Vulkan:** 1.1.121+
