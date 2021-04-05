@@ -186,6 +186,7 @@ void VulkanBase::pickPhysicalDevice() {
 }
 
 void VulkanBase::createLogicalDevice(){
+    m_enabledDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
     m_vulkanDevice = new vks::VulkanDevice(m_physicalDevice);
     m_result = m_vulkanDevice->createLogicalDevice(m_enabledFeatures, m_enabledDeviceExtensions,
                                                    m_deviceCreatepNextChain);

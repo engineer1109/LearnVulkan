@@ -13,11 +13,7 @@
 BEGIN_NAMESPACE(VulkanEngine)
 
 SkyboxCube::~SkyboxCube() {
-    delete_ptr(m_cube);
-    delete_ptr(m_cubeUniform);
-    delete_ptr(m_cubeShader);
-    delete_ptr(m_cubeTextureA);
-    delete_ptr(m_cubeTextureB);
+    destroyObjects();
 }
 
 void SkyboxCube::prepareMyObjects() {
@@ -66,33 +62,33 @@ void SkyboxCube::createPipelines() {
 }
 
 void SkyboxCube::createCube() {
-    m_cube = VkObject::New<VulkanCube>(m_context);
+    REGISTER_OBJECT<VulkanCube>(m_cube);
     m_cube->prepare();
 
-    m_cubeShader = VkObject::New<VulkanVertFragShader>(m_context);
+    REGISTER_OBJECT<VulkanVertFragShader>(m_cubeShader);
     m_cubeShader->setShaderObjPath("shaders/Texture2dCube/texture2d.so.vert",
                                    "shaders/Texture2dCube/texture2d.so.frag");
     m_cubeShader->setCullFlag(VK_CULL_MODE_BACK_BIT);
     m_cubeShader->prepare();
 
-    m_cubeUniform = VkObject::New<UniformCamera>(m_context);
+    REGISTER_OBJECT<UniformCamera>(m_cubeUniform);
     m_cubeUniform->m_pCameraPos = &m_cameraPos;
     m_cubeUniform->m_pRotation = &m_rotation;
     m_cubeUniform->m_pZoom = &m_zoom;
     m_cubeUniform->prepare();
 
-    m_cubeTextureA = VkObject::New<VulkanTexture2D>(m_context);
+    REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureA);
     m_cubeTextureA->loadFromFile("textures/awesomeface.png", VK_FORMAT_R8G8B8A8_UNORM);
 
-    m_cubeTextureB = VkObject::New<VulkanTexture2D>(m_context);
+    REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureB);
     m_cubeTextureB->loadFromFile("textures/container.png", VK_FORMAT_R8G8B8A8_UNORM);
 }
 
 void SkyboxCube::createSkybox() {
-    m_sky = VkObject::New<VulkanCube>(m_context);
+    REGISTER_OBJECT<VulkanCube>(m_sky);
     m_sky->prepare();
 
-    m_skyShader = VkObject::New<VulkanVertFragShader>(m_context);
+    REGISTER_OBJECT<VulkanVertFragShader>(m_skyShader);
     m_skyShader->setShaderObjPath("shaders/Skybox/skybox.so.vert",
                                    "shaders/Skybox/skybox.so.frag");
     m_skyShader->setCullFlag(VK_CULL_MODE_FRONT_BIT);
@@ -106,7 +102,7 @@ void SkyboxCube::createSkybox() {
             "textures/skybox/right.jpg",
             "textures/skybox/left.jpg",
     };
-    m_skyTexture = VkObject::New<VulkanTextureCubeMap>(m_context);
+    REGISTER_OBJECT<VulkanTextureCubeMap>(m_skyTexture);
     m_skyTexture->loadFromFile(skyImages, VK_FORMAT_R8G8B8A8_UNORM);
 
 }

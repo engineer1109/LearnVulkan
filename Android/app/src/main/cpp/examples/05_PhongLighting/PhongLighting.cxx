@@ -1,39 +1,42 @@
 //
-// Created by wjl on 21-3-22.
+// Created by wjl on 21-4-5.
 //
 
-#include "Texture2dCube.h"
+#include "PhongLighting.h"
 
 #include "VulkanCube.h"
 #include "VulkanVertFragShader.h"
 #include "UniformCamera.h"
 #include "VulkanTexture2D.h"
+#include "VulkanTextureCubeMap.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-Texture2dCube::~Texture2dCube() {
+PhongLighting::~PhongLighting() {
     destroyObjects();
 }
 
-void Texture2dCube::prepareMyObjects() {
+void PhongLighting::prepareMyObjects() {
     m_zoom = -4.f;
 
     createCube();
+    createSkybox();
 
     setDescriptorSet();
     createPipelines();
 }
 
-void Texture2dCube::buildMyObjects(VkCommandBuffer &cmd) {
+void PhongLighting::buildMyObjects(VkCommandBuffer &cmd) {
     m_cube->build(cmd, m_cubeShader);
+    m_sky->build(cmd, m_skyShader);
 }
 
-void Texture2dCube::render() {
+void PhongLighting::render() {
     updateCamera();
     m_cubeUniform->update();
 }
 
-void Texture2dCube::setDescriptorSet() {
+void PhongLighting::setDescriptorSet() {
     m_vulkanDescriptorSet->addBinding(0, &(m_cubeUniform->m_uniformBuffer.descriptor),
                                       VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT,
                                       0);
@@ -45,21 +48,26 @@ void Texture2dCube::setDescriptorSet() {
                                       VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                       VK_SHADER_STAGE_FRAGMENT_BIT,
                                       0);
+    m_vulkanDescriptorSet->addBinding(3, &(m_skyTexture->descriptor),
+                                      VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                      VK_SHADER_STAGE_FRAGMENT_BIT,
+                                      0);
     m_vulkanDescriptorSet->GenPipelineLayout(&m_pipelineLayout);
 }
 
-void Texture2dCube::createPipelines() {
+void PhongLighting::createPipelines() {
     m_pipelines->createBasePipelineInfo(m_pipelineLayout, m_renderPass);
     m_pipelines->createPipeline(m_cubeShader);
+    m_pipelines->createPipeline(m_skyShader);
 }
 
-void Texture2dCube::createCube() {
+void PhongLighting::createCube() {
     REGISTER_OBJECT<VulkanCube>(m_cube);
     m_cube->prepare();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_cubeShader);
-    m_cubeShader->setShaderObjPath("shaders/Texture2dCube/texture2d.so.vert",
-                                   "shaders/Texture2dCube/texture2d.so.frag");
+    m_cubeShader->setShaderObjPath("shaders/PhongLighting/phonglighting.so.vert",
+                                   "shaders/PhongLighting/phonglighting.so.frag");
     m_cubeShader->setCullFlag(VK_CULL_MODE_BACK_BIT);
     m_cubeShader->prepare();
 
@@ -72,9 +80,31 @@ void Texture2dCube::createCube() {
     REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureA);
     m_cubeTextureA->loadFromFile("textures/awesomeface.png", VK_FORMAT_R8G8B8A8_UNORM);
 
-
     REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureB);
     m_cubeTextureB->loadFromFile("textures/container.png", VK_FORMAT_R8G8B8A8_UNORM);
+}
+
+void PhongLighting::createSkybox() {
+    REGISTER_OBJECT<VulkanCube>(m_sky);
+    m_sky->prepare();
+
+    REGISTER_OBJECT<VulkanVertFragShader>(m_skyShader);
+    m_skyShader->setShaderObjPath("shaders/Skybox/skybox.so.vert",
+                                  "shaders/Skybox/skybox.so.frag");
+    m_skyShader->setCullFlag(VK_CULL_MODE_FRONT_BIT);
+    m_skyShader->prepare();
+
+    std::vector<std::string> skyImages = {
+            "textures/skybox/back.jpg",
+            "textures/skybox/front.jpg",
+            "textures/skybox/top.jpg",
+            "textures/skybox/bottom.jpg",
+            "textures/skybox/right.jpg",
+            "textures/skybox/left.jpg",
+    };
+    REGISTER_OBJECT<VulkanTextureCubeMap>(m_skyTexture);
+    m_skyTexture->loadFromFile(skyImages, VK_FORMAT_R8G8B8A8_UNORM);
+
 }
 
 END_NAMESPACE(VulkanEngine)

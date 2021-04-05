@@ -11,9 +11,7 @@
 BEGIN_NAMESPACE(VulkanEngine)
 
 StaticCube::~StaticCube() {
-    delete_ptr(m_cube);
-    delete_ptr(m_cubeUniform);
-    delete_ptr(m_cubeShader);
+    destroyObjects();
 }
 
 void StaticCube::prepareMyObjects() {
@@ -47,15 +45,15 @@ void StaticCube::createPipelines() {
 }
 
 void StaticCube::createCube() {
-    m_cube = VkObject::New<VulkanCube>(m_context);
+    REGISTER_OBJECT<VulkanCube>(m_cube);
     m_cube->prepare();
 
-    m_cubeShader = VkObject::New<VulkanVertFragShader>(m_context);
+    REGISTER_OBJECT<VulkanVertFragShader>(m_cubeShader);
     m_cubeShader->setShaderObjPath("shaders/StaticCube/staticcube.so.vert",
                                    "shaders/StaticCube/staticcube.so.frag");
     m_cubeShader->prepare();
 
-    m_cubeUniform = VkObject::New<UniformCamera>(m_context);
+    REGISTER_OBJECT<UniformCamera>(m_cubeUniform);
     m_cubeUniform->m_pCameraPos = &m_cameraPos;
     m_cubeUniform->m_pRotation = &m_rotation;
     m_cubeUniform->m_pZoom = &m_zoom;

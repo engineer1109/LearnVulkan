@@ -42,6 +42,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/examples/02_StaticCube
         ${PROJECT_SOURCE_DIR}/examples/03_Texture2dCube
         ${PROJECT_SOURCE_DIR}/examples/04_Skybox
+        ${PROJECT_SOURCE_DIR}/examples/05_PhongLighting
 )
 
 add_library( # Sets the name of the library.
@@ -108,6 +109,7 @@ add_library(
         examples/02_StaticCube/StaticCube.cxx
         examples/03_Texture2dCube/Texture2dCube.cxx
         examples/04_Skybox/SkyboxCube.cxx
+        examples/05_PhongLighting/PhongLighting.cxx
 )
 
 target_link_libraries(

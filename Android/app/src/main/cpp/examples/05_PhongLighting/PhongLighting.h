@@ -1,9 +1,9 @@
 //
-// Created by wjl on 21-3-28.
+// Created by wjl on 21-4-5.
 //
 
-#ifndef LEARNVULKAN_SKYBOXCUBE_H
-#define LEARNVULKAN_SKYBOXCUBE_H
+#ifndef LEARNVULKAN_PHONGLIGHTING_H
+#define LEARNVULKAN_PHONGLIGHTING_H
 
 #include "ThirdPersonEngine.h"
 
@@ -19,11 +19,11 @@ class VulkanTexture2D;
 
 class VulkanTextureCubeMap;
 
-class SkyboxCube : public ThirdPersonEngine  {
+class PhongLighting : public ThirdPersonEngine {
 public:
-    SkyboxCube() = default;
+    PhongLighting() = default;
 
-    virtual ~SkyboxCube();
+    virtual ~PhongLighting();
 
     void prepareMyObjects() override;
 
@@ -49,8 +49,9 @@ protected:
     VulkanCube *m_sky = nullptr;
     VulkanVertFragShader *m_skyShader = nullptr;
     VulkanTextureCubeMap *m_skyTexture = nullptr;
+
 };
 
 END_NAMESPACE(VulkanEngine)
 
-#endif //LEARNVULKAN_SKYBOXCUBE_H
+#endif //LEARNVULKAN_PHONGLIGHTING_H

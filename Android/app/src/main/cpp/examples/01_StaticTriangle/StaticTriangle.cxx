@@ -13,9 +13,7 @@ BEGIN_NAMESPACE(VulkanEngine)
 //StaticTriangle::StaticTriangle(){}
 
 StaticTriangle::~StaticTriangle() {
-    delete_ptr(m_triangle);
-    delete_ptr(m_triangleShader);
-    delete_ptr(m_triangleUniform);
+    destroyObjects();
 }
 
 void StaticTriangle::prepareMyObjects() {
@@ -35,13 +33,13 @@ void StaticTriangle::render() {
 }
 
 void StaticTriangle::createTriangle() {
-    m_triangle = VkObject::New<Triangle>(m_context);
+    REGISTER_OBJECT<Triangle>(m_triangle);
     m_triangle->prepare();
 
-    m_triangleShader = VkObject::New<TriangleShader>(m_context);
+    REGISTER_OBJECT<TriangleShader>(m_triangleShader);
     m_triangleShader->prepare();
 
-    m_triangleUniform = VkObject::New<TriangleUniform>(m_context);
+    REGISTER_OBJECT<TriangleUniform>(m_triangleUniform);
     m_triangleUniform->m_pCameraPos = &m_cameraPos;
     m_triangleUniform->m_pRotation = &m_rotation;
     m_triangleUniform->m_pZoom = &m_zoom;

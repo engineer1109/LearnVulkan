@@ -43,6 +43,18 @@ protected:
 
     virtual void buildMyObjects(VkCommandBuffer &cmd) {};
 
+    template<class T>
+    void REGISTER_OBJECT(T* &obj){
+        obj = VkObject::New<T>(m_context);
+        m_objs.push_back((VkObject**)&obj);
+    }
+
+    void destroyObjects(){
+        for (auto &obj : m_objs){
+            delete_ptr(*obj);
+        }
+    }
+
 protected:
     int m_maxSets = 1;
 
@@ -51,6 +63,8 @@ protected:
     VulkanPipelines *m_pipelines = nullptr;
     VulkanContext *m_context = nullptr;
     VkPipelineLayout m_pipelineLayout = VK_NULL_HANDLE;
+
+    std::vector<VkObject**> m_objs;
 };
 
 END_NAMESPACE(VulkanEngine)
