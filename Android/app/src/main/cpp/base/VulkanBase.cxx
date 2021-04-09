@@ -39,6 +39,7 @@ void VulkanBase::prepare() {
 }
 
 void VulkanBase::prepareBase() {
+    prepareFunctions();
     initSwapchain();
     createCommandPool();
     setupSwapChain();
@@ -480,6 +481,12 @@ void VulkanBase::destroyANativeWindow() {
     if(m_window){
         ANativeWindow_release(m_window);
         m_window = nullptr;
+    }
+}
+
+void VulkanBase::runFunction(int i) {
+    if(i < m_functions.size()){
+        m_functions[i]();
     }
 }
 

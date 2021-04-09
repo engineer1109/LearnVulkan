@@ -128,6 +128,10 @@ public:
 
     void destroyANativeWindow();
 
+    virtual void prepareFunctions() {}
+
+    virtual void runFunction(int i);
+
 protected:
     ANativeWindow *m_window = nullptr;
     AAssetManager *m_asset = nullptr;
@@ -194,6 +198,8 @@ protected:
 
     float m_distance = 0.f;
     float m_oldDistance = 0.f;
+
+    std::vector<std::function<void()>> m_functions;
 };
 
 END_NAMESPACE(VulkanEngine)

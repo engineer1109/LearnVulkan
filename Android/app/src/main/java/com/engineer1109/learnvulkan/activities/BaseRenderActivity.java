@@ -36,6 +36,8 @@ public class BaseRenderActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(BaseRenderViewModel.class);
         mBinding.setBaseRenderViewModel(mViewModel);
         mViewModel.init(id);
+        mViewModel.setBinding(mBinding);
+        mViewModel.showMenu(mBinding.getRoot());
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.hide();

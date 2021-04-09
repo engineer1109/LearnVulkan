@@ -5,10 +5,6 @@
 #ifndef LEARNVULKAN_VULKANBUFFER_H
 #define LEARNVULKAN_VULKANBUFFER_H
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-
 #include "VkObject.h"
 #include "VulkanContext.h"
 #include "VulkanBuffer.hpp"

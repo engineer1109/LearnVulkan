@@ -9,6 +9,7 @@
 #include "UniformCamera.h"
 #include "VulkanTexture2D.h"
 #include "VulkanTextureCubeMap.h"
+#include "ReflectParaBuffer.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
@@ -16,11 +17,16 @@ PhongLighting::~PhongLighting() {
     destroyObjects();
 }
 
+void PhongLighting::prepareFunctions() {
+    m_functions.emplace_back([this] { changeReflectMode(); });
+}
+
 void PhongLighting::prepareMyObjects() {
     m_zoom = -4.f;
 
     createCube();
     createSkybox();
+    createReflectParaBuffer();
 
     setDescriptorSet();
     createPipelines();
@@ -51,6 +57,10 @@ void PhongLighting::setDescriptorSet() {
     m_vulkanDescriptorSet->addBinding(3, &(m_skyTexture->descriptor),
                                       VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                       VK_SHADER_STAGE_FRAGMENT_BIT,
+                                      0);
+    m_vulkanDescriptorSet->addBinding(4, &(m_reflectParaBuffer->m_uniformBuffer.descriptor),
+                                      VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                      VK_SHADER_STAGE_VERTEX_BIT,
                                       0);
     m_vulkanDescriptorSet->GenPipelineLayout(&m_pipelineLayout);
 }
@@ -105,6 +115,17 @@ void PhongLighting::createSkybox() {
     REGISTER_OBJECT<VulkanTextureCubeMap>(m_skyTexture);
     m_skyTexture->loadFromFile(skyImages, VK_FORMAT_R8G8B8A8_UNORM);
 
+}
+
+void PhongLighting::createReflectParaBuffer() {
+    REGISTER_OBJECT<ReflectParaBuffer>(m_reflectParaBuffer);
+    m_reflectParaBuffer->prepare();
+}
+
+void PhongLighting::changeReflectMode() {
+    LOGI("changeReflect\n");
+    m_reflectParaBuffer->reflect();
+    m_reflectParaBuffer->update();
 }
 
 END_NAMESPACE(VulkanEngine)

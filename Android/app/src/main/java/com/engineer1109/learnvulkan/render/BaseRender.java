@@ -103,9 +103,13 @@ public class BaseRender {
         destroyANativeWindow(mInstance);
     }
 
+    public void runFunction(int i) { runFunction(mInstance, i); }
+
     public long getInstance() {
         return mInstance;
     }
+
+    public int getID() {return mID;}
 
     //public native long createInstance();
 
@@ -140,4 +144,6 @@ public class BaseRender {
     public native void waitCurrentFrameComplete(long instance);
 
     public native void destroyANativeWindow(long instance);
+
+    public native void runFunction(long instance, int i);
 }

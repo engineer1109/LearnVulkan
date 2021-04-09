@@ -224,3 +224,14 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_destroyANativeWindow(JNIEnv 
         LOGI("destroyANativeWindow");
     }
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_engineer1109_learnvulkan_render_BaseRender_runFunction(JNIEnv *env, jobject thiz,
+                                                            jlong instance, jint i) {
+    // TODO: implement runFun1()
+    if(instance){
+        auto *engine = reinterpret_cast<VulkanEngine::VulkanBaseEngine *>(instance);
+        engine->runFunction(i);
+    }
+}

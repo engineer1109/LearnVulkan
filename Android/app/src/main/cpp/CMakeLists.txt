@@ -110,6 +110,7 @@ add_library(
         examples/03_Texture2dCube/Texture2dCube.cxx
         examples/04_Skybox/SkyboxCube.cxx
         examples/05_PhongLighting/PhongLighting.cxx
+        examples/05_PhongLighting/ReflectParaBuffer.cxx
 )
 
 target_link_libraries(

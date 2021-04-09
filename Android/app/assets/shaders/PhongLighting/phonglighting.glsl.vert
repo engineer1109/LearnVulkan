@@ -13,11 +13,19 @@ layout (binding = 0) uniform UBO
     vec4 lightpos;
 } ubo;
 
+layout (binding = 4) uniform Reflect
+{
+    vec4 para;
+} reflect;
+
 layout (location = 0) out vec3 outUV;
 layout (location = 1) out float outLodBias;
 layout (location = 2) out vec3 outNormal;
 layout (location = 3) out vec3 outViewVec;
 layout (location = 4) out vec3 outLightVec;
+layout (location = 5) out vec3 outPos;
+layout (location = 6) out vec4 reflectPara;
+layout (location = 7) out mat4 outInvModelView;
 
 out gl_PerVertex 
 {
@@ -40,4 +48,10 @@ void main()
     
     vec3 viewPos = vec3(0.0);
     outViewVec = viewPos - pos.xyz;
+
+    outPos = pos.xyz;
+
+    reflectPara = reflect.para;
+
+    outInvModelView = inverse(ubo.view * ubo.model);
 }

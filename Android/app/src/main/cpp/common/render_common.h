@@ -16,6 +16,7 @@
 #include <memory>
 #include <algorithm>
 #include <thread>
+#include <functional>
 
 //Unix
 #include <unistd.h>
@@ -23,11 +24,24 @@
 //GL
 #include <vulkan/vulkan.h>
 
+//GLM
+#ifndef GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
+#endif
+#ifndef GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#endif
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+
 //Android
+#if defined(__ANDROID__)
 #include <android/log.h>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <android/asset_manager_jni.h>
+#endif
 
 //Define
 

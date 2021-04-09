@@ -19,11 +19,15 @@ class VulkanTexture2D;
 
 class VulkanTextureCubeMap;
 
+class ReflectParaBuffer;
+
 class PhongLighting : public ThirdPersonEngine {
 public:
     PhongLighting() = default;
 
     virtual ~PhongLighting();
+
+    void prepareFunctions() override;
 
     void prepareMyObjects() override;
 
@@ -39,6 +43,10 @@ public:
 
     void createSkybox();
 
+    void createReflectParaBuffer();
+
+    void changeReflectMode();
+
 protected:
     VulkanCube *m_cube = nullptr;
     VulkanVertFragShader *m_cubeShader = nullptr;
@@ -49,6 +57,8 @@ protected:
     VulkanCube *m_sky = nullptr;
     VulkanVertFragShader *m_skyShader = nullptr;
     VulkanTextureCubeMap *m_skyTexture = nullptr;
+
+    ReflectParaBuffer* m_reflectParaBuffer = nullptr;
 
 };
 
