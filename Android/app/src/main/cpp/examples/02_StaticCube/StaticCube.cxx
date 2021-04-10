@@ -49,8 +49,8 @@ void StaticCube::createCube() {
     m_cube->prepare();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_cubeShader);
-    m_cubeShader->setShaderObjPath("shaders/StaticCube/staticcube.so.vert",
-                                   "shaders/StaticCube/staticcube.so.frag");
+    m_cubeShader->setShaderObjPath(FS::getPath("shaders/StaticCube/staticcube.so.vert"),
+                                   FS::getPath("shaders/StaticCube/staticcube.so.frag"));
     m_cubeShader->prepare();
 
     REGISTER_OBJECT<UniformCamera>(m_cubeUniform);

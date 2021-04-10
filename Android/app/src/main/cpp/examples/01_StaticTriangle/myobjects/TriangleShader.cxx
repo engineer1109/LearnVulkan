@@ -8,9 +8,9 @@ BEGIN_NAMESPACE(VulkanEngine)
 
 void TriangleShader::prepareShaders() {
     m_shaderStages.push_back(
-            loadShader("shaders/StaticTriangle/statictriangle.so.vert", VK_SHADER_STAGE_VERTEX_BIT));
+            loadShader(FS::getPath("shaders/StaticTriangle/statictriangle.so.vert"), VK_SHADER_STAGE_VERTEX_BIT));
     m_shaderStages.push_back(
-            loadShader("shaders/StaticTriangle/statictriangle.so.frag", VK_SHADER_STAGE_FRAGMENT_BIT));
+            loadShader(FS::getPath("shaders/StaticTriangle/statictriangle.so.frag"), VK_SHADER_STAGE_FRAGMENT_BIT));
 }
 
 END_NAMESPACE(VulkanEngine)

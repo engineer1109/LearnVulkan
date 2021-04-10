@@ -70,11 +70,11 @@ void Texture2dCube::createCube() {
     m_cubeUniform->prepare();
 
     REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureA);
-    m_cubeTextureA->loadFromFile("textures/awesomeface.png", VK_FORMAT_R8G8B8A8_UNORM);
+    m_cubeTextureA->loadFromFile(FS::getPath("textures/awesomeface.png"), VK_FORMAT_R8G8B8A8_UNORM);
 
 
     REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureB);
-    m_cubeTextureB->loadFromFile("textures/container.png", VK_FORMAT_R8G8B8A8_UNORM);
+    m_cubeTextureB->loadFromFile(FS::getPath("textures/container.png"), VK_FORMAT_R8G8B8A8_UNORM);
 }
 
 END_NAMESPACE(VulkanEngine)

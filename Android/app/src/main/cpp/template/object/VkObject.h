@@ -7,6 +7,7 @@
 
 #include "vulkan_macro.h"
 #include "vulkan_template.h"
+#include "filesystem_utils.h"
 #include "VulkanDevice.hpp"
 #include "VulkanContext.h"
 

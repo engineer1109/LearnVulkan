@@ -66,8 +66,8 @@ void SkyboxCube::createCube() {
     m_cube->prepare();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_cubeShader);
-    m_cubeShader->setShaderObjPath("shaders/Texture2dCube/texture2d.so.vert",
-                                   "shaders/Texture2dCube/texture2d.so.frag");
+    m_cubeShader->setShaderObjPath(FS::getPath("shaders/Texture2dCube/texture2d.so.vert"),
+                                   FS::getPath("shaders/Texture2dCube/texture2d.so.frag"));
     m_cubeShader->setCullFlag(VK_CULL_MODE_BACK_BIT);
     m_cubeShader->prepare();
 
@@ -78,10 +78,10 @@ void SkyboxCube::createCube() {
     m_cubeUniform->prepare();
 
     REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureA);
-    m_cubeTextureA->loadFromFile("textures/awesomeface.png", VK_FORMAT_R8G8B8A8_UNORM);
+    m_cubeTextureA->loadFromFile(FS::getPath("textures/awesomeface.png"), VK_FORMAT_R8G8B8A8_UNORM);
 
     REGISTER_OBJECT<VulkanTexture2D>(m_cubeTextureB);
-    m_cubeTextureB->loadFromFile("textures/container.png", VK_FORMAT_R8G8B8A8_UNORM);
+    m_cubeTextureB->loadFromFile(FS::getPath("textures/container.png"), VK_FORMAT_R8G8B8A8_UNORM);
 }
 
 void SkyboxCube::createSkybox() {
@@ -89,18 +89,18 @@ void SkyboxCube::createSkybox() {
     m_sky->prepare();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_skyShader);
-    m_skyShader->setShaderObjPath("shaders/Skybox/skybox.so.vert",
-                                   "shaders/Skybox/skybox.so.frag");
+    m_skyShader->setShaderObjPath(FS::getPath("shaders/Skybox/skybox.so.vert"),
+                                  FS::getPath("shaders/Skybox/skybox.so.frag"));
     m_skyShader->setCullFlag(VK_CULL_MODE_FRONT_BIT);
     m_skyShader->prepare();
 
     std::vector<std::string> skyImages = {
-            "textures/skybox/back.jpg",
-            "textures/skybox/front.jpg",
-            "textures/skybox/top.jpg",
-            "textures/skybox/bottom.jpg",
-            "textures/skybox/right.jpg",
-            "textures/skybox/left.jpg",
+            FS::getPath("textures/skybox/back.jpg"),
+            FS::getPath("textures/skybox/front.jpg"),
+            FS::getPath("textures/skybox/top.jpg"),
+            FS::getPath("textures/skybox/bottom.jpg"),
+            FS::getPath("textures/skybox/right.jpg"),
+            FS::getPath("textures/skybox/left.jpg"),
     };
     REGISTER_OBJECT<VulkanTextureCubeMap>(m_skyTexture);
     m_skyTexture->loadFromFile(skyImages, VK_FORMAT_R8G8B8A8_UNORM);

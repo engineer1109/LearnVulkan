@@ -24,6 +24,8 @@ void main()
 
     cR = vec3(inInvModelView * vec4(cR, 0.0));
     cR.x *= -1.0;
+    cR.y = -cR.y;
+    cR.z = -cR.z;
 
     vec4 colorReflect = texture(samplerCubeMap, cR, inLodBias);
 

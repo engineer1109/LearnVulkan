@@ -7,6 +7,7 @@
 
 #include "render_common.h"
 #include "base_template.h"
+#include "filesystem_utils.h"
 #include "vulkan_macro.h"
 #include "vulkan_template.h"
 
