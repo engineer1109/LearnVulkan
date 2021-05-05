@@ -201,6 +201,8 @@ protected:
     float m_oldDistance = 0.f;
 
     std::vector<std::function<void()>> m_functions;
+
+    float m_frameTimer = 0.f;
 };
 
 END_NAMESPACE(VulkanEngine)

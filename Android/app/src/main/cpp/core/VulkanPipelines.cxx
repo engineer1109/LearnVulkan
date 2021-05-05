@@ -70,6 +70,12 @@ void VulkanPipelines::createPipeline(VulkanShader *shader, VkPolygonMode mode) {
         }
         m_rasterizationState.polygonMode = mode;
         m_rasterizationState.cullMode = shader->getCullFlag();
+
+        if(shader->isInstanceShader()){
+            LOGI("InstanceShader");
+            m_vertexInputState = shader->getVertexInputState();
+        }
+
         m_shaderStages[0] = shader->getShaderStages()[0];
         m_shaderStages[1] = shader->getShaderStages()[1];
         VK_CHECK_RESULT(

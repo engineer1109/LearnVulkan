@@ -16,7 +16,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags ""
+                cppFlags "-Ofast"
             }
         }
 
@@ -74,6 +74,42 @@ task copyTask {
     copy {
         from '../../data/textures'
         into "assets/textures"
+    }
+    copy {
+        from '../../data/shaders/StaticTriangle'
+        into "assets/shaders/StaticTriangle"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
+    }
+    copy {
+        from '../../data/shaders/StaticCube'
+        into "assets/shaders/StaticCube"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
+    }
+    copy {
+        from '../../data/shaders/Texture2dCube'
+        into "assets/shaders/Texture2dCube"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
+    }
+    copy {
+        from '../../data/shaders/Skybox'
+        into "assets/shaders/Skybox"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
+    }
+    copy {
+        from '../../data/shaders/PhongLighting'
+        into "assets/shaders/PhongLighting"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
+    }
+    copy {
+        from '../../data/shaders/InstanceDraw'
+        into "assets/shaders/InstanceDraw"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
     }
 }
 

@@ -65,6 +65,7 @@ public class MainViewModel extends ViewModel {
         addMenuButton(datas, 3, "Texture2dCube");
         addMenuButton(datas, 4, "SkyboxCube");
         addMenuButton(datas, 5, "PhongLighting");
+        addMenuButton(datas, 6, "InstanceDraw");
         return datas;
     }
 

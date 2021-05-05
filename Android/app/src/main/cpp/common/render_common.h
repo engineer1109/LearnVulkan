@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <thread>
 #include <functional>
+#include <random>
 
 //Unix
 #include <unistd.h>
@@ -59,5 +60,6 @@
 #define DELETE_PTR(x) if(x) { delete x; x = nullptr; }
 
 #define VERTEX_BUFFER_BIND_ID 0
+#define INSTANCE_BUFFER_BIND_ID 1
 
 #endif //LEARNVULKAN_RENDER_COMMON_H

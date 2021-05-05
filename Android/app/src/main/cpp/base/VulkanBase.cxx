@@ -55,8 +55,12 @@ void VulkanBase::renderLoop() {}
 
 void VulkanBase::renderFrame() {
     if (m_prepared and !m_pause) {
+        auto tStart = std::chrono::high_resolution_clock::now();
         render();
         draw();
+        auto tEnd = std::chrono::high_resolution_clock::now();
+        auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
+        m_frameTimer = (float)tDiff / 1000.0f;
         vkDeviceWaitIdle(m_device);
     }
 }

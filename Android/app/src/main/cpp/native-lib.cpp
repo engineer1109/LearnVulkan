@@ -7,6 +7,7 @@
 #include "Texture2dCube.h"
 #include "SkyboxCube.h"
 #include "PhongLighting.h"
+#include "InstanceDraw.h"
 
 extern "C"
 JNIEXPORT jlong JNICALL
@@ -34,6 +35,10 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_createInstance(JNIEnv *env, 
     }
     else if(id == 4){
         auto *engine = new VulkanEngine::PhongLighting();
+        return (jlong) engine;
+    }
+    else if(id == 5){
+        auto *engine = new VulkanEngine::InstanceDraw();
         return (jlong) engine;
     }
     else{

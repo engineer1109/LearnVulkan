@@ -27,8 +27,16 @@ public:
     std::vector<VkPipelineShaderStageCreateInfo> &getShaderStages() {return m_shaderStages;}
 
     void setCullFlag(VkCullModeFlags flag) { m_cullFlag = flag; }
+    void setVertexInputState(const VkPipelineVertexInputStateCreateInfo &inputStateCreateInfo){
+        m_inputState = inputStateCreateInfo;
+        m_instanceShader = true;
+    }
 
     VkCullModeFlags getCullFlag() const { return m_cullFlag;}
+
+    VkPipelineVertexInputStateCreateInfo getVertexInputState() { return m_inputState; }
+
+    bool isInstanceShader() const { return m_instanceShader; }
 
 protected:
     VkPipelineShaderStageCreateInfo
@@ -40,6 +48,9 @@ protected:
     std::vector<VkShaderModule> m_shaderModules;
 
     VkCullModeFlags m_cullFlag = VK_CULL_MODE_NONE;
+    VkPipelineVertexInputStateCreateInfo m_inputState;
+
+    bool m_instanceShader = false;
 };
 
 END_NAMESPACE(VulkanEngine)

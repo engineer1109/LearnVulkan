@@ -25,7 +25,7 @@ public:
 
     virtual void updateVertex() = 0;
 
-    void build(VkCommandBuffer &cmdBuffer, VulkanShader* vulkanShader);
+    virtual void build(VkCommandBuffer &cmdBuffer, VulkanShader* vulkanShader);
 
 public:
     vks::Buffer m_vertexBuffer;
