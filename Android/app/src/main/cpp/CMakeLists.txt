@@ -65,6 +65,7 @@ add_library( # Sets the name of the library.
         template/object/VulkanBuffer.cxx
         template/object/mesh/MeshObject.cxx
         template/object/mesh/VulkanCube.cxx
+        template/object/mesh/VulkanPlane.cxx
         template/object/mesh/InstanceCube.cxx
         template/object/camera/UniformCamera.cxx
         template/object/camera/ThirdPersonCamera.cxx
@@ -116,6 +117,7 @@ add_library(
         examples/05_PhongLighting/ReflectParaBuffer.cxx
         examples/06_InstanceDraw/InstanceDraw.cxx
         examples/06_InstanceDraw/SpeedBuffer.cxx
+        examples/07_ShadowMapping/ShadowMapping.cxx
 )
 
 target_link_libraries(
