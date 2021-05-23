@@ -12,14 +12,18 @@ void VulkanPlane::generateVertex() {
     std::vector<VertexTexVec4> vertices =
             {
 
-                    {{m_a,  m_b,  0.0f},  {1.0f, 1.0f}, {0.0f,  0.0f,  1.0f}},
-                    {{-m_a, -m_b, 0.0f},  {0.0f, 0.0f}, {0.0f,  0.0f,  1.0f}},
-                    {{-m_a, m_b,  0.0f},  {0.0f, 1.0f}, {0.0f,  0.0f,  1.0f}},
-                    {{m_a,  m_b,  0.0f},  {1.0f, 1.0f}, {0.0f,  0.0f,  1.0f}},
-                    {{m_a,  -m_b, 0.0f},  {1.0f, 0.0f}, {0.0f,  0.0f,  1.0f}},
-                    {{-m_a, -m_b, 0.0f},  {0.0f, 0.0f}, {0.0f,  0.0f,  1.0f}},
+                    {{m_a,  0.0f,  m_b},  {1.0f, 1.0f}, {0.0f,  0.0f,  1.0f}},
+                    {{-m_a, 0.0f, -m_b},  {0.0f, 0.0f}, {0.0f,  0.0f,  1.0f}},
+                    {{-m_a, 0.0f,  m_b},  {0.0f, 1.0f}, {0.0f,  0.0f,  1.0f}},
+                    {{m_a,  0.0f,  m_b},  {1.0f, 1.0f}, {0.0f,  0.0f,  1.0f}},
+                    {{m_a,  0.0f, -m_b},  {1.0f, 0.0f}, {0.0f,  0.0f,  1.0f}},
+                    {{-m_a, 0.0f, -m_b},  {0.0f, 0.0f}, {0.0f,  0.0f,  1.0f}},
 
             };
+
+    if(m_posOffset != glm::vec3(0.f)){
+        staticMove(vertices);
+    }
 
     // Setup indices
     std::vector<uint32_t> indices(vertices.size());

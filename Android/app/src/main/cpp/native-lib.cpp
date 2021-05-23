@@ -8,37 +8,52 @@
 #include "SkyboxCube.h"
 #include "PhongLighting.h"
 #include "InstanceDraw.h"
+#include "ShadowMapping.h"
+
+enum VulkanExampleNames {
+    Example_StaticTriangle = 0,
+    Example_StaticCube = 1,
+    Example_Texture2dCube = 2,
+    Example_SkyboxCube = 3,
+    Example_PhongLighting = 4,
+    Example_InstanceDraw = 5,
+    Example_ShadowMapping = 6,
+};
 
 extern "C"
 JNIEXPORT jlong JNICALL
 Java_com_engineer1109_learnvulkan_render_BaseRender_createInstance(JNIEnv *env, jobject thiz,
                                                                    jint id) {
-    if(id == 0){
+    if(id == Example_StaticTriangle){
         auto *engine = new VulkanEngine::StaticTriangle();
         LOGI("CreateInstance %ld", engine);
         return (jlong) engine;
     }
-    else if(id == 1){
+    else if(id == Example_StaticCube){
         auto *engine = new VulkanEngine::StaticCube();
         LOGI("CreateInstance %ld", engine);
         return (jlong) engine;
     }
-    else if(id == 2){
+    else if(id == Example_Texture2dCube){
         auto *engine = new VulkanEngine::Texture2dCube();
         LOGI("CreateInstance %ld", engine);
         return (jlong) engine;
     }
-    else if(id == 3){
+    else if(id == Example_SkyboxCube){
         auto *engine = new VulkanEngine::SkyboxCube();
         LOGI("CreateInstance %ld", engine);
         return (jlong) engine;
     }
-    else if(id == 4){
+    else if(id == Example_PhongLighting){
         auto *engine = new VulkanEngine::PhongLighting();
         return (jlong) engine;
     }
-    else if(id == 5){
+    else if(id == Example_InstanceDraw){
         auto *engine = new VulkanEngine::InstanceDraw();
+        return (jlong) engine;
+    }
+    else if(id == Example_ShadowMapping){
+        auto *engine = new VulkanEngine::ShadowMapping();
         return (jlong) engine;
     }
     else{

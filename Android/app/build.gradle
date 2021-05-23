@@ -111,6 +111,12 @@ task copyTask {
         include '**/*.so.vert'
         include '**/*.so.frag'
     }
+    copy {
+        from '../../data/shaders/ShadowMapping'
+        into "assets/shaders/ShadowMapping"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
+    }
 }
 
 preBuild.dependsOn copyTask

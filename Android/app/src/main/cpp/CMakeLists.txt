@@ -45,6 +45,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/examples/04_Skybox
         ${PROJECT_SOURCE_DIR}/examples/05_PhongLighting
         ${PROJECT_SOURCE_DIR}/examples/06_InstanceDraw
+        ${PROJECT_SOURCE_DIR}/examples/07_ShadowMapping
 )
 
 add_library( # Sets the name of the library.
@@ -60,6 +61,8 @@ add_library( # Sets the name of the library.
         core/VulkanDescriptorSet.cxx
         core/VulkanVertexDescriptions.cxx
         core/VulkanPipelines.cxx
+        core/VulkanRenderPass.cxx
+        core/VulkanFrameBuffer.cxx
         engines/ThirdPersonEngine.cxx
         template/object/VulkanShader.cxx
         template/object/VulkanBuffer.cxx
@@ -69,6 +72,7 @@ add_library( # Sets the name of the library.
         template/object/mesh/InstanceCube.cxx
         template/object/camera/UniformCamera.cxx
         template/object/camera/ThirdPersonCamera.cxx
+        template/object/camera/ShadowCamera.cxx
         template/object/texture/VulkanTexture2D.cxx
         template/object/texture/VulkanTextureCubeMap.cxx
         utils/VulkanTools.cpp
