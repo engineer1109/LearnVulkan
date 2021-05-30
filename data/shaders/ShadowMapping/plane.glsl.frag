@@ -4,6 +4,8 @@ layout (binding = 4) uniform sampler2D samplerTextureA;
 
 layout (binding = 3) uniform samplerCube samplerCubeMap;
 
+layout (binding = 5) uniform sampler2D shadowMap;
+
 layout (location = 0) in vec3 inUV;
 layout (location = 1) in float inLodBias;
 layout (location = 2) in vec3 inNormal;
@@ -13,8 +15,48 @@ layout (location = 5) in vec3 inPos;
 layout (location = 6) in vec4 reflectPara;
 layout (location = 7) in mat4 inInvModelView;
 layout (location = 11) in float inDistance;
+layout (location = 12) in vec4 inShadowCoord;
 
 layout (location = 0) out vec4 outFragColor;
+
+
+float textureProj(vec4 shadowCoord, vec2 off)
+{
+    float ambient = 0.2f;
+    float shadow = 1.0;
+    if ( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 ) 
+    {
+        float dist = texture( shadowMap, shadowCoord.st + off ).r;
+        if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
+        {
+            shadow = ambient;
+        }
+    }
+    return shadow;
+}
+
+float filterPCF(vec4 sc)
+{
+    ivec2 texDim = textureSize(shadowMap, 0);
+    float scale = 1.5;
+    float dx = scale * 1.0 / float(texDim.x);
+    float dy = scale * 1.0 / float(texDim.y);
+
+    float shadowFactor = 0.0;
+    int count = 0;
+    int range = 1;
+    
+    for (int x = -range; x <= range; x++)
+    {
+        for (int y = -range; y <= range; y++)
+        {
+            shadowFactor += textureProj(sc, vec2(dx*x, dy*y));
+            count++;
+        }
+    
+    }
+    return shadowFactor / count;
+}
 
 void main() 
 {
@@ -43,6 +85,9 @@ void main()
     float specular = pow(max(dot(R, V), 0.0), 16.0) * color.a;
 
     float attenuation = 1.0f / (1.0f + 0.09f * inDistance + 0.032f * (inDistance * inDistance));
+    attenuation = 1.f;
+    
+    float shadow = filterPCF(inShadowCoord / inShadowCoord.w);
 
-    outFragColor = vec4(ambient * color.rgb + diffuse * attenuation * color.rgb + specular * attenuation, 1.0);
+    outFragColor = vec4(ambient * shadow * color.rgb + diffuse * shadow * attenuation * color.rgb + specular * shadow * attenuation, 1.0);
 }
