@@ -23,9 +23,9 @@ public:
 
 public:
     ShadowMVP m_uboVS;
-    float m_lightFOV = 45.f;
-    float m_zNear = 0.001f;
-    float m_zFar = 256.f;
+    float m_lightFOV = 60.f;
+    float m_zNear = 1.f;
+    float m_zFar = 75.f;
     glm::vec3 m_lightPos = glm::vec3(0.f);
 };
 

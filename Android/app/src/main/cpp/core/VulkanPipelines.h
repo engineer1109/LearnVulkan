@@ -20,6 +20,8 @@ public:
 
     void createPipeline(VulkanShader* shader, VkPolygonMode mode= VK_POLYGON_MODE_FILL);
 
+    void createPipeline(VulkanShader* shader, VkRenderPass renderPass, VkPolygonMode mode= VK_POLYGON_MODE_FILL);
+
 public:
     VkDevice m_device;
     VkGraphicsPipelineCreateInfo m_pipelineCreateInfo;

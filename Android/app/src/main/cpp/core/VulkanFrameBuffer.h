@@ -49,7 +49,7 @@ protected:
     int m_width = 2048;
     int m_height = 2048;
     VkDevice m_device = VK_NULL_HANDLE;
-    VkFormat m_format = VK_FORMAT_R8G8B8A8_UNORM;
+    VkFormat m_format = VK_FORMAT_D16_UNORM;
     vks::VulkanDevice *m_vulkanDevice = nullptr;
     VulkanRenderPass *m_renderPass = nullptr;
     VkFramebuffer m_frameBuffer = VK_NULL_HANDLE;

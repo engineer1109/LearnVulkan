@@ -71,18 +71,40 @@ void VulkanPipelines::createPipeline(VulkanShader *shader, VkPolygonMode mode) {
         m_rasterizationState.polygonMode = mode;
         m_rasterizationState.cullMode = shader->getCullFlag();
 
+        if(shader->getDepthBiasEnable()){
+            m_rasterizationState.depthBiasEnable = VK_TRUE;
+            m_dynamicStateEnables.push_back(VK_DYNAMIC_STATE_DEPTH_BIAS);
+            m_dynamicState = vks::initializers::pipelineDynamicStateCreateInfo(
+                    m_dynamicStateEnables.data(),
+                    m_dynamicStateEnables.size(),
+                    0);
+        }
+
+        if(shader->isOneStage()){
+            m_pipelineCreateInfo.stageCount = 1;
+            m_colorBlendState.attachmentCount = 0;
+            m_shaderStages[0] = shader->getShaderStages()[0];
+        }
+        else{
+            m_shaderStages[0] = shader->getShaderStages()[0];
+            m_shaderStages[1] = shader->getShaderStages()[1];
+        }
+
         if(shader->isInstanceShader()){
             LOGI("InstanceShader");
             m_vertexInputState = shader->getVertexInputState();
         }
 
-        m_shaderStages[0] = shader->getShaderStages()[0];
-        m_shaderStages[1] = shader->getShaderStages()[1];
         VK_CHECK_RESULT(
                 vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &m_pipelineCreateInfo,
                                           nullptr,
                                           &(shader->getPipeLine())));
     }
+}
+
+void VulkanPipelines::createPipeline(VulkanShader* shader, VkRenderPass renderPass, VkPolygonMode mode) {
+    m_pipelineCreateInfo.renderPass = renderPass;
+    createPipeline(shader, mode);
 }
 
 END_NAMESPACE(VulkanEngine)

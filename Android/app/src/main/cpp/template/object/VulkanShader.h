@@ -31,10 +31,20 @@ public:
         m_inputState = inputStateCreateInfo;
         m_instanceShader = true;
     }
+    void setDepthBiasEnable(bool value) {
+        m_depthBiasEnable = value;
+    }
+    void setOneStage(bool value){
+        m_oneStage = value;
+    }
 
     VkCullModeFlags getCullFlag() const { return m_cullFlag;}
 
-    VkPipelineVertexInputStateCreateInfo getVertexInputState() { return m_inputState; }
+    VkPipelineVertexInputStateCreateInfo getVertexInputState() const { return m_inputState; }
+
+    bool getDepthBiasEnable() const { return m_depthBiasEnable; }
+
+    bool isOneStage() const { return m_oneStage; }
 
     bool isInstanceShader() const { return m_instanceShader; }
 
@@ -49,8 +59,11 @@ protected:
 
     VkCullModeFlags m_cullFlag = VK_CULL_MODE_NONE;
     VkPipelineVertexInputStateCreateInfo m_inputState;
+    bool m_depthBiasEnable = false;
 
     bool m_instanceShader = false;
+
+    bool m_oneStage = false;
 };
 
 END_NAMESPACE(VulkanEngine)

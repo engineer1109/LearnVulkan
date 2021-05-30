@@ -30,7 +30,7 @@ void UniformCamera::updateUniformBuffers() {
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_pRotation->z),
                                 glm::vec3(0.0f, 0.0f, 1.0f));
     m_uboVS.normal = glm::inverseTranspose(m_uboVS.view * m_uboVS.model);
-    m_uboVS.lightpos = glm::vec4(0.f, 0.f, -4.f, 0.f);
+    //m_uboVS.lightpos = glm::vec4(0.f, 0.f, -4.f, 0.f);
     memcpy(m_uniformBuffer.mapped, &m_uboVS, sizeof(m_uboVS));
 }
 

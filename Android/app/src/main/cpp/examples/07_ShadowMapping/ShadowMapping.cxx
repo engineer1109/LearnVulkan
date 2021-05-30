@@ -44,6 +44,7 @@ void ShadowMapping::buildMyObjects(VkCommandBuffer &cmd) {
 void ShadowMapping::render() {
     updateCamera();
     m_cubeUniform->update();
+    m_shadowCamera->update();
 }
 
 void ShadowMapping::setDescriptorSet() {
@@ -82,7 +83,7 @@ void ShadowMapping::createPipelines() {
     m_pipelines->createPipeline(m_cubeShader);
     m_pipelines->createPipeline(m_skyShader);
     m_pipelines->createPipeline(m_planeShader);
-    m_pipelines->createPipeline(m_shadowShader);
+    m_pipelines->createPipeline(m_shadowShader, m_frameBuffer->getRenderPass()->get());
 }
 
 void ShadowMapping::createCube() {
@@ -96,6 +97,7 @@ void ShadowMapping::createCube() {
     m_cubeShader->prepare();
 
     REGISTER_OBJECT<UniformCamera>(m_cubeUniform);
+    m_cubeUniform->m_uboVS.lightpos = glm::vec4(2.5f, -2.0f, 0.5f, 1.0f);
     m_cubeUniform->m_pCameraPos = &m_cameraPos;
     m_cubeUniform->m_pRotation = &m_rotation;
     m_cubeUniform->m_pZoom = &m_zoom;
@@ -139,7 +141,7 @@ void ShadowMapping::createPlane() {
     REGISTER_OBJECT<VulkanVertFragShader>(m_planeShader);
     m_planeShader->setShaderObjPath(FS::getPath("shaders/ShadowMapping/plane.so.vert"),
                                     FS::getPath("shaders/ShadowMapping/plane.so.frag"));
-    m_planeShader->setCullFlag(VK_CULL_MODE_NONE);
+    m_planeShader->setCullFlag(VK_CULL_MODE_BACK_BIT);
     m_planeShader->prepare();
 
     REGISTER_OBJECT<VulkanTexture2D>(m_planeTexture);
@@ -157,9 +159,12 @@ void ShadowMapping::createShadowFrameBuffer() {
     m_shadowShader->setShaderObjPath(FS::getPath("shaders/ShadowMapping/shadow.so.vert"),
                                     FS::getPath("shaders/ShadowMapping/shadow.so.frag"));
     m_shadowShader->setCullFlag(VK_CULL_MODE_NONE);
+    m_shadowShader->setDepthBiasEnable(true);
+    m_shadowShader->setOneStage(true);
     m_shadowShader->prepare();
 
     REGISTER_OBJECT<ShadowCamera>(m_shadowCamera);
+    m_shadowCamera->m_lightPos = m_cubeUniform->m_uboVS.lightpos;
     m_shadowCamera->prepare();
 }
 
