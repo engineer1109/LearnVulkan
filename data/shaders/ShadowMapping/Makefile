@@ -5,3 +5,5 @@ all:
 	glslangValidator -V plane.glsl.vert -o plane.so.vert
 	glslangValidator -V shadow.glsl.frag -o shadow.so.frag
 	glslangValidator -V shadow.glsl.vert -o shadow.so.vert
+	glslangValidator -V quad.glsl.frag -o quad.so.frag
+	glslangValidator -V quad.glsl.vert -o quad.so.vert
