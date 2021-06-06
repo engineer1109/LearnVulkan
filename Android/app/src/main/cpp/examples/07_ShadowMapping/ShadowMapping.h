@@ -51,7 +51,11 @@ public:
 
     void createShadowFrameBuffer();
 
-    void buildCommandBuffers() override;
+    void createDebugQuad();
+
+    void buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd) override;
+
+    void seeDebugQuad();
 
 protected:
     VulkanCube *m_cube = nullptr;
@@ -71,6 +75,11 @@ protected:
     VulkanFrameBuffer *m_frameBuffer = nullptr;
     VulkanVertFragShader *m_shadowShader = nullptr;
     ShadowCamera* m_shadowCamera = nullptr;
+
+    VulkanPlane *m_dubugPlane = nullptr;
+    VulkanVertFragShader* m_debugShader = nullptr;
+
+    bool m_seeDebug = false;
 };
 
 END_NAMESPACE(VulkanEngine)

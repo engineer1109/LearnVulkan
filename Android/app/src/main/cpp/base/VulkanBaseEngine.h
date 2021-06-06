@@ -37,7 +37,11 @@ protected:
 
     virtual void prepareMyObjects() {};
 
+    virtual void buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd) {}
+
     virtual void buildCommandBuffers() override;
+
+    virtual void buildCommandBuffersAfterMainRenderPass(VkCommandBuffer &cmd) {}
 
     virtual void setViewPorts(VkCommandBuffer &cmd);
 

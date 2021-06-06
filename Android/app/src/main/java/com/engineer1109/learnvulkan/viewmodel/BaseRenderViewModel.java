@@ -157,6 +157,9 @@ public class BaseRenderViewModel extends ViewModel {
         if (mRender.getID() + 1 == 5) {
             addMenuButton(datas, 1, "Reflect");
         }
+        if (mRender.getID() + 1 == 7) {
+            addMenuButton(datas, 1, "DebugQuad");
+        }
         return datas;
     }
 

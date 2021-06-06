@@ -58,36 +58,42 @@ void VulkanBaseEngine::prepareContext() {
 void VulkanBaseEngine::buildCommandBuffers() {
     VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
 
-    VkClearValue clearValues[2];
-    clearValues[0].color = {{0.1f, 0.2f, 0.3f, 1.0f}};
-    clearValues[1].depthStencil = {1.0f, 0};
-
-    VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
-    renderPassBeginInfo.renderPass = m_renderPass;
-    renderPassBeginInfo.renderArea.offset.x = 0;
-    renderPassBeginInfo.renderArea.offset.y = 0;
-    renderPassBeginInfo.renderArea.extent.width = m_width;
-    renderPassBeginInfo.renderArea.extent.height = m_height;
-    renderPassBeginInfo.clearValueCount = 2;
-    renderPassBeginInfo.pClearValues = clearValues;
-
     for (size_t i = 0; i < m_drawCmdBuffers.size(); ++i) {
-        // Set target frame buffer
-        renderPassBeginInfo.framebuffer = m_frameBuffers[i];
 
         LOGI("m_drawCmdBuffers %ld",m_drawCmdBuffers[i]);
         VK_CHECK_RESULT(vkBeginCommandBuffer(m_drawCmdBuffers[i], &cmdBufInfo));
 
-        vkCmdBeginRenderPass(m_drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+        buildCommandBuffersBeforeMainRenderPass(m_drawCmdBuffers[i]);
 
-        VkDeviceSize offsets[1] = {0};
-        vkCmdBindDescriptorSets(m_drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
-                                &(m_vulkanDescriptorSet->get(0)), 0, NULL);
+        {
+            VkClearValue clearValues[2];
+            clearValues[0].color = {{0.1f, 0.2f, 0.3f, 1.0f}};
+            clearValues[1].depthStencil = {1.0f, 0};
+            // Set target frame buffer
+            VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
+            renderPassBeginInfo.renderPass = m_renderPass;
+            renderPassBeginInfo.renderArea.offset.x = 0;
+            renderPassBeginInfo.renderArea.offset.y = 0;
+            renderPassBeginInfo.renderArea.extent.width = m_width;
+            renderPassBeginInfo.renderArea.extent.height = m_height;
+            renderPassBeginInfo.clearValueCount = 2;
+            renderPassBeginInfo.pClearValues = clearValues;
+            renderPassBeginInfo.framebuffer = m_frameBuffers[i];
 
-        setViewPorts(m_drawCmdBuffers[i]);
-        buildMyObjects(m_drawCmdBuffers[i]);
+            vkCmdBeginRenderPass(m_drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-        vkCmdEndRenderPass(m_drawCmdBuffers[i]);
+            VkDeviceSize offsets[1] = {0};
+            vkCmdBindDescriptorSets(m_drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
+                                    &(m_vulkanDescriptorSet->get(0)), 0, NULL);
+
+            setViewPorts(m_drawCmdBuffers[i]);
+            buildMyObjects(m_drawCmdBuffers[i]);
+
+            vkCmdEndRenderPass(m_drawCmdBuffers[i]);
+        }
+
+        buildCommandBuffersAfterMainRenderPass(m_drawCmdBuffers[i]);
+
         VK_CHECK_RESULT(vkEndCommandBuffer(m_drawCmdBuffers[i]));
     }
     vkQueueWaitIdle(m_queue);

@@ -64,7 +64,7 @@ void VulkanFrameBuffer::create() {
     sampler.magFilter = shadowmap_filter;
     sampler.minFilter = shadowmap_filter;
     sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-    sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
     sampler.addressModeV = sampler.addressModeU;
     sampler.addressModeW = sampler.addressModeU;
     sampler.mipLodBias = 0.0f;

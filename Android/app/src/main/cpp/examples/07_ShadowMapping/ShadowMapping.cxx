@@ -21,7 +21,9 @@ ShadowMapping::~ShadowMapping() noexcept {
     destroyObjects();
 }
 
-void ShadowMapping::prepareFunctions() {}
+void ShadowMapping::prepareFunctions() {
+    m_functions.emplace_back([this] { seeDebugQuad(); });
+}
 
 void ShadowMapping::prepareMyObjects() {
     m_zoom = -4.f;
@@ -30,6 +32,7 @@ void ShadowMapping::prepareMyObjects() {
     createSkybox();
     createPlane();
     createShadowFrameBuffer();
+    createDebugQuad();
 
     setDescriptorSet();
     createPipelines();
@@ -39,6 +42,9 @@ void ShadowMapping::buildMyObjects(VkCommandBuffer &cmd) {
     m_cube->build(cmd, m_cubeShader);
     m_sky->build(cmd, m_skyShader);
     m_plane->build(cmd, m_planeShader);
+    if(m_seeDebug){
+        m_dubugPlane->build(cmd, m_debugShader);
+    }
 }
 
 void ShadowMapping::render() {
@@ -83,6 +89,7 @@ void ShadowMapping::createPipelines() {
     m_pipelines->createPipeline(m_cubeShader);
     m_pipelines->createPipeline(m_skyShader);
     m_pipelines->createPipeline(m_planeShader);
+    m_pipelines->createPipeline(m_debugShader);
     m_pipelines->createPipeline(m_shadowShader, m_frameBuffer->getRenderPass()->get());
 }
 
@@ -97,7 +104,7 @@ void ShadowMapping::createCube() {
     m_cubeShader->prepare();
 
     REGISTER_OBJECT<UniformCamera>(m_cubeUniform);
-    m_cubeUniform->m_uboVS.lightpos = glm::vec4(2.5f, -2.0f, 0.5f, 1.0f);
+    m_cubeUniform->m_uboVS.lightpos = glm::vec4(10.0f, -10.0f, 10.0f, 1.0f);
     m_cubeUniform->m_pCameraPos = &m_cameraPos;
     m_cubeUniform->m_pRotation = &m_rotation;
     m_cubeUniform->m_pZoom = &m_zoom;
@@ -134,7 +141,7 @@ void ShadowMapping::createSkybox() {
 
 void ShadowMapping::createPlane() {
     REGISTER_OBJECT(m_plane);
-    m_plane->setSize(5.f, 5.f);
+    m_plane->setSize(10.f, 10.f);
     m_plane->setPosOffset({0.f, 1.f, 0.f});
     m_plane->prepare();
 
@@ -152,7 +159,7 @@ void ShadowMapping::createShadowFrameBuffer() {
     m_frameBuffer = new VulkanFrameBuffer();
     m_frameBuffer->setVulkanDevice(m_vulkanDevice);
     m_frameBuffer->setFormat(VK_FORMAT_D16_UNORM);
-    m_frameBuffer->setSize(2048, 2048);
+    m_frameBuffer->setSize(4096, 4096);
     m_frameBuffer->create();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_shadowShader);
@@ -168,87 +175,66 @@ void ShadowMapping::createShadowFrameBuffer() {
     m_shadowCamera->prepare();
 }
 
-void ShadowMapping::buildCommandBuffers() {
-    VkCommandBufferBeginInfo cmdBufInfo = vks::initializers::commandBufferBeginInfo();
+void ShadowMapping::createDebugQuad() {
+    REGISTER_OBJECT(m_dubugPlane);
+    m_dubugPlane->setSize(0.5, 0.5);
+    m_dubugPlane->prepare();
 
-    for (size_t i = 0; i < m_drawCmdBuffers.size(); ++i) {
+    REGISTER_OBJECT<VulkanVertFragShader>(m_debugShader);
+    m_debugShader->setShaderObjPath(FS::getPath("shaders/ShadowMapping/quad.so.vert"),
+                                    FS::getPath("shaders/ShadowMapping/quad.so.frag"));
+    m_debugShader->setCullFlag(VK_CULL_MODE_NONE);
+    m_debugShader->prepare();
+}
 
-        VK_CHECK_RESULT(vkBeginCommandBuffer(m_drawCmdBuffers[i], &cmdBufInfo));
+void ShadowMapping::buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd) {
+    VkClearValue clearValues[2];
+    clearValues[0].depthStencil = { 1.0f, 0 };
 
-        {
-            VkClearValue clearValues[2];
-            clearValues[0].depthStencil = { 1.0f, 0 };
+    VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
+    renderPassBeginInfo.renderPass = m_frameBuffer->getRenderPass()->get();
+    renderPassBeginInfo.framebuffer = m_frameBuffer->get();
+    renderPassBeginInfo.renderArea.extent.width = m_frameBuffer->getWidth();
+    renderPassBeginInfo.renderArea.extent.height = m_frameBuffer->getHeight();
+    renderPassBeginInfo.clearValueCount = 1;
+    renderPassBeginInfo.pClearValues = clearValues;
 
-            VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
-            renderPassBeginInfo.renderPass = m_frameBuffer->getRenderPass()->get();
-            renderPassBeginInfo.framebuffer = m_frameBuffer->get();
-            renderPassBeginInfo.renderArea.extent.width = m_frameBuffer->getWidth();
-            renderPassBeginInfo.renderArea.extent.height = m_frameBuffer->getHeight();
-            renderPassBeginInfo.clearValueCount = 1;
-            renderPassBeginInfo.pClearValues = clearValues;
+    vkCmdBeginRenderPass(cmd, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-            vkCmdBeginRenderPass(m_drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    auto viewport = vks::initializers::viewport((float)m_frameBuffer->getWidth(), (float)m_frameBuffer->getHeight(), 0.0f, 1.0f);
+    vkCmdSetViewport(cmd, 0, 1, &viewport);
 
-            auto viewport = vks::initializers::viewport((float)m_frameBuffer->getWidth(), (float)m_frameBuffer->getHeight(), 0.0f, 1.0f);
-            vkCmdSetViewport(m_drawCmdBuffers[i], 0, 1, &viewport);
+    auto scissor = vks::initializers::rect2D(m_frameBuffer->getWidth(), m_frameBuffer->getHeight(), 0, 0);
+    vkCmdSetScissor(cmd, 0, 1, &scissor);
 
-            auto scissor = vks::initializers::rect2D(m_frameBuffer->getWidth(), m_frameBuffer->getHeight(), 0, 0);
-            vkCmdSetScissor(m_drawCmdBuffers[i], 0, 1, &scissor);
+    // Set depth bias (aka "Polygon offset")
+    // Required to avoid shadow mapping artifacts
 
-            // Set depth bias (aka "Polygon offset")
-            // Required to avoid shadow mapping artifacts
+    // Constant depth bias factor (always applied)
+    float depthBiasConstant = 1.25f;
+    // Slope depth bias factor, applied depending on polygon's slope
+    float depthBiasSlope = 1.75f;
 
-            // Constant depth bias factor (always applied)
-            float depthBiasConstant = 1.25f;
-            // Slope depth bias factor, applied depending on polygon's slope
-            float depthBiasSlope = 1.75f;
+    vkCmdSetDepthBias(
+            cmd,
+            depthBiasConstant,
+            0.0f,
+            depthBiasSlope);
 
-            vkCmdSetDepthBias(
-                    m_drawCmdBuffers[i],
-                    depthBiasConstant,
-                    0.0f,
-                    depthBiasSlope);
+    //vkCmdBindPipeline(m_drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.offscreen);
+    VkDeviceSize offsets[1] = {0};
+    vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
+                            &(m_vulkanDescriptorSet->get(0)), 0, NULL);
 
-            //vkCmdBindPipeline(m_drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelines.offscreen);
-            VkDeviceSize offsets[1] = {0};
-            vkCmdBindDescriptorSets(m_drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
-                                    &(m_vulkanDescriptorSet->get(0)), 0, NULL);
-            //scenes[sceneIndex].draw(m_drawCmdBuffers[i]);
-            m_cube->build(m_drawCmdBuffers[i], m_shadowShader);
-            m_plane->build(m_drawCmdBuffers[i], m_shadowShader);
+    m_cube->build(cmd, m_shadowShader);
+    m_plane->build(cmd, m_shadowShader);
 
-            vkCmdEndRenderPass(m_drawCmdBuffers[i]);
-        }
+    vkCmdEndRenderPass(cmd);
+}
 
-        {
-            VkClearValue clearValues[2];
-            clearValues[0].color = {{0.1f, 0.2f, 0.3f, 1.0f}};
-            clearValues[1].depthStencil = {1.0f, 0};
-
-            VkRenderPassBeginInfo renderPassBeginInfo = vks::initializers::renderPassBeginInfo();
-            renderPassBeginInfo.renderPass = m_renderPass;
-            renderPassBeginInfo.renderArea.offset.x = 0;
-            renderPassBeginInfo.renderArea.offset.y = 0;
-            renderPassBeginInfo.renderArea.extent.width = m_width;
-            renderPassBeginInfo.renderArea.extent.height = m_height;
-            renderPassBeginInfo.clearValueCount = 2;
-            renderPassBeginInfo.pClearValues = clearValues;
-
-            renderPassBeginInfo.framebuffer = m_frameBuffers[i];
-
-            vkCmdBeginRenderPass(m_drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-            VkDeviceSize offsets[1] = {0};
-            vkCmdBindDescriptorSets(m_drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1,
-                                    &(m_vulkanDescriptorSet->get(0)), 0, NULL);
-
-            setViewPorts(m_drawCmdBuffers[i]);
-            buildMyObjects(m_drawCmdBuffers[i]);
-
-            vkCmdEndRenderPass(m_drawCmdBuffers[i]);
-        }
-    }
-    vkQueueWaitIdle(m_queue);
+void ShadowMapping::seeDebugQuad() {
+    m_seeDebug = !m_seeDebug;
+    buildCommandBuffers();
 }
 
 END_NAMESPACE(VulkanEngine)
