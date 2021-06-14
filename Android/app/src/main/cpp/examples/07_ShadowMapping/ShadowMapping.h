@@ -25,7 +25,7 @@ class VulkanFrameBuffer;
 
 class ShadowCamera;
 
-class ShadowMapping : ThirdPersonEngine {
+class ShadowMapping : public ThirdPersonEngine {
 public:
     ShadowMapping() = default;
 

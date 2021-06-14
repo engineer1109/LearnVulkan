@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <thread>
 #include <functional>
+#include <ciso646>
 #include <random>
 
 //Unix

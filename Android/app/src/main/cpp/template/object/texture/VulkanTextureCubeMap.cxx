@@ -4,12 +4,17 @@
 
 #include "VulkanTextureCubeMap.h"
 
+#ifdef __ANDROID__
 #include "AssetReader.h"
+#endif
+
 #include "ImageAlgorithm.h"
 
 #include <stb_image_aug.h>
 
 BEGIN_NAMESPACE(VulkanEngine)
+
+#ifdef __ANDROID__
 
 void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, AAssetManager *asset,
                                         VkFormat format, vks::VulkanDevice *device,
@@ -30,6 +35,23 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, AAssetMa
         imgList[i] = stbi_load_from_memory((uint8_t *) assetReaders[i]->getOutData(),
                                            assetReaders[i]->getSize(), &w, &h, &c, 0);
     }
+#else
+    void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, VkFormat format,
+                                        vks::VulkanDevice *device,
+                                        VkQueue copyQueue,
+                                        VkImageUsageFlags imageUsageFlags,
+                                        VkImageLayout imageLayout,
+                                        bool forceLinear) {
+
+    int w, h, c = 0;
+    std::vector<uint8_t *> imgList(files.size());
+    std::vector<FILE *> imgFileList(files.size());
+
+    for (size_t i = 0; i < files.size(); i++) {
+        imgFileList[i] = fopen(files[i].c_str(), "rb");
+        imgList[i] = stbi_load_from_file(imgFileList[i], &w, &h, &c, 0);
+    }
+#endif
 
     this->device = device;
     width = static_cast<uint32_t>(w);
@@ -228,9 +250,15 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, AAssetMa
     updateDescriptor();
 
     delete_array(img);
+#ifdef __ANDROID__
     for(auto &assetReader:assetReaders){
         delete_ptr(assetReader);
     }
+#else
+    for (auto &file : imgFileList) {
+        fclose(file);
+    }
+#endif
     for (size_t i = 0; i < imgList.size(); i++) {
         stbi_image_free(imgList[i]);
     }

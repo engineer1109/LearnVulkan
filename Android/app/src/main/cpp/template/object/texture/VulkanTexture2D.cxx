@@ -4,13 +4,17 @@
 
 #include "VulkanTexture2D.h"
 
+#ifdef __ANDROID__
 #include "AssetReader.h"
+#endif
+
 #include "VulkanTexture2D.h"
 
 #include <stb_image_aug.h>
 
 BEGIN_NAMESPACE(VulkanEngine)
 
+#ifdef __ANDROID__
 void VulkanTexture2D::loadFromFile(std::string file, AAssetManager *asset, VkFormat format,
                                    vks::VulkanDevice *device, VkQueue copyQueue,
                                    VkImageUsageFlags imageUsageFlags, VkImageLayout imageLayout,
@@ -22,6 +26,17 @@ void VulkanTexture2D::loadFromFile(std::string file, AAssetManager *asset, VkFor
 
     unsigned char *imgData = stbi_load_from_memory((uint8_t *) assetReader->getOutData(),
                                                    assetReader->getSize(), &w, &h, &c, 0);
+#else
+    void VulkanTexture2D::loadFromFile(std::string file, VkFormat format,
+                                   vks::VulkanDevice *device,
+                                   VkQueue copyQueue,
+                                   VkImageUsageFlags imageUsageFlags,
+                                   VkImageLayout imageLayout,
+                                   bool forceLinear) {
+    int w, h, c = 0;
+    FILE *imgFile = fopen(file.c_str(), "rb");
+    unsigned char *imgData = stbi_load_from_file(imgFile, &w, &h, &c, 0);
+#endif
 
     this->device = device;
     width = static_cast<uint32_t>(w);
@@ -309,7 +324,11 @@ void VulkanTexture2D::loadFromFile(std::string file, AAssetManager *asset, VkFor
     updateDescriptor();
 
     stbi_image_free(imgData);
+#ifdef __ANDROID__
     delete_ptr(assetReader);
+#else
+    fclose(imgFile);
+#endif
     if(newImgDataMalloc){
         delete[] newImgData;
     }

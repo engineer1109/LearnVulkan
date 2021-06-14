@@ -20,7 +20,9 @@ struct VulkanContext {
     uint32_t *pScreenWidth = nullptr;
     uint32_t *pScreenHeight = nullptr;
 
+#ifdef __ANDROID__
     AAssetManager *m_asset = nullptr;
+#endif
 
     VkDevice &getDevice(){
         return vulkanDevice->logicalDevice;
