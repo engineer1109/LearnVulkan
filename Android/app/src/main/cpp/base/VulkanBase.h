@@ -54,6 +54,8 @@ public:
 
     virtual void draw();
 
+    virtual void updateCommand() {}
+
     virtual void defaultTouchOperation();
 
     void waitForCurrentFrameComplete();

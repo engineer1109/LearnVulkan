@@ -234,7 +234,7 @@ void ShadowMapping::buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd
 
 void ShadowMapping::seeDebugQuad() {
     m_seeDebug = !m_seeDebug;
-    buildCommandBuffers();
+    m_rebuild = true;
 }
 
 END_NAMESPACE(VulkanEngine)

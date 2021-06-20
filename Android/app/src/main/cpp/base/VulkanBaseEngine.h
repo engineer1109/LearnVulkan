@@ -24,6 +24,8 @@ public:
 
     virtual void render() override;
 
+    virtual void updateCommand() override;
+
     virtual void processPrepareCallback(){}
 
 protected:
@@ -69,6 +71,8 @@ protected:
     VkPipelineLayout m_pipelineLayout = VK_NULL_HANDLE;
 
     std::vector<VkObject**> m_objs;
+
+    bool m_rebuild = false;
 };
 
 END_NAMESPACE(VulkanEngine)

@@ -27,6 +27,13 @@ void VulkanBaseEngine::prepare() {
 
 void VulkanBaseEngine::render() {}
 
+void VulkanBaseEngine::updateCommand() {
+    if(m_rebuild) {
+        buildCommandBuffers();
+        m_rebuild = false;
+    }
+}
+
 void VulkanBaseEngine::prepareDescriptorSets() {
     m_vulkanDescriptorSet = new VulkanDescriptorSet(m_device,m_maxSets);
 }
@@ -60,7 +67,7 @@ void VulkanBaseEngine::buildCommandBuffers() {
 
     for (size_t i = 0; i < m_drawCmdBuffers.size(); ++i) {
 
-        LOGI("m_drawCmdBuffers %ld",m_drawCmdBuffers[i]);
+        //LOGI("m_drawCmdBuffers %ld\n",m_drawCmdBuffers[i]);
         VK_CHECK_RESULT(vkBeginCommandBuffer(m_drawCmdBuffers[i], &cmdBufInfo));
 
         buildCommandBuffersBeforeMainRenderPass(m_drawCmdBuffers[i]);
