@@ -18,6 +18,11 @@ layout (binding = 6) uniform UBOShadow
     mat4 depthMVP;
 } uboShadow;
 
+layout (binding = 7) uniform Reflect
+{
+    vec4 para;
+} reflect;
+
 const mat4 biasMat = mat4( 
 	0.5, 0.0, 0.0, 0.0,
 	0.0, 0.5, 0.0, 0.0,
@@ -49,7 +54,7 @@ void main()
     gl_Position = ubo.projection * ubo.view * ubo.model * vec4(inPos.xyz, 1.0);	
 
     vec4 pos = ubo.view * ubo.model * vec4(inPos, 1.0);
-    outNormal = mat3(inverse(transpose(ubo.view * ubo.model))) * inNormal;
+    outNormal = mat3(inverse(transpose(ubo.view * ubo.model))) * normalize(inNormal);
     vec4 lightPos = ubo.lightpos;
     vec3 lPos =  (ubo.view * ubo.model * lightPos).xyz;
     outLightVec = lPos - pos.xyz;
@@ -59,7 +64,7 @@ void main()
 
     outPos = pos.xyz;
 
-    reflectPara = vec4(0.3f, 0.0f, 0.0f, 0.f);
+    reflectPara = reflect.para;
 
     outInvModelView = inverse(ubo.view * ubo.model);
 
