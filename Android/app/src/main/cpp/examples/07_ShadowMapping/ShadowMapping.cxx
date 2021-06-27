@@ -13,6 +13,7 @@
 
 #include "VulkanFrameBuffer.h"
 #include "ShadowCamera.h"
+#include "ReflectParaBuffer.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
@@ -33,6 +34,7 @@ void ShadowMapping::prepareMyObjects() {
     createPlane();
     createShadowFrameBuffer();
     createDebugQuad();
+    createReflectParaBuffer();
 
     setDescriptorSet();
     createPipelines();
@@ -78,6 +80,10 @@ void ShadowMapping::setDescriptorSet() {
                                       VK_SHADER_STAGE_FRAGMENT_BIT,
                                       0);
     m_vulkanDescriptorSet->addBinding(6, &(m_shadowCamera->m_uniformBuffer.descriptor),
+                                      VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                      VK_SHADER_STAGE_VERTEX_BIT,
+                                      0);
+    m_vulkanDescriptorSet->addBinding(7, &(m_reflectParaBuffer->m_uniformBuffer.descriptor),
                                       VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                       VK_SHADER_STAGE_VERTEX_BIT,
                                       0);
@@ -185,6 +191,11 @@ void ShadowMapping::createDebugQuad() {
                                     FS::getPath("shaders/ShadowMapping/quad.so.frag"));
     m_debugShader->setCullFlag(VK_CULL_MODE_NONE);
     m_debugShader->prepare();
+}
+
+void ShadowMapping::createReflectParaBuffer() {
+    REGISTER_OBJECT<ReflectParaBuffer>(m_reflectParaBuffer);
+    m_reflectParaBuffer->prepare();
 }
 
 void ShadowMapping::buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd) {

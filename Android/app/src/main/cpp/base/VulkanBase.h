@@ -80,13 +80,11 @@ public:
         m_touchMode = TouchMode::NONE;
     }
 
-    void pause(){
-        m_pause = true;
-    }
+    void pause(){ m_pause = true; }
 
-    void resume(){
-        m_pause = false;
-    }
+    void resume(){ m_pause = false; }
+
+    void quit() { m_quit = true; }
 
 protected:
     void createInstance();
