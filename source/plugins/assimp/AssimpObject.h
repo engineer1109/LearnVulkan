@@ -13,8 +13,6 @@ class Model;
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-#ifdef BUILD_ASSIMP
-
 class AssimpObject : public MeshObject {
 public:
     AssimpObject() = default;
@@ -35,8 +33,6 @@ protected:
     std::string m_modelPath;
     vks::Model *m_model = nullptr;
 };
-
-#endif
 
 END_NAMESPACE(VulkanEngine)
 

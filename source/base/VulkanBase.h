@@ -27,7 +27,7 @@ public:
 
     virtual ~VulkanBase();
 
-    void setWidth(const uint32_t &width) { m_width = width;}
+    void setWidth(const uint32_t &width) { m_width = width; }
 
     void setHeight(const uint32_t &height) { m_height = height; }
 
@@ -51,13 +51,11 @@ public:
 
     void waitForCurrentFrameComplete();
 
-    void pause(){
-        m_pause = true;
-    }
+    void pause() { m_pause = true; }
 
-    void resume(){
-        m_pause = false;
-    }
+    void resume() { m_pause = false; }
+
+    void quit() { m_quit = true; }
 
 protected:
     void createInstance();
@@ -86,7 +84,7 @@ protected:
 
     void setupFrameBuffer();
 
-    virtual void buildCommandBuffers(){};
+    virtual void buildCommandBuffers() {};
 
     void prepareFrame();
 
@@ -113,9 +111,29 @@ public:
     void handleMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
     bool m_resizing = false;
 #elif defined(VK_USE_PLATFORM_XCB_KHR)
+
     void initxcbConnection();
+
     xcb_window_t setupWindow();
+
     void handleEvent(const xcb_generic_event_t *event);
+
+#endif
+
+    void setMouseButtonLeft(bool value) { m_mouseButtons.left = value; }
+
+    void setMouseButtonRight(bool value) { m_mouseButtons.right = value; }
+
+    void setMouseButtonMiddle(bool value) { m_mouseButtons.middle = value; }
+
+#if defined(_WIN32)
+    void setWindow(HWND window) {
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+
+    void setWindow(xcb_window_t window) {
+        m_window = window;
+    }
+
 #endif
 
 protected:
@@ -193,20 +211,20 @@ protected:
     float m_distance = 0.f;
     float m_oldDistance = 0.f;
 
-    struct Settings{
+    struct Settings {
         bool fullScreen = false;
-    }m_settings;
+    } m_settings;
 
-    struct MouseButton{
+    struct MouseButton {
         bool left = false;
         bool right = false;
         bool middle = false;
-    }m_mouseButtons;
+    } m_mouseButtons;
 
-    struct Scroll{
+    struct Scroll {
         bool up = false;
         bool down = false;
-    }m_scroll;
+    } m_scroll;
 
     std::string m_title = "Vulkan";
 

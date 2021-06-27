@@ -8,7 +8,11 @@
 
 #include "VulkanModelV2.hpp"
 
+#endif
+
 BEGIN_NAMESPACE(VulkanEngine)
+
+#ifdef BUILD_ASSIMP
 
 AssimpObject::~AssimpObject() {
     if(m_model){
@@ -38,6 +42,15 @@ void AssimpObject::build(VkCommandBuffer &cmdBuffer, VulkanShader* vulkanShader)
     vkCmdBindIndexBuffer(cmdBuffer, m_model->indices.buffer, 0, VK_INDEX_TYPE_UINT32);
     vkCmdDrawIndexed(cmdBuffer, m_model->indexCount, 1, 0, 0, 0);
 }
+#else
+
+AssimpObject::~AssimpObject() {
+
+}
+
+void AssimpObject::generateVertex() {}
+
+void AssimpObject::build(VkCommandBuffer &cmdBuffer, VulkanShader* vulkanShader) {}
 
 #endif
 

@@ -102,6 +102,15 @@ void VulkanBaseEngine::updateCommand() {
     }
 }
 
+void VulkanBaseEngine::renderAsyncThread() {
+    m_thread=new std::thread(&VulkanBaseEngine::renderLoop,this);
+}
+
+void VulkanBaseEngine::renderJoin(){
+    m_thread->join();
+    delete_ptr(m_thread);
+}
+
 void VulkanBaseEngine::prepareIMGUI() {
 #ifndef __ANDROID__
     if(m_settings.overlay){
@@ -199,6 +208,22 @@ void VulkanBaseEngine::setViewPorts(VkCommandBuffer &cmd) {
 
     vkCmdSetViewport(cmd, 0, 1, viewports);
     vkCmdSetScissor(cmd, 0, 1, scissorRects);
+}
+
+VkPipelineShaderStageCreateInfo
+VulkanBaseEngine::loadShader(const std::string &fileName, const VkShaderStageFlagBits &stage) {
+    VkPipelineShaderStageCreateInfo shaderStage = {};
+    shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStage.stage = stage;
+#if __ANDROID__
+    shaderStage.module = vks::tools::loadShader(m_context->m_asset, fileName.c_str(), m_context->getDevice());
+#else
+    shaderStage.module = vks::tools::loadShader(fileName.c_str(), m_context->getDevice());
+#endif
+    shaderStage.pName = "main"; // todo : make param
+    assert(shaderStage.module != VK_NULL_HANDLE);
+    m_shaderModules.push_back(shaderStage.module);
+    return shaderStage;
 }
 
 END_NAMESPACE(VulkanEngine)

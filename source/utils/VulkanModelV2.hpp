@@ -319,6 +319,25 @@ namespace vks
 					}
 				}
 
+//				std::cout << vertexBuffer.size()/10 <<std::endl;
+//				int size = vertexBuffer.size()/10;
+//				auto vertexBufferCopy = vertexBuffer;
+//				for(int i = 0 ;i<vertexBuffer.size()/10 ; i++){
+//				    vertexBuffer[10 * i] = vertexBufferCopy[10 * (size - 1 - i)];
+//                    vertexBuffer[10 * i+1] = vertexBufferCopy[10 * (size - 1 - i)+1];
+//                    vertexBuffer[10 * i+2] = vertexBufferCopy[10 * (size - 1 - i)+2];
+//                    vertexBuffer[10 * i+3] = vertexBufferCopy[10 * (size - 1 - i)+3];
+//                    vertexBuffer[10 * i+4] = vertexBufferCopy[10 * (size - 1 - i)+4];
+//                    vertexBuffer[10 * i+7] = vertexBufferCopy[10 * (size - 1 - i)+7]/vertexBufferCopy[10 * (size - 1 - i)+7];
+//                    vertexBuffer[10 * i+8] = vertexBufferCopy[10 * (size - 1 - i)+8]/vertexBufferCopy[10 * (size - 1 - i)+8];
+//                    vertexBuffer[10 * i+9] = vertexBufferCopy[10 * (size - 1 - i)+9]/vertexBufferCopy[10 * (size - 1 - i)+9];
+//                    vertexBuffer[10 * i+7] = vertexBuffer[10 * i+7]/vertexBuffer[10 * i+7];
+//                    vertexBuffer[10 * i+8] = vertexBuffer[10 * i+8]/vertexBuffer[10 * i+8];
+//                    vertexBuffer[10 * i+9] = vertexBuffer[10 * i+9]/vertexBuffer[10 * i+9];
+//                    std::cout << vertexBuffer[10 * i+7] << " ";
+//                    std::cout << vertexBuffer[10 * i+8] << " ";
+//                    std::cout << vertexBuffer[10 * i+9] << " ";
+//				}
 
 				uint32_t vBufferSize = static_cast<uint32_t>(vertexBuffer.size()) * sizeof(float);
 				uint32_t iBufferSize = static_cast<uint32_t>(indexBuffer.size()) * sizeof(uint32_t);

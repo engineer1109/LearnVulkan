@@ -54,10 +54,9 @@ void VulkanBase::prepareBase() {
 void VulkanBase::renderLoop() {
 #if defined(VK_USE_PLATFORM_XCB_KHR)
     xcb_flush(m_connection);
-    while(!m_quit){
+    while (!m_quit) {
         xcb_generic_event_t *event;
-        while ((event = xcb_poll_for_event(m_connection)))
-        {
+        while ((event = xcb_poll_for_event(m_connection))) {
             handleEvent(event);
             free(event);
         }
@@ -84,6 +83,9 @@ void VulkanBase::renderLoop() {
         }
         m_scroll.up = false;
         m_scroll.down = false;
+        if (m_quit) {
+            break;
+        }
     }
 #endif
     if (m_device != VK_NULL_HANDLE) {
@@ -99,7 +101,7 @@ void VulkanBase::renderFrame() {
         updateCommand();
         auto tEnd = std::chrono::high_resolution_clock::now();
         auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
-        m_frameTimer = (float)tDiff / 1000.0f;
+        m_frameTimer = (float) tDiff / 1000.0f;
         vkDeviceWaitIdle(m_device);
     }
 }
@@ -498,10 +500,8 @@ void VulkanBase::destroyCommandBuffers() {
     m_drawCmdBuffers.resize(0);
 }
 
-void VulkanBase::windowResize()
-{
-    if (!m_prepared)
-    {
+void VulkanBase::windowResize() {
+    if (!m_prepared) {
         return;
     }
     m_prepared = false;
@@ -554,7 +554,7 @@ void VulkanBase::handleMouseMove(float x, float y) {
 }
 
 void VulkanBase::runFunction(int i) {
-    if(i < m_functions.size()){
+    if (i < m_functions.size()) {
         m_functions[i]();
     }
 }
