@@ -25,6 +25,8 @@ class VulkanFrameBuffer;
 
 class ShadowCamera;
 
+class ReflectParaBuffer;
+
 class ShadowMapping : public ThirdPersonEngine {
 public:
     ShadowMapping() = default;
@@ -53,6 +55,8 @@ public:
 
     void createDebugQuad();
 
+    void createReflectParaBuffer();
+
     void buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd) override;
 
     void seeDebugQuad();
@@ -80,6 +84,8 @@ protected:
 
     VulkanPlane *m_dubugPlane = nullptr;
     VulkanVertFragShader* m_debugShader = nullptr;
+
+    ReflectParaBuffer* m_reflectParaBuffer = nullptr;
 
     bool m_seeDebug = false;
 };

@@ -13,6 +13,7 @@
 
 #include "VulkanFrameBuffer.h"
 #include "ShadowCamera.h"
+#include "ReflectParaBuffer.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
@@ -33,6 +34,7 @@ void ShadowMapping::prepareMyObjects() {
     createPlane();
     createShadowFrameBuffer();
     createDebugQuad();
+    createReflectParaBuffer();
 
     setDescriptorSet();
     createPipelines();
@@ -78,6 +80,10 @@ void ShadowMapping::setDescriptorSet() {
                                       VK_SHADER_STAGE_FRAGMENT_BIT,
                                       0);
     m_vulkanDescriptorSet->addBinding(6, &(m_shadowCamera->m_uniformBuffer.descriptor),
+                                      VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                      VK_SHADER_STAGE_VERTEX_BIT,
+                                      0);
+    m_vulkanDescriptorSet->addBinding(7, &(m_reflectParaBuffer->m_uniformBuffer.descriptor),
                                       VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                       VK_SHADER_STAGE_VERTEX_BIT,
                                       0);
@@ -187,6 +193,11 @@ void ShadowMapping::createDebugQuad() {
     m_debugShader->prepare();
 }
 
+void ShadowMapping::createReflectParaBuffer() {
+    REGISTER_OBJECT<ReflectParaBuffer>(m_reflectParaBuffer);
+    m_reflectParaBuffer->prepare();
+}
+
 void ShadowMapping::buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd) {
     VkClearValue clearValues[2];
     clearValues[0].depthStencil = { 1.0f, 0 };
@@ -241,6 +252,9 @@ void ShadowMapping::OnUpdateUIOverlay(vks::UIOverlay *overlay) {
 #ifndef __ANDROID__
     if(m_UIOverlay.button("seeDebugQuad")){
         seeDebugQuad();
+    }
+    if(m_UIOverlay.sliderFloat("reflect", &m_reflectParaBuffer->m_para.para[0], 0.f, 1.f)){
+        m_reflectParaBuffer->update();
     }
 #endif
 }
