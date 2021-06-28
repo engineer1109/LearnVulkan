@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-MESSAGE(STATUS "operation system is ${CMAKE_SYSTEM}")
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+
 project(LearnVulkan)
+
+MESSAGE(STATUS "operation system is ${CMAKE_SYSTEM}")
 
 include(${PROJECT_SOURCE_DIR}/cmake/Config.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/GCC.cmake)
@@ -8,6 +10,17 @@ include(${PROJECT_SOURCE_DIR}/cmake/FindOpenMP.cmake)
 
 add_definitions(-DSTBI_NO_DDS)
 add_definitions(-DUSE_STD_FILESYSTEM)  # For Old Compilers as GCC 7 change to -DUSE_STD_EXPERIMENTAL_FILESYSTEM
+
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    message("Linux build needs libxcb-dev.")
+    include(FindPkgConfig)
+    pkg_check_modules(XCB xcb)
+    if(XCB_FOUND)
+        message("Found XCB ${XCB_LDFLAGS}")
+    else()
+        message("You may need install libxcb-dev!")
+    endif()
+endif()
 
 #if(GIT_ThirdParty MATCHES ON)
 #    message("Download third_party of glm gli imgui.")
