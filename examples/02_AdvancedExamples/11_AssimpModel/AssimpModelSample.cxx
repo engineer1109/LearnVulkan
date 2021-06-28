@@ -108,7 +108,8 @@ void AssimpModelSample::createCube() {
     REGISTER_OBJECT<VulkanVertFragShader>(m_cubeShader);
     m_cubeShader->setShaderObjPath(FS::getPath("shaders/ShadowMapping/scene.so.vert"),
                                    FS::getPath("shaders/ShadowMapping/scene.so.frag"));
-    m_cubeShader->setCullFlag(VK_CULL_MODE_NONE);
+    m_cubeShader->setCullFlag(VK_CULL_MODE_BACK_BIT);
+    m_cubeShader->setFrontFace(VK_FRONT_FACE_CLOCKWISE);
     m_cubeShader->prepare();
 
     REGISTER_OBJECT<UniformCamera>(m_cubeUniform);
@@ -173,7 +174,7 @@ void AssimpModelSample::createShadowFrameBuffer() {
     REGISTER_OBJECT<VulkanVertFragShader>(m_shadowShader);
     m_shadowShader->setShaderObjPath(FS::getPath("shaders/ShadowMapping/shadow.so.vert"),
                                      FS::getPath("shaders/ShadowMapping/shadow.so.frag"));
-    m_shadowShader->setCullFlag(VK_CULL_MODE_NONE);
+    m_shadowShader->setCullFlag(VK_CULL_MODE_FRONT_BIT);
     m_shadowShader->setDepthBiasEnable(true);
     m_shadowShader->setOneStage(true);
     m_shadowShader->prepare();
@@ -197,6 +198,7 @@ void AssimpModelSample::createDebugQuad() {
 
 void AssimpModelSample::createReflectParaBuffer() {
     REGISTER_OBJECT<ReflectParaBuffer>(m_reflectParaBuffer);
+    m_reflectParaBuffer->m_para.para[0] = 1.f;
     m_reflectParaBuffer->prepare();
 }
 

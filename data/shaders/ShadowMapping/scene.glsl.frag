@@ -21,14 +21,15 @@ layout (location = 12) in vec4 inShadowCoord;
 
 layout (location = 0) out vec4 outFragColor;
 
-float textureProj(vec4 shadowCoord, vec2 off)
+float textureProj(vec4 shadowCoord, vec2 off, float angle)
 {
     float ambient = 0.2f;
     float shadow = 1.0;
+    float bias = 0.005f * tan(acos(angle));
     if ( shadowCoord.z > -1.0 && shadowCoord.z < 1.0 ) 
     {
-        float dist = texture( shadowMap, shadowCoord.st + off ).r;
-        if ( shadowCoord.w > 0.0 && dist < shadowCoord.z ) 
+        float dist = texture( shadowMap, shadowCoord.st + off).r;
+        if ( shadowCoord.w > 0.0 && dist < shadowCoord.z - bias )
         {
             shadow = ambient;
         }
@@ -36,7 +37,7 @@ float textureProj(vec4 shadowCoord, vec2 off)
     return shadow;
 }
 
-float filterPCF(vec4 sc)
+float filterPCF(vec4 sc, float angle)
 {
     ivec2 texDim = textureSize(shadowMap, 0);
     float scale = 1.5;
@@ -51,7 +52,7 @@ float filterPCF(vec4 sc)
     {
         for (int y = -range; y <= range; y++)
         {
-            shadowFactor += textureProj(sc, vec2(dx*x, dy*y));
+            shadowFactor += textureProj(sc, vec2(dx*x, dy*y), angle);
             count++;
         }
     
@@ -90,7 +91,7 @@ void main()
     
     attenuation = 1.f;
     
-    float shadow = filterPCF(inShadowCoord / inShadowCoord.w);
+    float shadow = filterPCF(inShadowCoord / inShadowCoord.w, max(dot(N, L), 0.f));
 
     outFragColor = vec4(ambient * color.rgb * shadow + diffuse * shadow * attenuation * color.rgb + specular * shadow * attenuation, 1.0);
 }

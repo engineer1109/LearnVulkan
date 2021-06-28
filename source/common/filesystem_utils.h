@@ -9,6 +9,11 @@
 
 #include <string>
 #include <iostream>
+
+#if !defined(USE_STD_FILESYSTEM) && !defined(USE_STD_EXPERIMENTAL_FILESYSTEM)
+#define USE_STD_FILESYSTEM
+#endif
+
 #if defined(USE_STD_FILESYSTEM)
 #include <filesystem>
 using namespace std::filesystem;
