@@ -9,6 +9,7 @@
 #include "PhongLighting.h"
 #include "InstanceDraw.h"
 #include "ShadowMapping.h"
+#include "AssimpModelSample.h"
 
 enum VulkanExampleNames {
     Example_StaticTriangle = 0,
@@ -18,6 +19,7 @@ enum VulkanExampleNames {
     Example_PhongLighting = 4,
     Example_InstanceDraw = 5,
     Example_ShadowMapping = 6,
+    Example_AssimpModelSample = 7,
 };
 
 extern "C"
@@ -54,6 +56,10 @@ Java_com_engineer1109_learnvulkan_render_BaseRender_createInstance(JNIEnv *env, 
     }
     else if(id == Example_ShadowMapping){
         auto *engine = new VulkanEngine::ShadowMapping();
+        return (jlong) engine;
+    }
+    else if(id == Example_AssimpModelSample) {
+        auto *engine = new VulkanEngine::AssimpModelSample();
         return (jlong) engine;
     }
     else{

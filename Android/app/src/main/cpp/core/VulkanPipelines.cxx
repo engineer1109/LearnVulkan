@@ -70,6 +70,7 @@ void VulkanPipelines::createPipeline(VulkanShader *shader, VkPolygonMode mode) {
         }
         m_rasterizationState.polygonMode = mode;
         m_rasterizationState.cullMode = shader->getCullFlag();
+        m_rasterizationState.frontFace = shader->getFrontFace();
 
         if(shader->getDepthBiasEnable()){
             m_rasterizationState.depthBiasEnable = VK_TRUE;

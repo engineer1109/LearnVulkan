@@ -16,7 +16,7 @@ import android.view.WindowManager;
 import com.engineer1109.learnvulkan.databinding.ActivityBaseRenderBinding;
 import com.engineer1109.learnvulkan.viewmodel.BaseRenderViewModel;
 
-public class BaseRenderActivity extends AppCompatActivity {
+public class  BaseRenderActivity extends AppCompatActivity {
 
     static final String TAG = "BaseRenderActivity";
 

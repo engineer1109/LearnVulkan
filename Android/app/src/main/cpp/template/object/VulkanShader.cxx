@@ -25,7 +25,11 @@ VulkanShader::loadShader(const std::string &fileName, const VkShaderStageFlagBit
     VkPipelineShaderStageCreateInfo shaderStage = {};
     shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStage.stage = stage;
+#if __ANDROID__
     shaderStage.module = vks::tools::loadShader(m_context->m_asset, fileName.c_str(), m_context->getDevice());
+#else
+    shaderStage.module = vks::tools::loadShader(fileName.c_str(), m_context->getDevice());
+#endif
     shaderStage.pName = "main"; // todo : make param
     assert(shaderStage.module != VK_NULL_HANDLE);
     m_shaderModules.push_back(shaderStage.module);

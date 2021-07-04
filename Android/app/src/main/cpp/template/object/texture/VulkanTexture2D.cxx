@@ -27,7 +27,7 @@ void VulkanTexture2D::loadFromFile(std::string file, AAssetManager *asset, VkFor
     unsigned char *imgData = stbi_load_from_memory((uint8_t *) assetReader->getOutData(),
                                                    assetReader->getSize(), &w, &h, &c, 0);
 #else
-    void VulkanTexture2D::loadFromFile(std::string file, VkFormat format,
+void VulkanTexture2D::loadFromFile(std::string file, VkFormat format,
                                    vks::VulkanDevice *device,
                                    VkQueue copyQueue,
                                    VkImageUsageFlags imageUsageFlags,

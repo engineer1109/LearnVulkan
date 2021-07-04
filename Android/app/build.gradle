@@ -117,6 +117,18 @@ task copyTask {
         include '**/*.so.vert'
         include '**/*.so.frag'
     }
+    copy {
+        from '../../data/models'
+        into "assets/models"
+        include '**/*.*'
+        include '**/*.*'
+    }
+    copy {
+        from '../../third_party/assimp/lib/android'
+        into "lib"
+        include '**/*.so'
+        include '**/*.so'
+    }
 }
 
 preBuild.dependsOn copyTask

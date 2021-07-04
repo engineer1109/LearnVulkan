@@ -18,6 +18,7 @@ add_definitions(-DGLM_FORCE_RADIANS)
 add_definitions(-DGLM_FORCE_DEPTH_ZERO_TO_ONE)
 add_definitions(-DSTBI_NO_DDS)
 add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR)
+add_definitions(-DBUILD_ASSIMP)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/algorithm
@@ -32,10 +33,12 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/template/object/camera
         ${PROJECT_SOURCE_DIR}/template/object/shader
         ${PROJECT_SOURCE_DIR}/template/object/texture
+        ${PROJECT_SOURCE_DIR}/plugins/assimp
         ${PROJECT_SOURCE_DIR}/utils
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/glm
         ${PROJECT_SOURCE_DIR}/third_party/stb_image/include
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/stb_image/include/
+        ${PROJECT_SOURCE_DIR}/../../../../../third_party/assimp/include
 )
 
 include_directories(
@@ -46,6 +49,11 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/examples/05_PhongLighting
         ${PROJECT_SOURCE_DIR}/examples/06_InstanceDraw
         ${PROJECT_SOURCE_DIR}/examples/07_ShadowMapping
+        ${PROJECT_SOURCE_DIR}/examples/11_AssimpModel
+)
+
+link_directories(
+        ${PROJECT_SOURCE_DIR}/../../../../../third_party/assimp/lib/android/${CMAKE_ANDROID_ARCH_ABI}
 )
 
 add_library( # Sets the name of the library.
@@ -75,6 +83,7 @@ add_library( # Sets the name of the library.
         template/object/camera/ShadowCamera.cxx
         template/object/texture/VulkanTexture2D.cxx
         template/object/texture/VulkanTextureCubeMap.cxx
+        plugins/assimp/AssimpObject.cxx
         utils/VulkanTools.cpp
 
         ${PROJECT_SOURCE_DIR}/../../../../../third_party/stb_image/src/stb_image_aug.c
@@ -100,6 +109,7 @@ find_library( # Sets the name of the path variable.
 target_link_libraries( # Specifies the target library.
         VulkanBase
         vulkan
+        assimp
         # Links the target library to the log library
         # included in the NDK.
         android
@@ -122,6 +132,8 @@ add_library(
         examples/06_InstanceDraw/InstanceDraw.cxx
         examples/06_InstanceDraw/SpeedBuffer.cxx
         examples/07_ShadowMapping/ShadowMapping.cxx
+        examples/11_AssimpModel/AssimpModelSample.cxx
+        examples/11_AssimpModel/ReflectParaBuffer.cxx
 )
 
 target_link_libraries(

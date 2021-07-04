@@ -27,6 +27,9 @@ public:
     std::vector<VkPipelineShaderStageCreateInfo> &getShaderStages() {return m_shaderStages;}
 
     void setCullFlag(VkCullModeFlags flag) { m_cullFlag = flag; }
+
+    void setFrontFace(VkFrontFace face) { m_frontFace = face; }
+
     void setVertexInputState(const VkPipelineVertexInputStateCreateInfo &inputStateCreateInfo){
         m_inputState = inputStateCreateInfo;
         m_instanceShader = true;
@@ -39,6 +42,8 @@ public:
     }
 
     VkCullModeFlags getCullFlag() const { return m_cullFlag;}
+
+    VkFrontFace getFrontFace() const { return m_frontFace; }
 
     VkPipelineVertexInputStateCreateInfo getVertexInputState() const { return m_inputState; }
 
@@ -58,6 +63,7 @@ protected:
     std::vector<VkShaderModule> m_shaderModules;
 
     VkCullModeFlags m_cullFlag = VK_CULL_MODE_NONE;
+    VkFrontFace m_frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     VkPipelineVertexInputStateCreateInfo m_inputState;
     bool m_depthBiasEnable = false;
 

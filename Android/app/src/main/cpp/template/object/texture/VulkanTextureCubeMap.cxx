@@ -36,7 +36,7 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, AAssetMa
                                            assetReaders[i]->getSize(), &w, &h, &c, 0);
     }
 #else
-    void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, VkFormat format,
+void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, VkFormat format,
                                         vks::VulkanDevice *device,
                                         VkQueue copyQueue,
                                         VkImageUsageFlags imageUsageFlags,
