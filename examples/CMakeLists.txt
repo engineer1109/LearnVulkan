@@ -1,4 +1,4 @@
 add_subdirectory(01_SimpleExamples)
 add_subdirectory(02_AdvancedExamples)
-#add_subdirectory(03_QtVulkan)
+add_subdirectory(03_QtVulkan)
 #add_subdirectory(BaseProject)
