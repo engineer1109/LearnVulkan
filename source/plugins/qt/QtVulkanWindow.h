@@ -9,16 +9,14 @@
 
 #include "VulkanBaseEngine.h"
 
-BEGIN_NAMESPACE(VulkanEngine)
-
 class VULKANENGINE_EXPORT_API QtVulkanWindow : public QMainWindow {
 Q_OBJECT
 public:
     QtVulkanWindow(QWidget *parent = Q_NULLPTR);
 
-    ~QtVulkanWindow();
+    virtual ~QtVulkanWindow();
 
-    void setVulkanPtr(VulkanBaseEngine *vulkan);
+    void setVulkanPtr(VulkanEngine::VulkanBaseEngine *vulkan);
 
 public slots:
 
@@ -33,10 +31,8 @@ public slots:
     void closeEvent(QCloseEvent *event);
 
 protected:
-    VulkanBaseEngine *m_vulkan = nullptr;
+    VulkanEngine::VulkanBaseEngine *m_vulkan = nullptr;
     glm::vec2 *m_mousePos = nullptr;
 };
-
-END_NAMESPACE(VulkanEngine)
 
 #endif //LEARNVULKAN_QTVULKANWINDOW_H

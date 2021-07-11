@@ -57,6 +57,8 @@ public:
 
     void quit() { m_quit = true; }
 
+    bool getPrepared() const { return m_prepared; }
+
 protected:
     void createInstance();
 

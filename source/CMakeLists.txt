@@ -40,6 +40,11 @@ endif()
 
 if(BUILD_QtExamples MATCHES ON)
 
+    set(CMAKE_INCLUDE_CURRENT_DIR True)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+
     FILE(GLOB_RECURSE SRC_FILES_QT ${CMAKE_CURRENT_SOURCE_DIR}/plugins/qt/*)
 
     add_library(${LIB_NAME}_qt_plugin SHARED ${SRC_FILES_QT})

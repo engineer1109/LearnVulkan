@@ -12,6 +12,8 @@ public:
     ThirdPersonCamera()=default;
     ~ThirdPersonCamera()=default;
 
+    void setZoom(float zoom) { m_zoom = zoom; }
+
     glm::vec3 m_rotation = glm::vec3();
     glm::vec3 m_cameraPos = glm::vec3();
     const float m_baseZoom = -2.f;
