@@ -59,14 +59,14 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, VkFormat
     mipLevels = static_cast<uint32_t>(1);
     channels = static_cast<uint32_t>(c);
 
-    if(c==3){
+    if(c == 3 && format == VK_FORMAT_R8G8B8A8_UNORM){
         channels = 4;
     }
 
     m_size = width * height * channels * files.size();
     uint8_t *img = new uint8_t[m_size];
 
-    if(c==3){
+    if(c == 3 && format == VK_FORMAT_R8G8B8A8_UNORM){
         for (size_t i = 0; i < files.size(); i++) {
             ImageAlgorithm::turnRGB2RGBA(imgList[i], img + width * height * channels * i, width, height);
         }
@@ -217,7 +217,7 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, VkFormat
     samplerCreateInfo.magFilter = VK_FILTER_LINEAR;
     samplerCreateInfo.minFilter = VK_FILTER_LINEAR;
     samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-    samplerCreateInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    samplerCreateInfo.addressModeU = this->defaultAddressMode;
     samplerCreateInfo.addressModeV = samplerCreateInfo.addressModeU;
     samplerCreateInfo.addressModeW = samplerCreateInfo.addressModeU;
     samplerCreateInfo.mipLodBias = 0.0f;
@@ -262,6 +262,95 @@ void VulkanTextureCubeMap::loadFromFile(std::vector<std::string> files, VkFormat
     for (size_t i = 0; i < imgList.size(); i++) {
         stbi_image_free(imgList[i]);
     }
+}
+
+void VulkanTextureCubeMap::allocate(VkFormat format, int width, int height, int channels,
+                                    vks::VulkanDevice *device,
+                                    VkQueue copyQueue,
+                                    VkImageUsageFlags imageUsageFlags,
+                                    VkImageLayout imageLayout, bool forceLinear) {
+    this->device = device;
+    this->width = width;
+    this->height = height;
+    this->channels = channels;
+    this->mipLevels = 1;
+
+    // Cube map image description
+    VkImageCreateInfo imageCreateInfo = vks::initializers::imageCreateInfo();
+    imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageCreateInfo.format = format;
+    imageCreateInfo.extent = { this->width, this->height, 1 };
+    imageCreateInfo.mipLevels = 1;
+    imageCreateInfo.arrayLayers = 6;
+    imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageCreateInfo.usage = imageUsageFlags;
+    if (!(imageCreateInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT)) {
+        imageCreateInfo.usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    }
+    imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    imageCreateInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+
+    VkMemoryAllocateInfo memAllocInfo = vks::initializers::memoryAllocateInfo();
+    VkMemoryRequirements memReqs;
+
+    VkCommandBuffer layoutCmd = this->device->createCommandBuffer(VK_COMMAND_BUFFER_LEVEL_PRIMARY, true);
+
+    // Create cube map image
+    VK_CHECK_RESULT(vkCreateImage(device->logicalDevice, &imageCreateInfo, nullptr, &image));
+
+    vkGetImageMemoryRequirements(device->logicalDevice, image, &memReqs);
+
+    memAllocInfo.allocationSize = memReqs.size;
+    memAllocInfo.memoryTypeIndex = device->getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+    VK_CHECK_RESULT(vkAllocateMemory(device->logicalDevice, &memAllocInfo, nullptr, &deviceMemory));
+    VK_CHECK_RESULT(vkBindImageMemory(device->logicalDevice, image, deviceMemory, 0));
+
+    // Image barrier for optimal image (target)
+    VkImageSubresourceRange subresourceRange = {};
+    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    subresourceRange.baseMipLevel = 0;
+    subresourceRange.levelCount = 1;
+    subresourceRange.layerCount = 6;
+    vks::tools::setImageLayout(
+            layoutCmd,
+            image,
+            VK_IMAGE_LAYOUT_UNDEFINED,
+            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+            subresourceRange);
+
+    device->flushCommandBuffer(layoutCmd, copyQueue, true);
+
+    // Create sampler
+    VkSamplerCreateInfo samplerInfo = vks::initializers::samplerCreateInfo();
+    samplerInfo.magFilter = VK_FILTER_LINEAR;
+    samplerInfo.minFilter = VK_FILTER_LINEAR;
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+    samplerInfo.addressModeU = this->defaultAddressMode;
+    samplerInfo.addressModeV = samplerInfo.addressModeU;
+    samplerInfo.addressModeW = samplerInfo.addressModeU;
+    samplerInfo.mipLodBias = 0.0f;
+    samplerInfo.maxAnisotropy = 1.0f;
+    samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
+    samplerInfo.minLod = 0.0f;
+    samplerInfo.maxLod = 1.0f;
+    samplerInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+    VK_CHECK_RESULT(vkCreateSampler(device->logicalDevice, &samplerInfo, nullptr, &sampler));
+
+    // Create image view
+    VkImageViewCreateInfo viewCreateInfo = vks::initializers::imageViewCreateInfo();
+    viewCreateInfo.image = VK_NULL_HANDLE;
+    viewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_CUBE;
+    viewCreateInfo.format = format;
+    viewCreateInfo.components = getComponentMapping(channels);
+    viewCreateInfo.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+    viewCreateInfo.subresourceRange.layerCount = 6;
+    viewCreateInfo.image = image;
+    VK_CHECK_RESULT(vkCreateImageView(device->logicalDevice, &viewCreateInfo, nullptr, &view));
+
+    // Update descriptor image info member that can be used for setting up descriptor sets
+    updateDescriptor();
 }
 
 END_NAMESPACE(VulkanEngine)

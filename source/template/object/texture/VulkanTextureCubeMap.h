@@ -53,6 +53,24 @@ public:
         }
     }
 
+    void allocate(VkFormat format, int width, int height, int channels,
+                  vks::VulkanDevice *device,
+                  VkQueue copyQueue,
+                  VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_SAMPLED_BIT,
+                  VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                  bool forceLinear = false);
+
+    void allocate(VkFormat format, int width, int height, int channels,
+                  VkImageUsageFlags imageUsageFlags = VK_IMAGE_USAGE_SAMPLED_BIT,
+                  VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                  bool forceLinear = false) {
+        if (m_context) {
+            allocate(format, width, height, channels, m_context->vulkanDevice,
+                         m_context->queue,
+                         imageUsageFlags, imageLayout, forceLinear);
+        }
+    }
+
 #endif
 };
 

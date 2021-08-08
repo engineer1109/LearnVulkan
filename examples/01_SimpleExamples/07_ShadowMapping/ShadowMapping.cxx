@@ -163,10 +163,10 @@ void ShadowMapping::createPlane() {
 
 void ShadowMapping::createShadowFrameBuffer() {
     m_frameBuffer = new VulkanFrameBuffer();
-    m_frameBuffer->setVulkanDevice(m_vulkanDevice);
+    m_frameBuffer->setContext(m_context);
     m_frameBuffer->setFormat(VK_FORMAT_D16_UNORM);
     m_frameBuffer->setSize(4096, 4096);
-    m_frameBuffer->create();
+    m_frameBuffer->createWithDepth();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_shadowShader);
     m_shadowShader->setShaderObjPath(FS::getPath("shaders/ShadowMapping/shadow.so.vert"),

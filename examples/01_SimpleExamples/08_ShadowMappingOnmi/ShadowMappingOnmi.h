@@ -49,6 +49,10 @@ public:
 
     void createReflectParaBuffer();
 
+    void createRoom();
+
+    void createOnmiShadowFrameBuffer();
+
 protected:
     VulkanCube *m_cube = nullptr;
     VulkanVertFragShader *m_cubeShader = nullptr;
@@ -61,6 +65,13 @@ protected:
     VulkanTextureCubeMap *m_skyTexture = nullptr;
 
     ReflectParaBuffer* m_reflectParaBuffer = nullptr;
+
+    VulkanCube *m_room = nullptr;
+    VulkanVertFragShader *m_roomShader = nullptr;
+    VulkanTexture2D *m_floorTexture = nullptr;
+
+    VulkanFrameBuffer *m_frameBuffer = nullptr;
+    VulkanTextureCubeMap *m_shadowMapTexture = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)

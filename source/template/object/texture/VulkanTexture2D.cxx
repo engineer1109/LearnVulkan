@@ -48,7 +48,7 @@ void VulkanTexture2D::loadFromFile(std::string file, VkFormat format,
     unsigned char *newImgData = nullptr;
     bool newImgDataMalloc = false;
 
-    if (channels == 3) {
+    if (channels == 3 && format == VK_FORMAT_R8G8B8A8_UNORM) {
         channels = 4;
         m_size = width * height * channels * mipLevels;
         newImgDataMalloc = true;

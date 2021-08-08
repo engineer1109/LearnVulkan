@@ -10,6 +10,7 @@
 
 #include "VulkanDevice.hpp"
 #include "VulkanRenderPass.h"
+#include "VulkanContext.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
@@ -19,11 +20,19 @@ public:
 
     virtual ~VulkanFrameBuffer();
 
-    void create();
+    void createWithDepth();
+
+    void createWithColorDepth();
 
     void setSize(int width, int height) {
         m_width = width;
         m_height = height;
+    }
+
+    void setContext(VulkanContext* context){
+        m_context = context;
+        m_vulkanDevice = m_context->vulkanDevice;
+        m_device = m_context->getDevice();
     }
 
     void setVulkanDevice(vks::VulkanDevice *vulkanDevice) {
@@ -48,15 +57,28 @@ public:
 protected:
     int m_width = 2048;
     int m_height = 2048;
+    VulkanContext* m_context = nullptr;
     VkDevice m_device = VK_NULL_HANDLE;
     VkFormat m_format = VK_FORMAT_D16_UNORM;
     vks::VulkanDevice *m_vulkanDevice = nullptr;
     VulkanRenderPass *m_renderPass = nullptr;
     VkFramebuffer m_frameBuffer = VK_NULL_HANDLE;
 
-    VkImageView m_view = VK_NULL_HANDLE;
-    VkImage m_image = VK_NULL_HANDLE;
-    VkDeviceMemory m_memory = VK_NULL_HANDLE;
+    struct ColorAttachment {
+        VkImageView view = VK_NULL_HANDLE;
+        VkImage image = VK_NULL_HANDLE;
+        VkDeviceMemory memory = VK_NULL_HANDLE;
+    } m_color;
+
+    struct DepthAttachment{
+        VkImageView view = VK_NULL_HANDLE;
+        VkImage image = VK_NULL_HANDLE;
+        VkDeviceMemory memory = VK_NULL_HANDLE;
+    } m_depth;
+
+//    VkImageView m_view = VK_NULL_HANDLE;
+//    VkImage m_image = VK_NULL_HANDLE;
+//    VkDeviceMemory m_memory = VK_NULL_HANDLE;
     VkSampler m_depthSampler = VK_NULL_HANDLE;
     VkDescriptorImageInfo m_descriptor;
 };

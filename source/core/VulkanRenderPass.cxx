@@ -14,7 +14,52 @@ VulkanRenderPass::~VulkanRenderPass() {
     }
 }
 
-void VulkanRenderPass::create() {
+void VulkanRenderPass::createColorDepthPass() {
+    VkAttachmentDescription osAttachments[2] = {};
+
+    osAttachments[0].format = m_format;
+    osAttachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    osAttachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    osAttachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    osAttachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    osAttachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    osAttachments[0].initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    osAttachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    // Depth attachment
+    osAttachments[1].format = m_depthFormat;
+    osAttachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    osAttachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    osAttachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    osAttachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    osAttachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    osAttachments[1].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    osAttachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference colorReference = {};
+    colorReference.attachment = 0;
+    colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference depthReference = {};
+    depthReference.attachment = 1;
+    depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpass = {};
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount = 1;
+    subpass.pColorAttachments = &colorReference;
+    subpass.pDepthStencilAttachment = &depthReference;
+
+    VkRenderPassCreateInfo renderPassCreateInfo = vks::initializers::renderPassCreateInfo();
+    renderPassCreateInfo.attachmentCount = 2;
+    renderPassCreateInfo.pAttachments = osAttachments;
+    renderPassCreateInfo.subpassCount = 1;
+    renderPassCreateInfo.pSubpasses = &subpass;
+
+    VK_CHECK_RESULT(vkCreateRenderPass(m_device, &renderPassCreateInfo, nullptr, &m_renderPass));
+}
+
+void VulkanRenderPass::createDepthPass() {
     VkAttachmentDescription attachmentDescription{};
     attachmentDescription.format = m_format;
     attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;

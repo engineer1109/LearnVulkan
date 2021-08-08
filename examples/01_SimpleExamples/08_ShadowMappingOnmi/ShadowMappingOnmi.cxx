@@ -26,6 +26,8 @@ void ShadowMappingOnmi::prepareMyObjects() {
     createCube();
     createSkybox();
     createReflectParaBuffer();
+    createRoom();
+    createOnmiShadowFrameBuffer();
 
     setDescriptorSet();
     createPipelines();
@@ -34,6 +36,7 @@ void ShadowMappingOnmi::prepareMyObjects() {
 void ShadowMappingOnmi::buildMyObjects(VkCommandBuffer &cmd) {
     m_cube->build(cmd, m_cubeShader);
     m_sky->build(cmd, m_skyShader);
+    m_room->build(cmd, m_roomShader);
 }
 
 void ShadowMappingOnmi::render() {
@@ -68,10 +71,12 @@ void ShadowMappingOnmi::createPipelines() {
     m_pipelines->createBasePipelineInfo(m_pipelineLayout, m_renderPass);
     m_pipelines->createPipeline(m_cubeShader);
     m_pipelines->createPipeline(m_skyShader);
+    m_pipelines->createPipeline(m_roomShader);
 }
 
 void ShadowMappingOnmi::createCube() {
     REGISTER_OBJECT<VulkanCube>(m_cube);
+    m_cube->setPosOffset({-2, -2, 0});
     m_cube->prepare();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_cubeShader);
@@ -81,7 +86,7 @@ void ShadowMappingOnmi::createCube() {
     m_cubeShader->prepare();
 
     REGISTER_OBJECT<UniformCamera>(m_cubeUniform);
-    m_cubeUniform->m_uboVS.lightpos = glm::vec4(10.0f, -10.0f, 10.0f, 1.0f);
+    m_cubeUniform->m_uboVS.lightpos = glm::vec4(0.0f, -0.0f, 0.0f, 1.0f);
     m_cubeUniform->m_pCameraPos = &m_cameraPos;
     m_cubeUniform->m_pRotation = &m_rotation;
     m_cubeUniform->m_pZoom = &m_zoom;
@@ -119,6 +124,30 @@ void ShadowMappingOnmi::createSkybox() {
 void ShadowMappingOnmi::createReflectParaBuffer() {
     REGISTER_OBJECT<ReflectParaBuffer>(m_reflectParaBuffer);
     m_reflectParaBuffer->prepare();
+}
+
+void ShadowMappingOnmi::createRoom() {
+    REGISTER_OBJECT<VulkanCube>(m_room);
+    m_room->setSize(5, 5, 5);
+    m_room->prepare();
+
+    REGISTER_OBJECT<VulkanVertFragShader>(m_roomShader);
+    m_roomShader->setShaderObjPath(FS::getPath("shaders/ShadowMappingOnmi/room.so.vert"),
+                                  FS::getPath("shaders/ShadowMappingOnmi/room.so.frag"));
+    m_roomShader->setCullFlag(VK_CULL_MODE_NONE);
+    m_roomShader->prepare();
+}
+
+void ShadowMappingOnmi::createOnmiShadowFrameBuffer() {
+    REGISTER_OBJECT<VulkanTextureCubeMap>(m_shadowMapTexture);
+    m_shadowMapTexture->defaultAddressMode = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+    m_shadowMapTexture->allocate(VK_FORMAT_R32_SFLOAT, 1024, 1024, 1);
+
+    m_frameBuffer = new VulkanFrameBuffer();
+    m_frameBuffer->setContext(m_context);
+    m_frameBuffer->setFormat(VK_FORMAT_R32_SFLOAT);
+    m_frameBuffer->setSize(1024, 1024);
+    m_frameBuffer->createWithColorDepth();
 }
 
 END_NAMESPACE(VulkanEngine)
