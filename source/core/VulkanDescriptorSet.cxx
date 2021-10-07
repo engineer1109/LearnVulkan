@@ -78,7 +78,9 @@ void VulkanDescriptorSet::GenPipelineLayout(VkPipelineLayout *pipelineLayout) {
 
     VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo =
             vks::initializers::pipelineLayoutCreateInfo(&m_descriptorSetLayout, 1);
-
+    VkPushConstantRange pushConstantRange = vks::initializers::pushConstantRange(VK_SHADER_STAGE_VERTEX_BIT, sizeof(glm::mat4), 0);
+    pipelineLayoutCreateInfo.pushConstantRangeCount = 1;
+    pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
     VK_CHECK_RESULT(vkCreatePipelineLayout(m_device, &pipelineLayoutCreateInfo, nullptr, pipelineLayout));
 
     for (int i=0; i<m_descriptorSets.size();i++){

@@ -50,7 +50,7 @@ void InstanceDraw::render() {
 }
 
 void InstanceDraw::createInstanceDescription() {
-    m_instanceDescription = new DefaultInstanceDescription();
+    m_instanceDescription = std::make_shared<DefaultInstanceDescription>();
     m_instanceDescription->GenerateInstanceDescriptions();
 }
 

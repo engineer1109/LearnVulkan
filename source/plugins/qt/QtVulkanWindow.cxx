@@ -34,7 +34,7 @@ void QtVulkanWindow::mouseReleaseEvent(QMouseEvent *event) {
         m_vulkan->setMouseButtonLeft(false);
     } else if (event->button() & Qt::RightButton) {
         m_vulkan->setMouseButtonRight(false);
-    } else if (event->button() & Qt::MidButton) {
+    } else if (event->button() & Qt::MiddleButton) {
         m_vulkan->setMouseButtonMiddle(false);
     }
     m_vulkan->handleMouseMove(event->pos().x(), event->pos().y());

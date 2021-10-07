@@ -54,6 +54,10 @@ public:
 
     int getHeight() const {return m_height;}
 
+    auto &getColorAttachment() { return m_color; }
+
+    auto &getDepthAttachment() { return m_depth; }
+
 protected:
     int m_width = 2048;
     int m_height = 2048;
@@ -79,8 +83,11 @@ protected:
 //    VkImageView m_view = VK_NULL_HANDLE;
 //    VkImage m_image = VK_NULL_HANDLE;
 //    VkDeviceMemory m_memory = VK_NULL_HANDLE;
+    VkSampler m_colorSampler = VK_NULL_HANDLE;
     VkSampler m_depthSampler = VK_NULL_HANDLE;
     VkDescriptorImageInfo m_descriptor;
+public:
+    VkRenderPass m_pRenderPass;
 };
 
 END_NAMESPACE(VulkanEngine)

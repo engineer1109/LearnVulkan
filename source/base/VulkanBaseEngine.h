@@ -70,14 +70,14 @@ protected:
     virtual void buildMyObjects(VkCommandBuffer &cmd) {};
 
     template<class T>
-    void REGISTER_OBJECT(T *&obj) {
+    void REGISTER_OBJECT(std::shared_ptr<T> &obj) {
         obj = VkObject::New<T>(m_context);
-        m_objs.push_back((VkObject **) &obj);
+        m_objs.push_back(obj);
     }
 
     void destroyObjects() {
         for (auto &obj : m_objs) {
-            delete_ptr(*obj);
+            obj = nullptr;
         }
     }
 
@@ -97,7 +97,7 @@ protected:
     vks::UIOverlay m_UIOverlay;
 #endif
 
-    std::vector<VkObject **> m_objs;
+    std::vector<std::shared_ptr<VkObject>> m_objs;
 
     struct Settings {
         bool overlay = true;

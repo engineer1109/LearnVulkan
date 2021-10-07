@@ -29,6 +29,10 @@ public:
 
     virtual void build(VkCommandBuffer &cmdBuffer, VulkanShader *vulkanShader) override;
 
+    virtual void build(VkCommandBuffer &cmdBuffer, std::shared_ptr<VulkanShader> vulkanShader) override {
+        build(cmdBuffer, vulkanShader.get());
+    }
+
 protected:
     std::string m_modelPath;
     vks::Model *m_model = nullptr;

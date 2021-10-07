@@ -8,8 +8,16 @@ layout (location = 4) in vec3 inPos;
 layout (location = 5) in mat4 inInvModelView;
 layout (location = 11) in float inDistance;
 layout (location = 12) in vec3 inColor;
+layout (location = 13) in vec3 inWorldPos;
+layout (location = 14) in vec3 inLightPos;
 
 layout (location = 0) out vec4 outFragColor;
+
+layout (binding = 8) uniform samplerCube shadowCubeMap;
+layout (binding = 9) uniform sampler2D frameBuffer;
+
+#define EPSILON 0.15
+#define SHADOW_OPACITY 0.5
 
 void main() {
     vec4 color = vec4(inColor * 0.5f + vec3(0.5f), 1.0f);
@@ -26,4 +34,12 @@ void main() {
     float attenuation = 1.0f / (1.0f + 0.09f * inDistance + 0.032f * (inDistance * inDistance));
 
     outFragColor = vec4(ambient * color.rgb + diffuse * color.rgb + vec3(specular) * attenuation, 1.0);
+
+    vec3 lightVec = inWorldPos - inLightPos;
+    float sampledDist = texture(shadowCubeMap, lightVec).r;
+    float dist = length(lightVec);
+
+    // Check if fragment is in shadow
+    float shadow = (dist <= sampledDist + EPSILON) ? 1.0 : SHADOW_OPACITY;
+    outFragColor.rgb = outFragColor.rgb * shadow;
 }

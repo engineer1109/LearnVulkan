@@ -36,9 +36,9 @@ public:
     void createTriangle();
 
 private:
-    Triangle* m_triangle = nullptr;
-    TriangleShader* m_triangleShader = nullptr;
-    TriangleUniform* m_triangleUniform = nullptr;
+    std::shared_ptr<Triangle> m_triangle = nullptr;
+    std::shared_ptr<TriangleShader> m_triangleShader = nullptr;
+    std::shared_ptr<TriangleUniform> m_triangleUniform = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)

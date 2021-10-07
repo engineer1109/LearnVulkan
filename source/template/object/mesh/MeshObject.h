@@ -28,6 +28,10 @@ public:
 
     virtual void build(VkCommandBuffer &cmdBuffer, VulkanShader *vulkanShader);
 
+    virtual void build(VkCommandBuffer &cmdBuffer, std::shared_ptr<VulkanShader> vulkanShader) {
+        this->build(cmdBuffer, vulkanShader.get());
+    }
+
     void setPosOffset(const glm::vec3 &offset) { m_posOffset = offset; }
 
     template<class T>

@@ -25,6 +25,8 @@ class VulkanFrameBuffer;
 
 class ReflectParaBuffer;
 
+class OnmiCamera;
+
 class ShadowMappingOnmi : public ThirdPersonEngine {
 public:
     ShadowMappingOnmi() = default;
@@ -53,25 +55,42 @@ public:
 
     void createOnmiShadowFrameBuffer();
 
+    void createDebugQuad();
+
+    void updateCubeFace(uint32_t faceIndex, VkCommandBuffer &commandBuffer);
+
+    void buildCommandBuffersBeforeMainRenderPass(VkCommandBuffer &cmd) override;
+
+    void seeDebugQuad();
+
+    void OnUpdateUIOverlay(vks::UIOverlay *overlay);
+
 protected:
-    VulkanCube *m_cube = nullptr;
-    VulkanVertFragShader *m_cubeShader = nullptr;
-    UniformCamera *m_cubeUniform = nullptr;
-    VulkanTexture2D *m_cubeTextureA = nullptr;
-    VulkanTexture2D *m_cubeTextureB = nullptr;
+    std::vector<std::shared_ptr<VulkanCube>> m_cubes;
+    std::shared_ptr<VulkanVertFragShader> m_cubeShader = nullptr;
+    std::shared_ptr<UniformCamera> m_cubeUniform = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureA = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureB = nullptr;
 
-    VulkanCube *m_sky = nullptr;
-    VulkanVertFragShader *m_skyShader = nullptr;
-    VulkanTextureCubeMap *m_skyTexture = nullptr;
+    std::shared_ptr<VulkanCube> m_sky = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_skyShader = nullptr;
+    std::shared_ptr<VulkanTextureCubeMap> m_skyTexture = nullptr;
 
-    ReflectParaBuffer* m_reflectParaBuffer = nullptr;
+    std::shared_ptr<ReflectParaBuffer> m_reflectParaBuffer = nullptr;
 
-    VulkanCube *m_room = nullptr;
-    VulkanVertFragShader *m_roomShader = nullptr;
-    VulkanTexture2D *m_floorTexture = nullptr;
+    std::shared_ptr<VulkanCube> m_room = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_roomShader = nullptr;
 
-    VulkanFrameBuffer *m_frameBuffer = nullptr;
-    VulkanTextureCubeMap *m_shadowMapTexture = nullptr;
+    std::shared_ptr<VulkanFrameBuffer> m_frameBuffer = nullptr;
+    std::shared_ptr<VulkanTextureCubeMap> m_shadowMapTexture = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_shadowShader = nullptr;
+    std::shared_ptr<OnmiCamera> m_onmiCamera = nullptr;
+
+    std::shared_ptr<VulkanPlane> m_dubugPlane = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_debugShader = nullptr;
+
+    int m_cubeNum = 3;
+    bool m_displayDebugQuad = false;
 };
 
 END_NAMESPACE(VulkanEngine)

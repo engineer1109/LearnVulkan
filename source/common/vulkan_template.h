@@ -9,7 +9,6 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-
 END_NAMESPACE(VulkanEngine)
 
 #endif //LEARNVULKAN_VULKAN_TEMPLATE_H

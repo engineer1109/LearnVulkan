@@ -21,6 +21,8 @@ layout (location = 4) out vec3 outPos;
 layout (location = 5) out mat4 outInvModelView;
 layout (location = 11) out float outDistance;
 layout (location = 12) out vec3 outColor;
+layout (location = 13) out vec3 outWorldPos;
+layout (location = 14) out vec3 outLightPos;
 
 out gl_PerVertex
 {
@@ -51,4 +53,8 @@ void main()
     outDistance = length(lightPos.xyz - pos.xyz);
 
     outColor = inNormal;
+
+    outWorldPos = inPos.xyz;
+
+    outLightPos = lightPos.xyz;
 }

@@ -27,6 +27,10 @@ public:
 
     virtual void build(VkCommandBuffer &cmdBuffer, VulkanShader *vulkanShader) override;
 
+    virtual void build(VkCommandBuffer &cmdBuffer, std::shared_ptr<VulkanShader> vulkanShader) override {
+        this->build(cmdBuffer, vulkanShader.get());
+    }
+
 public:
     struct InstanceBuffer {
         VkBuffer buffer = VK_NULL_HANDLE;

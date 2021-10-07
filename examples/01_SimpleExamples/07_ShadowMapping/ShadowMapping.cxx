@@ -18,7 +18,6 @@
 BEGIN_NAMESPACE(VulkanEngine)
 
 ShadowMapping::~ShadowMapping() noexcept {
-    delete_ptr(m_frameBuffer);
     destroyObjects();
 }
 
@@ -162,7 +161,7 @@ void ShadowMapping::createPlane() {
 }
 
 void ShadowMapping::createShadowFrameBuffer() {
-    m_frameBuffer = new VulkanFrameBuffer();
+    m_frameBuffer = std::make_shared<VulkanFrameBuffer>();
     m_frameBuffer->setContext(m_context);
     m_frameBuffer->setFormat(VK_FORMAT_D16_UNORM);
     m_frameBuffer->setSize(4096, 4096);

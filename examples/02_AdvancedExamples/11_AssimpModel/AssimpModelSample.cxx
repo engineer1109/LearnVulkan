@@ -19,7 +19,6 @@
 BEGIN_NAMESPACE(VulkanEngine)
 
 AssimpModelSample::~AssimpModelSample() noexcept {
-    delete_ptr(m_frameBuffer);
     destroyObjects();
 }
 
@@ -165,11 +164,11 @@ void AssimpModelSample::createPlane() {
 }
 
 void AssimpModelSample::createShadowFrameBuffer() {
-    m_frameBuffer = new VulkanFrameBuffer();
+    m_frameBuffer = std::make_shared<VulkanFrameBuffer>();
     m_frameBuffer->setVulkanDevice(m_vulkanDevice);
     m_frameBuffer->setFormat(VK_FORMAT_D16_UNORM);
     m_frameBuffer->setSize(4096, 4096);
-    m_frameBuffer->create();
+    m_frameBuffer->createWithDepth();
 
     REGISTER_OBJECT<VulkanVertFragShader>(m_shadowShader);
     m_shadowShader->setShaderObjPath(FS::getPath("shaders/ShadowMapping/shadow.so.vert"),
