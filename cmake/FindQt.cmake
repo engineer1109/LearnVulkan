@@ -1,7 +1,7 @@
 if(BUILD_QtExamples MATCHES "ON")
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 else()
-    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets)
     if(Qt5_FOUND)
         message("Auto Find Qt${QT_VERSION_MAJOR}. Qt${QT_VERSION_MAJOR} is enabled")
         set(BUILD_QtExamples ON)
