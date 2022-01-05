@@ -408,8 +408,8 @@ public:
 
         // If an existing swap chain is re-created, destroy the old swap chain
         // This also cleans up all the presentable images
-//        if (oldSwapchain != VK_NULL_HANDLE)
-//        {
+        if (oldSwapchain != VK_NULL_HANDLE)
+        {
             for (uint32_t i = 0; i < buffers.size(); i++)
             {
             	if(buffers[i].view){
@@ -417,12 +417,12 @@ public:
 					buffers[i].view=VK_NULL_HANDLE;
             	}
             }
-		buffers.clear();
-		if (oldSwapchain != VK_NULL_HANDLE){
-            fpDestroySwapchainKHR(device, oldSwapchain, nullptr);
-			oldSwapchain=VK_NULL_HANDLE;
-		}
-//        }
+		    buffers.clear();
+		    if (oldSwapchain != VK_NULL_HANDLE){
+                fpDestroySwapchainKHR(device, oldSwapchain, nullptr);
+                oldSwapchain=VK_NULL_HANDLE;
+		    }
+        }
         VK_CHECK_RESULT(fpGetSwapchainImagesKHR(device, swapChain, &imageCount, NULL));
 
         // Get the swap chain images
@@ -457,6 +457,8 @@ public:
 
             VK_CHECK_RESULT(vkCreateImageView(device, &colorAttachmentView, nullptr, &buffers[i].view));
         }
+
+
 	}
 
 	/** 
@@ -479,6 +481,7 @@ public:
 		else{
 			return VK_SUCCESS;
 		}
+
 	}
 
 	/**
@@ -518,22 +521,24 @@ public:
 	*/
 	void cleanup()
 	{
-			for (uint32_t i = 0; i < buffers.size(); i++)
-			{
-				if(buffers[i].view){
-				    vkDestroyImageView(device, buffers[i].view, nullptr);
-				}
-				if(buffers[i].image){
-				    vkDestroyImage(device,buffers[i].image,nullptr);
-				}
-				buffers[i].view=VK_NULL_HANDLE;
-				buffers[i].image=VK_NULL_HANDLE;
-			}
+	    bool flag = swapChain != VK_NULL_HANDLE;
+	    bool flag2 = surface != VK_NULL_HANDLE;
+
+	    for (uint32_t i = 0; i < buffers.size(); i++)
+	    {
+	        if(buffers[i].view){
+	            vkDestroyImageView(device, buffers[i].view, nullptr);
+	        }
+	        buffers[i].view=VK_NULL_HANDLE;
+			buffers[i].image=VK_NULL_HANDLE;
+	    }
+
         if (swapChain != VK_NULL_HANDLE)
         {
             vkDestroySwapchainKHR(device, swapChain, nullptr);
             swapChain = VK_NULL_HANDLE;
         }
+
 		if (surface != VK_NULL_HANDLE)
 		{
 			vkDestroySurfaceKHR(instance, surface, nullptr);

@@ -29,7 +29,7 @@ public class SurfaceAdapters {
                 viewModel.setSurface(view.getHolder().getSurface());
                 viewModel.setAssetManager(view.getContext().getAssets());
                 if(viewModel.isStarted()){
-                    viewModel.destroySurface();
+                    //viewModel.destroySurface();
                     viewModel.rebuildSurface();
                     viewModel.resume();
                 }

@@ -76,7 +76,8 @@ public class  BaseRenderActivity extends AppCompatActivity {
         Log.i(TAG, "onPause");
         mViewModel.pause();
         mViewModel.waitCurrentFrameComplete();
-        mViewModel.destroyANativeWindow();
+        mViewModel.destroySurface();
+        //mViewModel.destroyANativeWindow();
     }
 
     @Override

@@ -115,6 +115,9 @@ public class BaseRenderViewModel extends ViewModel {
     }
 
     public void quitRender(View view) {
+        mRender.pause();
+        mRender.waitCurrentFrameComplete();
+        mRender.destroySurface();
         mRender.quit();
         while (mRender.getInstance() != 0) {
             try {
