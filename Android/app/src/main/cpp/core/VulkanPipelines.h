@@ -22,6 +22,14 @@ public:
 
     void createPipeline(VulkanShader* shader, VkRenderPass renderPass, VkPolygonMode mode= VK_POLYGON_MODE_FILL);
 
+    void createPipeline(std::shared_ptr<VulkanShader> shader, VkPolygonMode mode= VK_POLYGON_MODE_FILL) {
+        this->createPipeline(shader.get(), mode);
+    }
+
+    void createPipeline(std::shared_ptr<VulkanShader> shader, VkRenderPass renderPass, VkPolygonMode mode= VK_POLYGON_MODE_FILL) {
+        this->createPipeline(shader.get(), renderPass, mode);
+    }
+
 public:
     VkDevice m_device;
     VkGraphicsPipelineCreateInfo m_pipelineCreateInfo;

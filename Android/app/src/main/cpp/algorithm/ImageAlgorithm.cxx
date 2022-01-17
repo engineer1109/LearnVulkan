@@ -60,8 +60,8 @@ void ImageAlgorithm::mirrorXY(uint8_t *data, int width, int height) {
 }
 
 uint8_t &ImageAlgorithm::at(uint8_t *data, int x, int y, int c, int width, int height) {
-    x = clamp(x, 0, width - 1);
-    y = clamp(y, 0, height - 1);
+    //x = clamp(x, 0, width - 1);
+    //y = clamp(y, 0, height - 1);
     return data[(y * height + x) * 4 + c];
 }
 

@@ -17,9 +17,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-ShadowMapping::~ShadowMapping() noexcept {
-    destroyObjects();
-}
+ShadowMapping::~ShadowMapping() {}
 
 void ShadowMapping::prepareFunctions() {
     m_functions.emplace_back([this] { seeDebugQuad(); });

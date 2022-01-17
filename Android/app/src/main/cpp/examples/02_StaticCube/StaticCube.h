@@ -34,9 +34,9 @@ public:
     void createCube();
 
 protected:
-    VulkanCube *m_cube = nullptr;
-    VulkanVertFragShader *m_cubeShader = nullptr;
-    UniformCamera *m_cubeUniform = nullptr;
+    std::shared_ptr<VulkanCube> m_cube = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_cubeShader = nullptr;
+    std::shared_ptr<UniformCamera> m_cubeUniform = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)

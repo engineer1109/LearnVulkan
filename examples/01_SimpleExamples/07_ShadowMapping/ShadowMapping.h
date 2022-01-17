@@ -31,7 +31,7 @@ class ShadowMapping : public ThirdPersonEngine {
 public:
     ShadowMapping() = default;
 
-    ~ShadowMapping();
+    virtual ~ShadowMapping();
 
     void prepareFunctions() override;
 

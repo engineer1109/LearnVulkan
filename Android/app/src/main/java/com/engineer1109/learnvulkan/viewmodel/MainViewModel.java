@@ -67,7 +67,8 @@ public class MainViewModel extends ViewModel {
         addMenuButton(datas, 5, "PhongLighting");
         addMenuButton(datas, 6, "InstanceDraw");
         addMenuButton(datas, 7, "ShadowMapping");
-        addMenuButton(datas, 8, "AssimpModelSample");
+        addMenuButton(datas, 8, "ShadowMappingOnmi");
+        addMenuButton(datas, 9, "AssimpModelSample");
         return datas;
     }
 

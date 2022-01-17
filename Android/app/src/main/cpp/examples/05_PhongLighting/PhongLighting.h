@@ -48,17 +48,17 @@ public:
     void changeReflectMode();
 
 protected:
-    VulkanCube *m_cube = nullptr;
-    VulkanVertFragShader *m_cubeShader = nullptr;
-    UniformCamera *m_cubeUniform = nullptr;
-    VulkanTexture2D *m_cubeTextureA = nullptr;
-    VulkanTexture2D *m_cubeTextureB = nullptr;
+    std::shared_ptr<VulkanCube> m_cube = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_cubeShader = nullptr;
+    std::shared_ptr<UniformCamera> m_cubeUniform = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureA = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureB = nullptr;
 
-    VulkanCube *m_sky = nullptr;
-    VulkanVertFragShader *m_skyShader = nullptr;
-    VulkanTextureCubeMap *m_skyTexture = nullptr;
+    std::shared_ptr<VulkanCube> m_sky = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_skyShader = nullptr;
+    std::shared_ptr<VulkanTextureCubeMap> m_skyTexture = nullptr;
 
-    ReflectParaBuffer* m_reflectParaBuffer = nullptr;
+    std::shared_ptr<ReflectParaBuffer> m_reflectParaBuffer = nullptr;
 
 };
 

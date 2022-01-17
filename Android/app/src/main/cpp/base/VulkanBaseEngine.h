@@ -12,6 +12,14 @@
 #include "VulkanVertexDescriptions.h"
 #include "VulkanPipelines.h"
 
+#ifdef __ANDROID__
+namespace vks{
+class UIOverlay;
+}
+#else
+#include "VulkanUIOverlay.h"
+#endif
+
 BEGIN_NAMESPACE(VulkanEngine)
 
 class VulkanBaseEngine : public VulkanBase {
@@ -25,6 +33,8 @@ public:
     virtual void render() override;
 
     virtual void updateCommand() override;
+
+    virtual void OnUpdateUIOverlay(vks::UIOverlay *overlay) {}
 
     virtual void processPrepareCallback(){}
 
@@ -50,14 +60,14 @@ protected:
     virtual void buildMyObjects(VkCommandBuffer &cmd) {};
 
     template<class T>
-    void REGISTER_OBJECT(T* &obj){
+    void REGISTER_OBJECT(std::shared_ptr<T> &obj) {
         obj = VkObject::New<T>(m_context);
-        m_objs.push_back((VkObject**)&obj);
+        m_objs.emplace_back(obj);
     }
 
     void destroyObjects(){
         for (auto &obj : m_objs){
-            delete_ptr(*obj);
+            obj = nullptr;
         }
     }
 
@@ -70,7 +80,7 @@ protected:
     VulkanContext *m_context = nullptr;
     VkPipelineLayout m_pipelineLayout = VK_NULL_HANDLE;
 
-    std::vector<VkObject**> m_objs;
+    std::vector<std::shared_ptr<VkObject>> m_objs;
 
     bool m_rebuild = false;
 };

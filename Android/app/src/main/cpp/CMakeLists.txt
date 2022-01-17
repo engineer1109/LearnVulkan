@@ -49,6 +49,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/examples/05_PhongLighting
         ${PROJECT_SOURCE_DIR}/examples/06_InstanceDraw
         ${PROJECT_SOURCE_DIR}/examples/07_ShadowMapping
+        ${PROJECT_SOURCE_DIR}/examples/08_ShadowMappingOnmi
         ${PROJECT_SOURCE_DIR}/examples/11_AssimpModel
 )
 
@@ -132,6 +133,8 @@ add_library(
         examples/06_InstanceDraw/InstanceDraw.cxx
         examples/06_InstanceDraw/SpeedBuffer.cxx
         examples/07_ShadowMapping/ShadowMapping.cxx
+        examples/08_ShadowMappingOnmi/OnmiCamera.cpp
+        examples/08_ShadowMappingOnmi/ShadowMappingOnmi.cxx
         examples/11_AssimpModel/AssimpModelSample.cxx
         examples/11_AssimpModel/ReflectParaBuffer.cxx
 )

@@ -14,7 +14,72 @@ VulkanRenderPass::~VulkanRenderPass() {
     }
 }
 
-void VulkanRenderPass::create() {
+void VulkanRenderPass::createColorDepthPass() {
+    VkAttachmentDescription osAttachments[2] = {};
+
+    osAttachments[0].format = m_format;
+    osAttachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    osAttachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    osAttachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    osAttachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    osAttachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    osAttachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    osAttachments[0].finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    // Depth attachment
+    osAttachments[1].format = m_depthFormat;
+    osAttachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    osAttachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    osAttachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    osAttachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    osAttachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    osAttachments[1].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    osAttachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference colorReference = {};
+    colorReference.attachment = 0;
+    colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    VkAttachmentReference depthReference = {};
+    depthReference.attachment = 1;
+    depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpass = {};
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount = 1;
+    subpass.pColorAttachments = &colorReference;
+    subpass.pDepthStencilAttachment = &depthReference;
+
+    std::array<VkSubpassDependency, 2> dependencies;
+
+    dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependencies[0].dstSubpass = 0;
+    dependencies[0].srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+    dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependencies[0].srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    dependencies[1].srcSubpass = 0;
+    dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+    dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependencies[1].dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+    dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    VkRenderPassCreateInfo renderPassCreateInfo = vks::initializers::renderPassCreateInfo();
+    renderPassCreateInfo.attachmentCount = 2;
+    renderPassCreateInfo.pAttachments = osAttachments;
+    renderPassCreateInfo.subpassCount = 1;
+    renderPassCreateInfo.pSubpasses = &subpass;
+    renderPassCreateInfo.dependencyCount = static_cast<uint32_t>(dependencies.size());
+    renderPassCreateInfo.pDependencies = dependencies.data();
+
+    VK_CHECK_RESULT(vkCreateRenderPass(m_device, &renderPassCreateInfo, nullptr, &m_renderPass));
+}
+
+void VulkanRenderPass::createDepthPass() {
     VkAttachmentDescription attachmentDescription{};
     attachmentDescription.format = m_format;
     attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;

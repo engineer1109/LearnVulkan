@@ -16,9 +16,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-InstanceDraw::~InstanceDraw() {
-    destroyObjects();
-}
+InstanceDraw::~InstanceDraw() {}
 
 void InstanceDraw::prepareFunctions() {}
 
@@ -50,7 +48,7 @@ void InstanceDraw::render() {
 }
 
 void InstanceDraw::createInstanceDescription() {
-    m_instanceDescription = new DefaultInstanceDescription();
+    m_instanceDescription = std::make_shared<DefaultInstanceDescription>();
     m_instanceDescription->GenerateInstanceDescriptions();
 }
 

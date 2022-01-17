@@ -15,14 +15,13 @@ VulkanBase::~VulkanBase() {
     }
     VK_SAFE_DELETE(m_pipelineCache, vkDestroyPipelineCache(m_device, m_pipelineCache, nullptr));
 
-    VK_SAFE_DELETE(m_cmdPool, vkDestroyCommandPool(m_device, m_cmdPool, nullptr));
-
     VK_SAFE_DELETE(m_semaphores.presentComplete, vkDestroySemaphore(m_device, m_semaphores.presentComplete, nullptr));
     VK_SAFE_DELETE(m_semaphores.renderComplete, vkDestroySemaphore(m_device, m_semaphores.renderComplete, nullptr));
     for (auto &fence : m_waitFences) {
         VK_SAFE_DELETE(fence, vkDestroyFence(m_device, fence, nullptr));
     }
     destroySurface();
+    VK_SAFE_DELETE(m_cmdPool, vkDestroyCommandPool(m_device, m_cmdPool, nullptr));
     delete_ptr(m_vulkanDevice);
     VK_SAFE_DELETE(m_instance, vkDestroyInstance(m_instance, nullptr));
     destroyANativeWindow();

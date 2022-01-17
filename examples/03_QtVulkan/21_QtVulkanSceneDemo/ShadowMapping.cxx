@@ -17,7 +17,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-ShadowMapping::~ShadowMapping() noexcept {
+ShadowMapping::~ShadowMapping() {
     destroyObjects();
 }
 

@@ -10,11 +10,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-//StaticTriangle::StaticTriangle(){}
-
-StaticTriangle::~StaticTriangle() {
-    destroyObjects();
-}
+StaticTriangle::~StaticTriangle() {}
 
 void StaticTriangle::prepareMyObjects() {
     createTriangle();

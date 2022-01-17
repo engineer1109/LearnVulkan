@@ -12,9 +12,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-SkyboxCube::~SkyboxCube() {
-    destroyObjects();
-}
+SkyboxCube::~SkyboxCube() {}
 
 void SkyboxCube::prepareMyObjects() {
     m_zoom = -4.f;

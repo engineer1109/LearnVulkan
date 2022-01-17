@@ -13,7 +13,7 @@ BEGIN_NAMESPACE(VulkanEngine)
 class ThirdPersonEngine : public VulkanBaseEngine , public ThirdPersonCamera {
 public:
     ThirdPersonEngine() = default;
-    ~ThirdPersonEngine() = default;
+    virtual ~ThirdPersonEngine() {}
 
     void updateCamera();
 };

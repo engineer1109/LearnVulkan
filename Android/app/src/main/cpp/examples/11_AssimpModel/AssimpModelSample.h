@@ -35,7 +35,7 @@ class AssimpModelSample : public ThirdPersonEngine {
 public:
     AssimpModelSample() = default;
 
-    ~AssimpModelSample();
+    virtual ~AssimpModelSample();
 
     void prepareFunctions() override;
 
@@ -70,30 +70,30 @@ public:
 #endif
 
 protected:
-    AssimpObject *m_assimpObject = nullptr;
+    std::shared_ptr<AssimpObject> m_assimpObject = nullptr;
 
-    VulkanCube *m_cube = nullptr;
-    VulkanVertFragShader *m_cubeShader = nullptr;
-    UniformCamera *m_cubeUniform = nullptr;
-    VulkanTexture2D *m_cubeTextureA = nullptr;
-    VulkanTexture2D *m_cubeTextureB = nullptr;
+    std::shared_ptr<VulkanCube> m_cube = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_cubeShader = nullptr;
+    std::shared_ptr<UniformCamera> m_cubeUniform = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureA = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureB = nullptr;
 
-    VulkanCube *m_sky = nullptr;
-    VulkanVertFragShader *m_skyShader = nullptr;
-    VulkanTextureCubeMap *m_skyTexture = nullptr;
+    std::shared_ptr<VulkanCube> m_sky = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_skyShader = nullptr;
+    std::shared_ptr<VulkanTextureCubeMap> m_skyTexture = nullptr;
 
-    VulkanPlane *m_plane = nullptr;
-    VulkanVertFragShader *m_planeShader = nullptr;
-    VulkanTexture2D *m_planeTexture = nullptr;
+    std::shared_ptr<VulkanPlane> m_plane = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_planeShader = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_planeTexture = nullptr;
 
-    VulkanFrameBuffer *m_frameBuffer = nullptr;
-    VulkanVertFragShader *m_shadowShader = nullptr;
-    ShadowCamera* m_shadowCamera = nullptr;
+    std::shared_ptr<VulkanFrameBuffer> m_frameBuffer = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_shadowShader = nullptr;
+    std::shared_ptr<ShadowCamera> m_shadowCamera = nullptr;
 
-    VulkanPlane *m_dubugPlane = nullptr;
-    VulkanVertFragShader* m_debugShader = nullptr;
+    std::shared_ptr<VulkanPlane> m_dubugPlane = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_debugShader = nullptr;
 
-    AssimpSample::ReflectParaBuffer* m_reflectParaBuffer = nullptr;
+    std::shared_ptr<AssimpSample::ReflectParaBuffer> m_reflectParaBuffer = nullptr;
 
     bool m_seeDebug = false;
 };

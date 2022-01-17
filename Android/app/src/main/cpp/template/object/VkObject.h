@@ -20,8 +20,8 @@ public:
     virtual ~VkObject() = default;
 
     template<class T>
-    static T* New(VulkanContext* context){
-        T* object = new T();
+    static std::shared_ptr<T> New(VulkanContext* context){
+        std::shared_ptr<T> object = std::make_shared<T>();
         object->setContext(context);
         return object;
     }

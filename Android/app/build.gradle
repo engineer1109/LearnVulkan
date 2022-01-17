@@ -118,6 +118,12 @@ task copyTask {
         include '**/*.so.frag'
     }
     copy {
+        from '../../data/shaders/ShadowMappingOnmi'
+        into "assets/shaders/ShadowMappingOnmi"
+        include '**/*.so.vert'
+        include '**/*.so.frag'
+    }
+    copy {
         from '../../data/models'
         into "assets/models"
         include '**/*.*'

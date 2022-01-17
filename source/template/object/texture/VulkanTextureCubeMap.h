@@ -52,6 +52,7 @@ public:
                          imageUsageFlags, imageLayout, forceLinear);
         }
     }
+#endif
 
     void allocate(VkFormat format, int width, int height, int channels,
                   vks::VulkanDevice *device,
@@ -71,7 +72,6 @@ public:
         }
     }
 
-#endif
 };
 
 END_NAMESPACE(VulkanEngine)

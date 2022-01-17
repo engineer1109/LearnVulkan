@@ -12,10 +12,12 @@
 #include "VulkanVertexDescriptions.h"
 #include "VulkanPipelines.h"
 
-#ifndef __ANDROID__
-
+#ifdef __ANDROID__
+namespace vks{
+class UIOverlay;
+}
+#else
 #include "VulkanUIOverlay.h"
-
 #endif
 
 BEGIN_NAMESPACE(VulkanEngine)
@@ -72,7 +74,7 @@ protected:
     template<class T>
     void REGISTER_OBJECT(std::shared_ptr<T> &obj) {
         obj = VkObject::New<T>(m_context);
-        m_objs.push_back(obj);
+        m_objs.emplace_back(obj);
     }
 
     void destroyObjects() {

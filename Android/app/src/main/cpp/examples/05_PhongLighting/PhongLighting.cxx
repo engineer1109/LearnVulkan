@@ -13,9 +13,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-PhongLighting::~PhongLighting() {
-    destroyObjects();
-}
+PhongLighting::~PhongLighting() {}
 
 void PhongLighting::prepareFunctions() {
     m_functions.emplace_back([this] { changeReflectMode(); });

@@ -52,20 +52,20 @@ public:
     void createSpeedBuffer();
 
 private:
-    DefaultInstanceDescription* m_instanceDescription = nullptr;
+    std::shared_ptr<DefaultInstanceDescription> m_instanceDescription = nullptr;
 
-    UniformCamera *m_cubeUniform = nullptr;
-    VulkanTexture2D *m_cubeTextureA = nullptr;
-    VulkanTexture2D *m_cubeTextureB = nullptr;
+    std::shared_ptr<UniformCamera> m_cubeUniform = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureA = nullptr;
+    std::shared_ptr<VulkanTexture2D> m_cubeTextureB = nullptr;
 
-    VulkanCube *m_sky = nullptr;
-    VulkanVertFragShader *m_skyShader = nullptr;
-    VulkanTextureCubeMap *m_skyTexture = nullptr;
+    std::shared_ptr<VulkanCube> m_sky = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_skyShader = nullptr;
+    std::shared_ptr<VulkanTextureCubeMap> m_skyTexture = nullptr;
 
-    InstanceCube* m_instanceCube = nullptr;
-    VulkanVertFragShader* m_instanceCubeShader = nullptr;
+    std::shared_ptr<InstanceCube> m_instanceCube = nullptr;
+    std::shared_ptr<VulkanVertFragShader> m_instanceCubeShader = nullptr;
 
-    SpeedBuffer *m_speedBuffer = nullptr;
+    std::shared_ptr<SpeedBuffer> m_speedBuffer = nullptr;
 };
 
 END_NAMESPACE(VulkanEngine)
