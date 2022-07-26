@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class UniformCamera : public VulkanBuffer {
+class VULKANENGINE_EXPORT_API UniformCamera : public VulkanBuffer {
 public:
     struct CameraMatrix{
         glm::mat4 projection;

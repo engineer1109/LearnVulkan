@@ -11,7 +11,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanBuffer : public VkObject {
+class VULKANENGINE_EXPORT_API VulkanBuffer : public VkObject {
 public:
     VulkanBuffer() = default;
     virtual ~VulkanBuffer();

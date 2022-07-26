@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class ImageAlgorithm {
+class VULKANENGINE_EXPORT_API ImageAlgorithm {
 public:
     static void turnRGB2RGBA(uint8_t* inData, uint8_t* outData, int width, int height);
 

@@ -7,12 +7,13 @@
 
 #include "vertex_struct.h"
 #include "render_common.h"
+#include "base_template.h"
 
 #include "VulkanInitializers.hpp"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanVertexDescriptions {
+class VULKANENGINE_EXPORT_API VulkanVertexDescriptions {
 public:
     VulkanVertexDescriptions() = default;
     ~VulkanVertexDescriptions() = default;

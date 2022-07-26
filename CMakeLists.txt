@@ -10,6 +10,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/FindOpenMP.cmake)
 
 add_definitions(-DSTBI_NO_DDS)
 add_definitions(-DUSE_STD_FILESYSTEM)  # For Old Compilers as GCC 7 change to -DUSE_STD_EXPERIMENTAL_FILESYSTEM
+add_definitions(-D_USE_MATH_DEFINES)
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     message("Linux build needs libxcb-dev.")

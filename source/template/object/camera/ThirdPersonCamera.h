@@ -6,8 +6,9 @@
 #define LEARNVULKAN_THIRDPERSONCAMERA_H
 
 #include <glm/glm.hpp>
+#include "base_template.h"
 
-class ThirdPersonCamera {
+class VULKANENGINE_EXPORT_API ThirdPersonCamera {
 public:
     ThirdPersonCamera()=default;
     ~ThirdPersonCamera()=default;

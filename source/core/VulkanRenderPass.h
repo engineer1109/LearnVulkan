@@ -6,10 +6,11 @@
 #define LEARNVULKAN_VULKANRENDERPASS_H
 
 #include "render_common.h"
+#include "base_template.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanRenderPass {
+class VULKANENGINE_EXPORT_API VulkanRenderPass {
 public:
     VulkanRenderPass() = default;
 

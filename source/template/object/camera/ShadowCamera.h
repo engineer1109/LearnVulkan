@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class ShadowCamera : public VulkanBuffer {
+class VULKANENGINE_EXPORT_API ShadowCamera : public VulkanBuffer {
 public:
     struct ShadowMVP {
         glm::mat4 depthMVP;

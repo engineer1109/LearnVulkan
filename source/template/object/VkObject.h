@@ -13,7 +13,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-interface VkObject{
+interface VULKANENGINE_EXPORT_API VkObject{
 public:
     VkObject() = default;
 

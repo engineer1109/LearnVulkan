@@ -14,7 +14,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanFrameBuffer {
+class VULKANENGINE_EXPORT_API VulkanFrameBuffer {
 public:
     VulkanFrameBuffer() = default;
 

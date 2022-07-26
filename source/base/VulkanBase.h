@@ -131,12 +131,11 @@ public:
 #if defined(_WIN32)
     void setWindow(HWND window) {
 #elif defined(VK_USE_PLATFORM_XCB_KHR)
-
     void setWindow(xcb_window_t window) {
-        m_window = window;
+#endif
+    m_window = window;
     }
 
-#endif
 
 protected:
 #if defined(_WIN32)

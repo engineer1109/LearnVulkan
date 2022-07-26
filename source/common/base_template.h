@@ -6,6 +6,7 @@
 #define LEARNVULKAN_BASE_TEMPLATE_H
 
 #include "render_common.h"
+#include "vulkan_macro.h"
 
 BEGIN_NAMESPACE(VulkanEngine)
 

@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanTexture2D : public VulkanTexture {
+class VULKANENGINE_EXPORT_API VulkanTexture2D : public VulkanTexture {
 public:
     VulkanTexture2D() = default;
 

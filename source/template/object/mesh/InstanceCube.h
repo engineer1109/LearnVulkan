@@ -10,7 +10,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class InstanceCube : public VulkanCube {
+class VULKANENGINE_EXPORT_API InstanceCube : public VulkanCube {
 public:
     InstanceCube() = default;
 

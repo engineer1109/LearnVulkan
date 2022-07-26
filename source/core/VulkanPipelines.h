@@ -11,7 +11,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanPipelines {
+class VULKANENGINE_EXPORT_API VulkanPipelines {
 public:
     VulkanPipelines(VkDevice &device);
     ~VulkanPipelines() = default;

@@ -74,14 +74,14 @@ namespace vks
 		std::string VULKANENGINE_EXPORT_API errorString(VkResult errorCode);
 
 		/** @brief Returns the device type as a string */
-		std::string physicalDeviceTypeString(VkPhysicalDeviceType type);
+		std::string VULKANENGINE_EXPORT_API physicalDeviceTypeString(VkPhysicalDeviceType type);
 
 		// Selected a suitable supported depth format starting with 32 bit down to 16 bit
 		// Returns false if none of the depth formats in the list is supported by the device
-		VkBool32 getSupportedDepthFormat(VkPhysicalDevice physicalDevice, VkFormat *depthFormat);
+		VkBool32 VULKANENGINE_EXPORT_API getSupportedDepthFormat(VkPhysicalDevice physicalDevice, VkFormat *depthFormat);
 
 		// Put an image memory barrier for setting an image layout on the sub resource into the given command buffer
-		void setImageLayout(
+		void VULKANENGINE_EXPORT_API setImageLayout(
 			VkCommandBuffer cmdbuffer,
 			VkImage image,
 			VkImageLayout oldImageLayout,
@@ -90,7 +90,7 @@ namespace vks
 			VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
 			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 		// Uses a fixed sub resource layout with first mip level and layer
-		void setImageLayout(
+		void VULKANENGINE_EXPORT_API setImageLayout(
 			VkCommandBuffer cmdbuffer,
 			VkImage image,
 			VkImageAspectFlags aspectMask,
@@ -100,7 +100,7 @@ namespace vks
 			VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
 		/** @brief Inser an image memory barrier into the command buffer */
-		void insertImageMemoryBarrier(
+		void VULKANENGINE_EXPORT_API insertImageMemoryBarrier(
 			VkCommandBuffer cmdbuffer,
 			VkImage image,
 			VkAccessFlags srcAccessMask,
@@ -112,17 +112,17 @@ namespace vks
 			VkImageSubresourceRange subresourceRange);
 
 		// Display error message and exit on fatal error
-		void exitFatal(std::string message, int32_t exitCode);
-		void exitFatal(std::string message, VkResult resultCode);
+		void VULKANENGINE_EXPORT_API exitFatal(std::string message, int32_t exitCode);
+		void VULKANENGINE_EXPORT_API exitFatal(std::string message, VkResult resultCode);
 
 		// Load a SPIR-V shader (binary) 
 #if defined(__ANDROID__)
 		VkShaderModule loadShader(AAssetManager* assetManager, const char *fileName, VkDevice device);
 #else
-		VkShaderModule loadShader(const char *fileName, VkDevice device);
+		VkShaderModule VULKANENGINE_EXPORT_API loadShader(const char *fileName, VkDevice device);
 #endif
 
 		/** @brief Checks if a file exists */
-		bool fileExists(const std::string &filename);
+		bool VULKANENGINE_EXPORT_API fileExists(const std::string &filename);
 	}
 }

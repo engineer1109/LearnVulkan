@@ -10,7 +10,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanCube : public MeshObject {
+class VULKANENGINE_EXPORT_API VULKANENGINE_EXPORT_API VulkanCube : public MeshObject {
 public:
     VulkanCube() = default;
     virtual ~VulkanCube();

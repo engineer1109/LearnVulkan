@@ -12,7 +12,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class MeshObject : public VkObject {
+class VULKANENGINE_EXPORT_API MeshObject : public VkObject {
 public:
     MeshObject() = default;
 

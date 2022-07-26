@@ -10,7 +10,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanShader : public VkObject {
+class VULKANENGINE_EXPORT_API VulkanShader : public VkObject {
 public:
     VulkanShader() = default;
 

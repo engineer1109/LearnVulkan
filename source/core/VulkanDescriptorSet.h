@@ -13,7 +13,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanDescriptorSet {
+class VULKANENGINE_EXPORT_API VulkanDescriptorSet {
 public:
     enum class DescriptorType{
         IMAGE = 0,

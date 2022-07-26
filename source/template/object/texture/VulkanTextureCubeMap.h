@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanTextureCubeMap : public VulkanTexture {
+class VULKANENGINE_EXPORT_API VulkanTextureCubeMap : public VulkanTexture {
 public:
     VulkanTextureCubeMap() = default;
 

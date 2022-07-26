@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-class VulkanVertFragShader : public VulkanShader {
+class VULKANENGINE_EXPORT_API VulkanVertFragShader : public VulkanShader {
 public:
     VulkanVertFragShader() = default;
     ~VulkanVertFragShader() = default;

@@ -9,7 +9,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-struct VulkanContext {
+struct VULKANENGINE_EXPORT_API VulkanContext {
     vks::VulkanDevice *vulkanDevice = nullptr;
     VkCommandBuffer copyCmd = VK_NULL_HANDLE;
     VkCommandPool cmdPool = VK_NULL_HANDLE;

@@ -11,7 +11,7 @@
 
 BEGIN_NAMESPACE(VulkanEngine)
 
-interface VulkanTexture : public VkObject {
+interface VULKANENGINE_EXPORT_API VulkanTexture : public VkObject {
 public:
     VulkanTexture() = default;
     virtual ~VulkanTexture(){
