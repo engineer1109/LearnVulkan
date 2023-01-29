@@ -18,3 +18,4 @@ all:
 	$(call compileVertFrag,ShadowMappingOnmi,offscreen)
 	$(call compileVertFrag,ShadowMappingOnmi,room)
 	$(call compileVertFrag,ShadowMappingOnmi,scene)
+	$(call compileVertFrag,VolumeFog,volumefog)

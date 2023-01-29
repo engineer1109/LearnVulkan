@@ -1,6 +1,6 @@
 if(UNIX)
     set(CMAKE_EXE_LINKER_FLAGS "-fno-pie -no-pie")
-    add_definitions("-Ofast -std=c++17 -fPIC")
+    add_definitions("-std=c++17 -fPIC")
     add_definitions(-DVK_USE_PLATFORM_XCB_KHR)
 elseif(WIN32)
     add_definitions(-DNOMINMAX)

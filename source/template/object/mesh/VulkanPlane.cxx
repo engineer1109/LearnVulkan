@@ -4,32 +4,22 @@
 
 #include "VulkanPlane.h"
 
+#include "VertexFactory.h"
+
 BEGIN_NAMESPACE(VulkanEngine)
 
 VulkanPlane::~VulkanPlane() noexcept {}
 
 void VulkanPlane::generateVertex() {
-    std::vector<VertexTexVec4> vertices =
-            {
+    auto vertices = VertexFactory::GenPlaneVertex(m_direction, {m_a, m_b});
 
-                    {{m_a,  -0.0f, m_b},  {1.0f, 1.0f}, {0.0f,  -1.0f, 0.0f}},
-                    {{-m_a, -0.0f, -m_b}, {0.0f, 0.0f}, {0.0f,  -1.0f, 0.0f}},
-                    {{-m_a, -0.0f, m_b},  {0.0f, 1.0f}, {0.0f,  -1.0f, 0.0f}},
-                    {{m_a,  -0.0f, m_b},  {1.0f, 1.0f}, {0.0f,  -1.0f, 0.0f}},
-                    {{m_a,  -0.0f, -m_b}, {1.0f, 0.0f}, {0.0f,  -1.0f, 0.0f}},
-                    {{-m_a, -0.0f, -m_b}, {0.0f, 0.0f}, {0.0f,  -1.0f, 0.0f}},
-
-            };
-
-    if(m_posOffset != glm::vec3(0.f)){
+    if (m_posOffset != glm::vec3(0.f)) {
         staticMove(vertices);
     }
 
     // Setup indices
-    std::vector<uint32_t> indices(vertices.size());
-    for(int i=0;i<indices.size();i++){
-        indices[i]=i;
-    }
+    std::vector<uint32_t> indices = {2, 1, 0, 0, 3, 2};
+
     m_indexCount = static_cast<uint32_t>(indices.size());
 
     // Create buffers
