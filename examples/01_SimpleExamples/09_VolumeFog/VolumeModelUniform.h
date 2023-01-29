@@ -1,0 +1,14 @@
+//
+// Created by wjl on 2023/1/29.
+//
+
+#ifndef LEARNVULKAN_VOLUMEMODELUNIFORM_H
+#define LEARNVULKAN_VOLUMEMODELUNIFORM_H
+
+
+class VolumeModelUniform {
+
+};
+
+
+#endif //LEARNVULKAN_VOLUMEMODELUNIFORM_H
