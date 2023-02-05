@@ -35,7 +35,11 @@ void MainWindow::connectSettings() {
 
 void MainWindow::initRender() {
     m_vkEngine = new VulkanEngine::ShadowMapping();
+#if defined(_WIN32)
+    m_vkEngine->setWindow((HWND)ui->vulkanWidget->winId());
+#else
     m_vkEngine->setWindow(ui->vulkanWidget->winId());
+#endif
     ui->vulkanWidget->setVulkanPtr(m_vkEngine);
 }
 

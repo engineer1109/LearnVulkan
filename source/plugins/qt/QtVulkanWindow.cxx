@@ -22,7 +22,7 @@ void QtVulkanWindow::mousePressEvent(QMouseEvent *event) {
         m_vulkan->setMouseButtonLeft(true);
     } else if (event->button() & Qt::RightButton) {
         m_vulkan->setMouseButtonRight(true);
-    } else if (event->button() & Qt::MidButton) {
+    } else if (event->button() & Qt::MiddleButton) {
         m_vulkan->setMouseButtonMiddle(true);
     }
     m_vulkan->handleMouseMove(event->pos().x(), event->pos().y());
@@ -52,7 +52,11 @@ void QtVulkanWindow::showEvent(QShowEvent *event) {
         m_vulkan->initxcbConnection();
 #endif
         m_vulkan->initVulkan();
+#if defined(_WIN32)
+        m_vulkan->setWindow(HWND(winId()));
+#else
         m_vulkan->setWindow(uint32_t(winId()));
+#endif
         m_vulkan->prepare();
         m_vulkan->renderAsyncThread();
     }

@@ -49,7 +49,7 @@ if(BUILD_QtExamples MATCHES ON)
 
     add_library(${LIB_NAME}_qt_plugin SHARED ${SRC_FILES_QT})
 
-    target_link_libraries(${LIB_NAME}_qt_plugin ${LIB_NAME} Qt5::Widgets)
+    target_link_libraries(${LIB_NAME}_qt_plugin ${LIB_NAME} Qt${QT_VERSION_MAJOR}::Widgets)
 
     INSTALL(TARGETS ${LIB_NAME}_qt_plugin DESTINATION "${PROJECT_SOURCE_DIR}/bin")
 

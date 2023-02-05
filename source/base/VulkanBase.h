@@ -19,6 +19,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+class CommandLineParser;
+
 BEGIN_NAMESPACE(VulkanEngine)
 
 class VULKANENGINE_EXPORT_API VulkanBase {
@@ -30,6 +32,8 @@ public:
     void setWidth(const uint32_t &width) { m_width = width; }
 
     void setHeight(const uint32_t &height) { m_height = height; }
+
+    void parseArgs(int argc, char** argv);
 
     void initVulkan();
 
@@ -160,6 +164,7 @@ protected:
     VkDevice m_device = VK_NULL_HANDLE;
     VkQueue m_queue = VK_NULL_HANDLE;
     VkCommandPool m_cmdPool = VK_NULL_HANDLE;
+    uint32_t m_selectGPUIndex = 0;
 
     std::vector<const char *> m_enabledDeviceExtensions;
     std::vector<const char *> m_enabledInstanceExtensions;
@@ -211,6 +216,7 @@ protected:
 
     float m_distance = 0.f;
     float m_oldDistance = 0.f;
+    float m_frameTimer = 0.f;
 
     struct Settings {
         bool fullScreen = false;
@@ -231,7 +237,7 @@ protected:
 
     std::vector<std::function<void()>> m_functions;
 
-    float m_frameTimer = 0.f;
+    std::shared_ptr<CommandLineParser> m_commandParser{};
 };
 
 END_NAMESPACE(VulkanEngine)

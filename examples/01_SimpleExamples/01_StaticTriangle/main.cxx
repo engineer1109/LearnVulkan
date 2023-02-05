@@ -6,6 +6,7 @@
 
 int main(int argc, char** argv){
     VulkanEngine::StaticTriangle* engine = new VulkanEngine::StaticTriangle();
+    engine->parseArgs(argc, argv);
     engine->initWindow();
     engine->initVulkan();
     engine->prepare();

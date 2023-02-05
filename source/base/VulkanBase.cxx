@@ -4,6 +4,8 @@
 
 #include "VulkanBase.h"
 
+#include "CommandLineParser.hpp"
+
 BEGIN_NAMESPACE(VulkanEngine)
 VulkanBase::~VulkanBase() {
     VK_CHECK_RESULT(vkQueueWaitIdle(m_queue));
@@ -25,6 +27,28 @@ VulkanBase::~VulkanBase() {
     VK_SAFE_DELETE(m_cmdPool, vkDestroyCommandPool(m_device, m_cmdPool, nullptr));
     delete_ptr(m_vulkanDevice);
     VK_SAFE_DELETE(m_instance, vkDestroyInstance(m_instance, nullptr));
+}
+
+void VulkanBase::parseArgs(int argc, char** argv) {
+    if (!m_commandParser) {
+        m_commandParser = std::make_shared<CommandLineParser>();
+        m_commandParser->add("help", { "--help", "-h" }, 0, u8"See Help.");
+        m_commandParser->add("gpu", { "--gpu", "-g" }, 1, u8"Select GPU ID.");
+    }
+
+    std::vector<const char*> arguments{};
+    for (int i = 0; i < argc; i++) {
+        arguments.emplace_back(argv[i]);
+    }
+    m_commandParser->parse(arguments);
+
+    if (m_commandParser->isSet("help")) {
+        m_commandParser->printHelp();
+        exit(EXIT_SUCCESS);
+    }
+    if (m_commandParser->isSet("gpu")) {
+        m_selectGPUIndex = m_commandParser->getValueAsInt("gpu", 0);
+    }
 }
 
 void VulkanBase::initVulkan() {
@@ -208,9 +232,9 @@ void VulkanBase::pickPhysicalDevice() {
 
     // Select physical device to be used for the Vulkan example
     // Defaults to the first device unless specified by command line
-    uint32_t selectedDevice = 0;
-
-    m_physicalDevice = physicalDevices[selectedDevice];
+    if (m_selectGPUIndex <= gpuCount) {
+        m_physicalDevice = physicalDevices[m_selectGPUIndex];
+    }
 
     // Store properties (including limits), features and memory properties of the phyiscal device (so that examples can check against them)
     vkGetPhysicalDeviceProperties(m_physicalDevice, &m_deviceProperties);
@@ -445,8 +469,11 @@ void VulkanBase::prepareFrame() {
     VkResult err = m_swapChain.acquireNextImage(m_semaphores.presentComplete, &m_currentBuffer);
     // Recreate the swapchain if it's no longer compatible with the surface (OUT_OF_DATE) or no longer optimal for presentation (SUBOPTIMAL)
     if ((err == VK_ERROR_OUT_OF_DATE_KHR) || (err == VK_SUBOPTIMAL_KHR)) {
-        LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
+        LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR\n");
         windowResize();
+
+        // fix for intel crash
+        err = m_swapChain.acquireNextImage(m_semaphores.presentComplete, &m_currentBuffer);
     } else {
         VK_CHECK_RESULT(err);
     }
@@ -457,15 +484,15 @@ void VulkanBase::submitFrame() {
     if (m_pause) {
         return;
     }
-    VkResult res = m_swapChain.queuePresent(m_queue, m_currentBuffer, m_semaphores.renderComplete);
-    if (!((res == VK_SUCCESS) || (res == VK_SUBOPTIMAL_KHR))) {
-        if (res == VK_ERROR_OUT_OF_DATE_KHR) {
+    VkResult err = m_swapChain.queuePresent(m_queue, m_currentBuffer, m_semaphores.renderComplete);
+    if (!((err == VK_SUCCESS) || (err == VK_SUBOPTIMAL_KHR))) {
+        if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR) {
             // Swap chain is no longer compatible with the surface and needs to be recreated
-            LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR");
+            LOGI("VulkanEngine VK_ERROR_OUT_OF_DATE_KHR\n");
             windowResize();
             return;
         } else {
-            VK_CHECK_RESULT(res);
+            VK_CHECK_RESULT(err);
         }
     }
     VK_CHECK_RESULT(vkQueueWaitIdle(m_queue));
