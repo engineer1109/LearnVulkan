@@ -53,23 +53,41 @@
 
 //Define
 
+#ifndef BEGIN_NAMESPACE
 #define BEGIN_NAMESPACE(n) namespace n {
+#endif
 
+#ifndef END_NAMESPACE
 #define END_NAMESPACE(n) }
+#endif
 
-#define interface class
+#ifndef interface
+#define interface struct
+#endif
 
 //#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "vulkan", __VA_ARGS__))
 //#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "vulkan", __VA_ARGS__))
 //#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, "vulkan", __VA_ARGS__))
 //#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "vulkan", __VA_ARGS__))
 
+#ifndef LOG
 #define LOG(...) printf(__VA_ARGS__)
+#endif
+
+#ifndef LOGI
 #define LOGI(...) printf(__VA_ARGS__)
+#endif
 
+#ifndef DELETE_PTR
 #define DELETE_PTR(x) if(x) { delete x; x = nullptr; }
+#endif
 
+#ifndef VERTEX_BUFFER_BIND_ID
 #define VERTEX_BUFFER_BIND_ID 0
+#endif
+
+#ifndef INSTANCE_BUFFER_BIND_ID
 #define INSTANCE_BUFFER_BIND_ID 1
+#endif
 
 #endif //LEARNVULKAN_RENDER_COMMON_H
