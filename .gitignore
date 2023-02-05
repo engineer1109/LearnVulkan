@@ -8,3 +8,5 @@
 /Release
 bin/
 cmake-build-debug/
+.vs/
+out/
